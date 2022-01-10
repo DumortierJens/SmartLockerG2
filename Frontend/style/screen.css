@@ -1,0 +1,240 @@
+/* LAATSTE VERSIE */
+@font-face {
+  font-family: 'MyFont';
+  src: url(/font/TitilliumWeb-SemiBold.ttf);
+  font-weight: 600;
+}
+@font-face {
+  font-family: 'MyFont';
+  src: url(/font/TitilliumWeb-Regular.ttf);
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'MyFont';
+  src: url(/font/TitilliumWeb-Light.ttf);
+  font-weight: 300;
+}
+
+:root {
+  --blue-accent-color: #1f79ff;
+  --blue-accent-color-light: #4992ff;
+  --blue-accent-color-dark: #1f48ff;
+  --status-available: #008000;
+  --status-soonAvailable: #ffa500;
+  --status-unavailable: #ff411f;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 100%;
+  line-height: 1.5;
+  font-family: 'MyFont', arial, sans-serif;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+::selection {
+  background: var(--blue-accent-color-light);
+  color: white;
+  text-shadow: none;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: top;
+}
+p{
+  margin: 0;
+}
+
+a:visited,
+a:active {
+  color: var(--blue-accent-color-dark);
+}
+
+a:hover,
+a:focus {
+  color: var(--blue-accent-color-light);
+}
+
+.header_locker_detail {
+  height: 3.5rem;
+  width: 100%;
+  background-color: var(--blue-accent-color);
+  color: white;
+  font-size: 2rem;
+  font-weight: 400;
+  align-items: center;
+}
+
+.title_header_locker_detail {
+  margin: auto;
+}
+
+.flex {
+  display: flex;
+}
+
+.backarrow_header_locker_detail {
+  height: 1.5rem;
+  width: 1.5rem;
+  position: absolute;
+  left: 1rem;
+}
+
+.profile_header_locker_detail {
+  height: 1.5rem;
+  width: 1.5rem;
+  position: absolute;
+  right: 1rem;
+}
+
+.locker_detail_content {
+  margin: 1.5rem 1.75rem 1.75rem 1rem;
+}
+
+.locker_detail_content_title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 2.25;
+  color: var(--blue-accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.locker_detail_content_info {
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.locker_detail_content_status_color {
+  color: var(--status-available);
+}
+
+.locker_detail_content_toggleInstructions {
+  margin: 1.5rem 0 1.5rem 0;
+}
+
+.locker_detail_content_toggleSvg {
+  height: 11.25rem;
+  width: 9.375rem;
+}
+
+.center {
+  text-align: center;
+}
+
+.locker_detail_content_instructions {
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
+  font-weight: 300;
+  margin: 0;
+}
+
+.locker_detail_opmerkingbtn {
+  margin: 0 0 1.5rem 0;
+  background-color: var(--blue-accent-color);
+  border-style: none;
+  color: white;
+  font-family: 'MyFont';
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.locker_detail_sendbtn {
+  margin: 1.5rem 0 1.5rem;
+  background-color: var(--blue-accent-color);
+  border-style: none;
+  color: white;
+  font-family: 'MyFont';
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.centerflex {
+  justify-content: center;
+  align-items: center;
+}
+
+.locker_detail_opmerking {
+  border: none;
+  overflow: auto;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  resize: none;
+  font-family: 'MyFont';
+  width: 100%;
+}
+
+.div_locker_detail_opmerking {
+  display: none;
+  border: 2px solid var(--blue-accent-color);
+  border-radius: 5px;
+  padding: 0.5rem;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.js-submit {
+  display: none;
+}
+
+.locker_detail_popup {
+  display: none;
+  position: fixed;
+  width: 18.75rem;
+  height: 12.5rem;
+  top: 50%;
+  left: 50%;
+  margin-top: -6.25rem;
+  margin-left: -9.375rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  text-align: center;
+}
+
+.locker_detail_popup_terug {
+  background-color: var(--status-unavailable);
+  border-style: none;
+  color: white;
+  font-family: 'MyFont';
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 2rem;
+}
+
+.locker_detail_popup_open {
+  background-color: var(--blue-accent-color);
+  border-style: none;
+  color: white;
+  font-family: 'MyFont';
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 2rem;
+}
+
+.open_locker_message {
+  padding: 1rem 0.5rem 1rem 0.5rem;
+  margin-bottom: 0rem;
+}
+
+@media (min-width: 550px) {
+  :root {
+    text-align: center;
+  }
+}
