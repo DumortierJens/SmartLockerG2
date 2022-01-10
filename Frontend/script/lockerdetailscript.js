@@ -9,6 +9,7 @@ let popup;
 let popupterug;
 let background;
 let popupopen;
+let extracontent;
 
 function ListenToTerug(){
     popupterug.addEventListener('click',function(){
@@ -46,14 +47,15 @@ function ListenToClickOpmerkingBtn() {
             opmerkingbtn.style = "background-color : var(--status-unavailable);"
             console.log("Schrijf een opmerking")
             schrijfOpmerking = false;
-            submitbtn.style = "display: block"
+            submitbtn.style = "display: block;"
+            extracontent.style.animation = "fadein 0.3s"
         } else {
             opmerkingbtn.style = "background-color : var(--blue-accent-color);"
             opmerkingbtn.innerHTML = "Opmerking toevoegen"
-            opmerkingdiv.style = "display: none;"
             schrijfOpmerking = true
             console.log("Annuleer")
-            submitbtn.style = "display: none"
+            submitbtn.style = "display: none;"
+            opmerkingdiv.style = "display: none;"
         }
     })
 }
@@ -69,6 +71,7 @@ function init() {
     popupterug = document.querySelector('.js-popup-terug')
     background = document.querySelector('.locker_detail_blur')
     popupopen = document.querySelector('.js-popup-open')
+    extracontent = document.querySelector('.locker_detail_extra_content')
     ListenToClickToggleLocker();
     ListenToClickOpmerkingBtn(schrijfOpmerking);
 }
