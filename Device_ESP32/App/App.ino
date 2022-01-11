@@ -4,6 +4,9 @@
 #define US_LEFT_ECHO_PIN        18 
 #define US_RIGHT_TRIGGER_PIN    19  
 #define US_RIGHT_ECHO_PIN       21
+#define BUTTON_LOCK_PIN         15
+#define LOCK_PIN                22
+// #define LOCK_FEEDBACK_PIN       23
 
 // Const values
 #define LOCKER_ID               1
@@ -14,6 +17,7 @@
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
 #include <TaskScheduler.h>
 #include <NewPing.h>
+#include "Lock.h"
 
 
 // Methods
@@ -29,6 +33,8 @@ bool usLeftLastState = false;
 NewPing usRight(US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN, 400);
 double usRightThreshold = 22;
 bool usRightLastState = false;
+
+Lock lock(LOCK_PIN);
 
 // Tasks
 Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
@@ -80,6 +86,7 @@ void setup() {
 
     // Pin initialisation
     pinMode(RESET_WIFI_CONFIG_PIN, INPUT_PULLUP);
+    pinMode(BUTTON_LOCK_PIN, INPUT_PULLUP);
 
     // Initialize tasks
     Serial.println("Initializing tasks...");
@@ -101,6 +108,10 @@ void loop() {
       WiFiManager wifiManager;
       wifiManager.setTimeout(120); // sets timeout until configuration portal gets turned off in sec
       wifiManager.startConfigPortal("SmartLockerSetup"); // wifi ap settings (ssid, password)
+    }
+
+    if ( !digitalRead(BUTTON_LOCK_PIN) ) {
+        lock.openLock();
     }
 
 }
