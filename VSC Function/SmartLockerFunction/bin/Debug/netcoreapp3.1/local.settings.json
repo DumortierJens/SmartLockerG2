@@ -1,8 +1,0 @@
-{
-    "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-    "CosmosAdmin": "AccountEndpoint=AccountEndpoint=https://smartlockercosmos.documents.azure.com:443/;AccountKey=oCGsLU4rkHwHthztk0ArrcuiWCqWqdaWHG1qfe1mUCSVhwnAF3u7vRZCZOwIcV5KsI4q6hWcKnHp75PlVNlriA==;"
-  }
-}
