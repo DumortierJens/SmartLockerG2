@@ -16,12 +16,12 @@
 }
 
 :root {
-  --blue-accent-color: #1f79ff;
+  --blue-accent-color: #2771DE;
   --blue-accent-color-light: #4992ff;
   --blue-accent-color-dark: #1f48ff;
   --status-available: #008000;
   --status-soonAvailable: #ffa500;
-  --status-unavailable: #ff411f;
+  --status-unavailable: #B60000;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -66,7 +66,7 @@ a:focus {
 }
 
 .header_locker_detail {
-  height: 3.5rem;
+  height: 4.5rem;
   width: 100%;
   background-color: var(--blue-accent-color);
   color: white;
@@ -87,14 +87,14 @@ a:focus {
   height: 1.5rem;
   width: 1.5rem;
   position: absolute;
-  left: 1rem;
+  left: 1.5rem;
 }
 
 .profile_header_locker_detail {
   height: 1.5rem;
   width: 1.5rem;
   position: absolute;
-  right: 1rem;
+  right: 1.5rem;
 }
 
 .locker_detail_content {
