@@ -5,51 +5,94 @@ using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using SmartLockerFunction.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.IO;
+using Microsoft.Azure.Cosmos;
+
 namespace SmartLockerFunction
 {
     class main
     {
-        [FunctionName("GetCodes")]
-        public static async Task<IActionResult> RunAzureTableStorage(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "codes/{email}")] HttpRequest req, string email,
+        [FunctionName("StatusLock")]
+        public static async Task<IActionResult> StatusLock(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "data/{lockerid}/{status}")] HttpRequest req, int lockerid, bool status,
             ILogger log)
         {
-
             try
             {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureStorageConStr"));
-                CloudTableClient client = storageAccount.CreateCloudTableClient();
-                CloudTable table = client.GetTableReference("struyvemattice");
 
-                TableQuery<CodeEntity> rangeQuery = new TableQuery<CodeEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, email));
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                Device device = JsonConvert.DeserializeObject<Device>(requestBody);
 
-                var queryResult = await table.ExecuteQuerySegmentedAsync<CodeEntity>(rangeQuery, null);
-                List<ReceivedCode> receivedCodes = new List<ReceivedCode>();
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Database database = cosmosClient.GetDatabase("SmartLocker");
+                Container container = database.GetContainer("Logs");
 
-                foreach (var reg in queryResult.Results)
-                {
-                    receivedCodes.Add(new ReceivedCode()
-                    {
-                        Code = reg.Code,
-                        Timestamp = reg.Timestamp,
-                        EMail = reg.PartitionKey
+                QueryDefinition queryDefinition = new QueryDefinition("INSERT INTO Logs (DeviceName, Status, Timestamp) VALUES(Lock, @Status, @Timestamp); ");
+                queryDefinition.WithParameter("@Status", status);
+                queryDefinition.WithParameter("@Timestamp", DateTime.UtcNow);
 
-                    });
-                }
-                return new OkObjectResult(receivedCodes);
             }
+
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
-
+            return new OkObjectResult("");
         }
+
+        [FunctionName("StatusMaterial")]
+        public static async Task<IActionResult> StatusMaterial(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "data/{lockerid}/{devicename}/{status}")] HttpRequest req, int lockerid, string devicename, bool status,
+            ILogger log)
+        {
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                Device device = JsonConvert.DeserializeObject<Device>(requestBody);
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Database database = cosmosClient.GetDatabase("SmartLocker");
+                Container container = database.GetContainer("Logs");
+
+                QueryDefinition queryDefinition = new QueryDefinition("INSERT INTO Logs (DeviceName, Status, Timestamp) VALUES(@DeviceName, @Status, @Timestamp);");
+                queryDefinition.WithParameter("@DeviceName", devicename);
+                queryDefinition.WithParameter("@Status", status);
+                queryDefinition.WithParameter("@Timestamp", DateTime.UtcNow);
+
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return new OkObjectResult("");
+        }
+
+        //[FunctionName("GetLockerDetails")]
+        //public static async Task<IActionResult> GetLockerDetails(
+        //    [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "data/{lockerid}")] HttpRequest req, int lockerid,
+        //    ILogger log)
+        //{
+        //    try
+        //    {
+
+
+
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //return new OkObjectResult("");
+        //}
     }
 }

@@ -6,9 +6,8 @@ namespace SmartLockerFunction.Models
 {
     public class Device
     {
-        public string Code { get; set; }
-        public string EMail { get; set; }
-
+        public string DeviceName { get; set; }
+        public string Status { get; set; }
         public DateTime Timestamp { get; set; }
     }
 
