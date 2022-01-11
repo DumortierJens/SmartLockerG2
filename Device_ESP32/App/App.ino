@@ -4,6 +4,9 @@
 #define US_LEFT_ECHO_PIN        18 
 #define US_RIGHT_TRIGGER_PIN    19  
 #define US_RIGHT_ECHO_PIN       21
+#define BUTTON_LOCK_PIN         15
+#define LOCK_PIN                22
+#define LOCK_FEEDBACK_PIN       23
 
 // Const values
 #define LOCKER_ID               1
@@ -14,10 +17,12 @@
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
 #include <TaskScheduler.h>
 #include <NewPing.h>
+#include "Lock.h"
 
 
 // Methods
 void checkMaterial();
+bool checkMaterialOfUltrasoonSensor(NewPing, double);
 
 // Variables
 Scheduler taskRunner;
@@ -30,10 +35,12 @@ NewPing usRight(US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN, 400);
 double usRightThreshold = 22;
 bool usRightLastState = false;
 
+Lock lock(LOCK_PIN, LOCK_FEEDBACK_PIN);
+bool lockLastState = LOW;
+
 // Tasks
 Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
 void checkMaterial(){            
-
     bool usLeftState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
     bool usRightState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
     
@@ -56,7 +63,6 @@ void checkMaterial(){
     usLeftLastState = usLeftState;
     usRightLastState = usRightState;
 }
-
 bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){            
     double usValue = us.ping_cm();
     Serial.println(usValue);
@@ -65,6 +71,22 @@ bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){
         return true;
 
     return false;
+}
+
+Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
+void checkLock() {
+    bool lockState = lock.getLockState();
+    Serial.println(lockState);
+
+    if (lockState != lockLastState)
+    {
+        if (lockState)
+            Serial.println("Locker: closed");
+        else
+            Serial.println("Locker: opened");
+    }
+
+    lockLastState = lockState;
 }
 
 
@@ -80,12 +102,15 @@ void setup() {
 
     // Pin initialisation
     pinMode(RESET_WIFI_CONFIG_PIN, INPUT_PULLUP);
+    pinMode(BUTTON_LOCK_PIN, INPUT_PULLUP);
 
     // Initialize tasks
     Serial.println("Initializing tasks...");
     taskRunner.init();
     taskRunner.addTask(checkMaterialTask);
     checkMaterialTask.enable();
+    taskRunner.addTask(checkLockTask);
+    checkLockTask.enable();
 
 }
 
@@ -101,6 +126,10 @@ void loop() {
       WiFiManager wifiManager;
       wifiManager.setTimeout(120); // sets timeout until configuration portal gets turned off in sec
       wifiManager.startConfigPortal("SmartLockerSetup"); // wifi ap settings (ssid, password)
+    }
+
+    if ( !digitalRead(BUTTON_LOCK_PIN) ) {
+        lock.openLock();
     }
 
 }
