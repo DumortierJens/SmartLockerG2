@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmartLockerFunction.Models
+namespace SmartLockerFunctionApp.Models
 {
     public class User
     {
