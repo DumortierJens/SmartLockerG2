@@ -6,7 +6,7 @@
 #define US_RIGHT_ECHO_PIN       21
 #define BUTTON_LOCK_PIN         15
 #define LOCK_PIN                22
-// #define LOCK_FEEDBACK_PIN       23
+#define LOCK_FEEDBACK_PIN       23
 
 // Const values
 #define LOCKER_ID               1
@@ -22,6 +22,7 @@
 
 // Methods
 void checkMaterial();
+bool checkMaterialOfUltrasoonSensor(NewPing, double);
 
 // Variables
 Scheduler taskRunner;
@@ -34,12 +35,12 @@ NewPing usRight(US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN, 400);
 double usRightThreshold = 22;
 bool usRightLastState = false;
 
-Lock lock(LOCK_PIN);
+Lock lock(LOCK_PIN, LOCK_FEEDBACK_PIN);
+bool lockLastState = LOW;
 
 // Tasks
 Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
 void checkMaterial(){            
-
     bool usLeftState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
     bool usRightState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
     
@@ -62,7 +63,6 @@ void checkMaterial(){
     usLeftLastState = usLeftState;
     usRightLastState = usRightState;
 }
-
 bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){            
     double usValue = us.ping_cm();
     Serial.println(usValue);
@@ -71,6 +71,22 @@ bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){
         return true;
 
     return false;
+}
+
+Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
+void checkLock() {
+    bool lockState = lock.getLockState();
+    Serial.println(lockState);
+
+    if (lockState != lockLastState)
+    {
+        if (lockState)
+            Serial.println("Locker: closed");
+        else
+            Serial.println("Locker: opened");
+    }
+
+    lockLastState = lockState;
 }
 
 
@@ -93,6 +109,8 @@ void setup() {
     taskRunner.init();
     taskRunner.addTask(checkMaterialTask);
     checkMaterialTask.enable();
+    taskRunner.addTask(checkLockTask);
+    checkLockTask.enable();
 
 }
 
