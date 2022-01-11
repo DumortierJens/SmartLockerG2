@@ -6,6 +6,7 @@
 #define US_RIGHT_ECHO_PIN       21
 
 // Const values
+#define LOCKER_ID               1
 #define US_THRESHOLD_DIFF       5
 
 
@@ -22,21 +23,48 @@ void checkMaterial();
 Scheduler taskRunner;
 
 NewPing usLeft(US_LEFT_TRIGGER_PIN, US_LEFT_ECHO_PIN, 400);
+double usLeftThreshold = 22;
+bool usLeftLastState = false;
+
 NewPing usRight(US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN, 400);
-double usLeftThreshold = 50;
-double usRightThreshold = 50;
+double usRightThreshold = 22;
+bool usRightLastState = false;
 
 // Tasks
 Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
+void checkMaterial(){            
 
-void checkMaterial(){              
+    bool usLeftState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
+    bool usRightState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
+    
+    if (usLeftState != usLeftLastState)
+    {
+        if (usLeftState)
+            Serial.println("Ultrasoon left: material detected");
+        else
+            Serial.println("Ultrasoon left: no material detected");
+    }
 
-    double usLeftValue = usLeft.ping_cm();
-    double usRightValue = usLeft.ping_cm();
+    if (usRightState != usRightLastState)
+    {
+        if (usRightState)
+            Serial.println("Ultrasoon right: material detected");
+        else
+            Serial.println("Ultrasoon right: no material detected");
+    }
+    
+    usLeftLastState = usLeftState;
+    usRightLastState = usRightState;
+}
 
-    Serial.println("Ultrasoon left: " + String(usLeftValue) + "cm");
-    Serial.println("Ultrasoon right: " + String(usRightValue) + "cm");
+bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){            
+    double usValue = us.ping_cm();
+    Serial.println(usValue);
+    
+    if (usValue > usThresholdValue - US_THRESHOLD_DIFF && usValue < usThresholdValue + US_THRESHOLD_DIFF)
+        return true;
 
+    return false;
 }
 
 
