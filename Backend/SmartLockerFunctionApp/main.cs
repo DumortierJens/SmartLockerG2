@@ -20,8 +20,8 @@ namespace SmartLockerFunctionApp
     {
         [FunctionName("StatusLog")]
         public static async Task<IActionResult> StatusLog(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "lockers/{lockerid}/log")] HttpRequest req, 
-            Guid lockerid,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "devices/{deviceId}/log")] HttpRequest req, 
+            Guid deviceId,
             ILogger log)
         {
             try
@@ -31,13 +31,11 @@ namespace SmartLockerFunctionApp
                 
                 newLog.Id = Guid.NewGuid();
                 newLog.Timestamp = DateTime.Now;
-                newLog.DeviceId = lockerid;
+                newLog.DeviceId = deviceId;
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
-
-                await container.CreateItemAsync<Log>(newLog, new PartitionKey(newLog.DeviceName));
-
+                await container.CreateItemAsync<Log>(newLog, new PartitionKey(deviceId.ToString()));
                 return new StatusCodeResult(200);
             }
 
@@ -59,15 +57,15 @@ namespace SmartLockerFunctionApp
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
-                List<Locker> lockerDetails = new List<Locker>();
+                List<Locker> lockers = new List<Locker>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers");
                 FeedIterator<Locker> iterator = container.GetItemQueryIterator<Locker>(query);
                 while (iterator.HasMoreResults)
                 {
                     FeedResponse<Locker> response = await iterator.ReadNextAsync();
-                    lockerDetails.AddRange(response);
+                    lockers.AddRange(response);
                 }
-                return new OkObjectResult(lockerDetails);
+                return new OkObjectResult(lockers);
 
             }
 
@@ -87,17 +85,17 @@ namespace SmartLockerFunctionApp
             {
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
-                List<Locker> lockerDetails = new List<Locker>();
+                Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
+                List<Locker> lockers = new List<Locker>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
                 query.WithParameter("@id", lockerId);
                 FeedIterator<Locker> iterator = container.GetItemQueryIterator<Locker>(query);
                 while (iterator.HasMoreResults)
                 {
                     FeedResponse<Locker> response = await iterator.ReadNextAsync();
-                    lockerDetails.AddRange(response);
+                    lockers.AddRange(response);
                 }
-                return new OkObjectResult(lockerDetails);
+                return new OkObjectResult(lockers);
 
             }
 
@@ -107,8 +105,8 @@ namespace SmartLockerFunctionApp
             }
 
         }
-        [FunctionName("GetMaterialStatusByID")]
-        public static async Task<IActionResult> GetMaterialStatusByID(
+        [FunctionName("GetMaterialStatusById")]
+        public static async Task<IActionResult> GetMaterialStatusById(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}/status")] HttpRequest req,
           string lockerId,
           ILogger log)
@@ -128,7 +126,7 @@ namespace SmartLockerFunctionApp
                 }
                 foreach (Device device in devices)
                 {
-                    if (device.)
+                    
                 }
                 return new OkObjectResult("");
 
