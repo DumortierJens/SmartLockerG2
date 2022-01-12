@@ -86,7 +86,7 @@ namespace SmartLockerFunctionApp
             {
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
+                Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
                 List<LockerDetails> lockerDetails = new List<LockerDetails>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
                 query.WithParameter("@id", lockerId);
