@@ -20,7 +20,8 @@ namespace SmartLockerFunctionApp
     {
         [FunctionName("StatusLog")]
         public static async Task<IActionResult> StatusLog(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "lockers/{lockerid}/log")] HttpRequest req, Guid lockerid,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "lockers/{lockerid}/log")] HttpRequest req, 
+            Guid lockerid,
             ILogger log)
         {
             try
@@ -58,12 +59,12 @@ namespace SmartLockerFunctionApp
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
-                List<LockerDetails> lockerDetails = new List<LockerDetails>();
+                List<Locker> lockerDetails = new List<Locker>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers");
-                FeedIterator<LockerDetails> iterator = container.GetItemQueryIterator<LockerDetails>(query);
+                FeedIterator<Locker> iterator = container.GetItemQueryIterator<Locker>(query);
                 while (iterator.HasMoreResults)
                 {
-                    FeedResponse<LockerDetails> response = await iterator.ReadNextAsync();
+                    FeedResponse<Locker> response = await iterator.ReadNextAsync();
                     lockerDetails.AddRange(response);
                 }
                 return new OkObjectResult(lockerDetails);
@@ -87,13 +88,13 @@ namespace SmartLockerFunctionApp
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
-                List<LockerDetails> lockerDetails = new List<LockerDetails>();
+                List<Locker> lockerDetails = new List<Locker>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
                 query.WithParameter("@id", lockerId);
-                FeedIterator<LockerDetails> iterator = container.GetItemQueryIterator<LockerDetails>(query);
+                FeedIterator<Locker> iterator = container.GetItemQueryIterator<Locker>(query);
                 while (iterator.HasMoreResults)
                 {
-                    FeedResponse<LockerDetails> response = await iterator.ReadNextAsync();
+                    FeedResponse<Locker> response = await iterator.ReadNextAsync();
                     lockerDetails.AddRange(response);
                 }
                 return new OkObjectResult(lockerDetails);
@@ -116,17 +117,20 @@ namespace SmartLockerFunctionApp
             {
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
-                List<LockerDetails> lockerDetails = new List<LockerDetails>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
-                query.WithParameter("@id", lockerId);
-                FeedIterator<LockerDetails> iterator = container.GetItemQueryIterator<LockerDetails>(query);
+                Container container = cosmosClient.GetContainer("SmartLocker", "Devices");
+                List<Device> devices = new List<Device>();
+                QueryDefinition query_devices = new QueryDefinition("SELECT * FROM Devices");
+                FeedIterator<Device> iterator = container.GetItemQueryIterator<Device>(query_devices);
                 while (iterator.HasMoreResults)
                 {
-                    FeedResponse<LockerDetails> response = await iterator.ReadNextAsync();
-                    lockerDetails.AddRange(response);
+                    FeedResponse<Device> response = await iterator.ReadNextAsync();
+                    devices.AddRange(response);
                 }
-                return new OkObjectResult(lockerDetails);
+                foreach (Device device in devices)
+                {
+                    if (device.)
+                }
+                return new OkObjectResult("");
 
             }
 
