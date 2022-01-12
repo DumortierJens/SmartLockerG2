@@ -256,14 +256,14 @@ a:focus {
   position: absolute;
   z-index: 1;
   left: 50%;
-  bottom: 0;
+  bottom: 3rem;
   height: 10rem;
   width: 8.125rem;
-  margin-top: -5rem;
-  margin-left: -12.3rem;
+  margin-left: -9rem;
   background-color: white;
   border-radius: 10px 10px 0 0;
   filter: drop-shadow(0 3px 6px rgba(17, 12, 46, 0.15));
+  border-radius: 10px;
 }
 
 .overview_legende_grid {
@@ -348,6 +348,7 @@ a:focus {
   grid-area: text3;
   align-self: center;
 }
+
 /* Animations*/
 @keyframes fadein {
   from {
@@ -373,17 +374,14 @@ a:focus {
   }
 }
 
-@media (max-width: 400px) {
-  .overview_legende {
-    margin-left: -11rem;
-    bottom: 1.8rem;
-    border-radius: 10px;
+@media(min-height: 760px){
+  .overview_legende{
+    bottom: 6rem;
   }
 }
-@media (max-width: 360px) {
-  .overview_legende {
-    margin-left: -10.5rem;
-    bottom: 3rem;
-    border-radius: 10px;
+
+@media(min-height: 860px){
+  .overview_legende{
+    bottom: 8rem;
   }
 }

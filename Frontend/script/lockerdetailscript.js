@@ -10,6 +10,20 @@ let popupterug;
 let background;
 let popupopen;
 let extracontent;
+let backarrow;
+let lockerTitle;
+
+function FillCorrectTitle(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('sport');
+    lockerTitle.innerHTML = myParam;
+}
+
+function ListenToClickBackArrow(){
+    backarrow.addEventListener('click',function(){
+        window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
+    })
+}
 
 function DisplayNone(){
     popup.style = "display: none;"
@@ -76,8 +90,12 @@ function init() {
     background = document.querySelector('.locker_detail_blur')
     popupopen = document.querySelector('.js-popup-open')
     extracontent = document.querySelector('.locker_detail_extra_content')
+    backarrow = document.querySelector('.js-backarrow')
+    lockerTitle = document.querySelector('.js-lockerTitle')
+    FillCorrectTitle();
     ListenToClickToggleLocker();
     ListenToClickOpmerkingBtn(schrijfOpmerking);
+    ListenToClickBackArrow();
 }
 
 document.addEventListener('DOMContentLoaded', init)
