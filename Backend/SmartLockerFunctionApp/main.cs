@@ -30,7 +30,7 @@ namespace SmartLockerFunctionApp
                 
                 newLog.Id = Guid.NewGuid();
                 newLog.Timestamp = DateTime.Now;
-                newLog.LockerId = lockerid;
+                newLog.DeviceId = lockerid;
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
@@ -50,7 +50,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("GetLockerDetails")]
         public static async Task<IActionResult> GetLockerDetails(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "data/lockers")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers")] HttpRequest req,
             ILogger log)
         {
             try
@@ -78,7 +78,7 @@ namespace SmartLockerFunctionApp
         }
         [FunctionName("GetLockerDetailsByID")]
         public static async Task<IActionResult> GetLockerDetailsByID(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "data/{lockerId}")] HttpRequest req, 
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}")] HttpRequest req, 
           string lockerId,
           ILogger log)
         {
@@ -87,6 +87,36 @@ namespace SmartLockerFunctionApp
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
+                List<LockerDetails> lockerDetails = new List<LockerDetails>();
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
+                query.WithParameter("@id", lockerId);
+                FeedIterator<LockerDetails> iterator = container.GetItemQueryIterator<LockerDetails>(query);
+                while (iterator.HasMoreResults)
+                {
+                    FeedResponse<LockerDetails> response = await iterator.ReadNextAsync();
+                    lockerDetails.AddRange(response);
+                }
+                return new OkObjectResult(lockerDetails);
+
+            }
+
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+
+        }
+        [FunctionName("GetMaterialStatusByID")]
+        public static async Task<IActionResult> GetMaterialStatusByID(
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}/status")] HttpRequest req,
+          string lockerId,
+          ILogger log)
+        {
+            try
+            {
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
                 List<LockerDetails> lockerDetails = new List<LockerDetails>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
                 query.WithParameter("@id", lockerId);
