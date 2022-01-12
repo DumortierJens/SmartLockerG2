@@ -9,7 +9,7 @@
 #define LOCK_FEEDBACK_PIN       23
 
 // Const values
-#define LOCKER_ID               1
+#define API_URL                 "http://192.168.1.51:7071/api"
 #define US_THRESHOLD_DIFF       5
 
 
@@ -22,14 +22,14 @@
 #include <ArduinoJson.h>
 
 
-// Methods
+// Methods for tasks
 void checkMaterial();
 bool checkMaterialOfUltrasoonSensor(NewPing, double);
+void checkLock();
+
 
 // Variables
 Scheduler taskRunner;
-HTTPClient httpClient;
-char jsonOutput[128];
 
 NewPing usLeft(US_LEFT_TRIGGER_PIN, US_LEFT_ECHO_PIN, 400);
 double usLeftThreshold = 22;
@@ -42,8 +42,39 @@ bool usRightLastState = false;
 Lock lock(LOCK_PIN, LOCK_FEEDBACK_PIN);
 bool lockLastState = LOW;
 
+
 // Tasks
 Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
+Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
+
+void updateDeviceStatus(String deviceId, bool value){
+    HTTPClient httpClient;
+    char jsonOutput[128];
+    
+    httpClient.begin(String(API_URL) + "/devices/" + String(deviceId) + "/log");
+    httpClient.addHeader("Content-Type", "application/json");
+
+    const size_t CAPACITY = JSON_OBJECT_SIZE(1);
+    StaticJsonDocument<CAPACITY> doc;
+
+    JsonObject object = doc.to<JsonObject>();
+    object["value"] = value;
+    serializeJson(doc, jsonOutput);
+
+    int httpCode = httpClient.POST(String(jsonOutput));
+
+    if (httpCode > 0) {
+        String payload = httpClient.getString();
+        Serial.println("\nStatuscode: " + String(httpCode));
+        Serial.println(payload);
+
+        httpClient.end();
+    }
+    else {
+        Serial.println("Error on HTTP request");
+    }
+}
+
 void checkMaterial(){            
     bool usLeftState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
     bool usRightState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
@@ -67,6 +98,7 @@ void checkMaterial(){
     usLeftLastState = usLeftState;
     usRightLastState = usRightState;
 }
+
 bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){            
     double usValue = us.ping_cm();
     Serial.println(usValue);
@@ -77,7 +109,6 @@ bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){
     return false;
 }
 
-Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
 void checkLock() {
     bool lockState = lock.getLockState();
     Serial.println(lockState);
@@ -86,34 +117,10 @@ void checkLock() {
     {
         if (lockState)
             Serial.println("Locker: closed");
-        
         else
             Serial.println("Locker: opened");
 
-        httpClient.begin("http://192.168.1.51:7071/api/devices/fc5a0661-20fc-4eb1-95d7-e27e19f211df/log");
-        httpClient.addHeader("Content-Type", "application/json");
-
-        const size_t CAPACITY = JSON_OBJECT_SIZE(1);
-        StaticJsonDocument<CAPACITY> doc;
-
-        JsonObject object = doc.to<JsonObject>();
-        object["value"] = lockState;
-        
-        serializeJson(doc, jsonOutput);
-        Serial.println(jsonOutput);
-
-        int httpCode = httpClient.POST(String(jsonOutput));
-
-        if (httpCode > 0) {
-            String payload = httpClient.getString();
-            Serial.println("\nStatuscode: " + String(httpCode));
-            Serial.println(payload);
-
-            httpClient.end();
-        }
-        else {
-            Serial.println("Error on HTTP request");
-        }
+        updateDeviceStatus("fc5a0661-20fc-4eb1-95d7-e27e19f211df", lockState);
     }
 
     lockLastState = lockState;
