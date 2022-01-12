@@ -78,7 +78,7 @@ namespace SmartLockerFunctionApp
         [FunctionName("GetLockerDetailsByID")]
         public static async Task<IActionResult> GetLockerDetailsByID(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}")] HttpRequest req, 
-          string lockerId,
+          Guid lockerId,
           ILogger log)
         {
             try
@@ -107,28 +107,42 @@ namespace SmartLockerFunctionApp
         }
         [FunctionName("GetMaterialStatusById")]
         public static async Task<IActionResult> GetMaterialStatusById(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}/status")] HttpRequest req,
-          string lockerId,
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{deviceId}/status")] HttpRequest req,
+          string deviceId,
           ILogger log)
         {
             try
             {
-
+                string ultrasoon = null;
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Devices");
+                Container container_devices = cosmosClient.GetContainer("SmartLocker", "Devices");
                 List<Device> devices = new List<Device>();
-                QueryDefinition query_devices = new QueryDefinition("SELECT * FROM Devices");
-                FeedIterator<Device> iterator = container.GetItemQueryIterator<Device>(query_devices);
-                while (iterator.HasMoreResults)
+                QueryDefinition query_devices = new QueryDefinition("SELECT * FROM Devices d WHERE d.id = @id");
+                query_devices.WithParameter("@id", deviceId);
+                FeedIterator<Device> iterator_devices = container_devices.GetItemQueryIterator<Device>(query_devices);
+                while (iterator_devices.HasMoreResults)
                 {
-                    FeedResponse<Device> response = await iterator.ReadNextAsync();
-                    devices.AddRange(response);
+                    FeedResponse<Device> response_device = await iterator_devices.ReadNextAsync();
+                    devices.AddRange(response_device);
                 }
                 foreach (Device device in devices)
                 {
-                    
+                    if (device.Type == "ultrasoon")
+                    {
+                        ultrasoon = device.Id.ToString();
+                    }
                 }
-                return new OkObjectResult("");
+                Container container_logs = cosmosClient.GetContainer("SmartLocker", "Logs");
+                List<Log> logs = new List<Log>();
+                QueryDefinition query_logs = new QueryDefinition("SELECT * FROM Logs l WHERE l.deviceId = @id");
+                query_logs.WithParameter("@id", ultrasoon);
+                FeedIterator<Log> iterator_logs = container_logs.GetItemQueryIterator<Log>(query_logs);
+                while (iterator_logs.HasMoreResults)
+                {
+                    FeedResponse<Log> response_log = await iterator_logs.ReadNextAsync();
+                    logs.AddRange(response_log);
+                }
+                return new OkObjectResult(logs);
 
             }
 
