@@ -9,7 +9,7 @@
 #define LOCK_FEEDBACK_PIN       23
 
 // Const values
-#define API_URL                 "http://192.168.1.51:7071/api"
+#define API_URL                 "http://smartlockerfunctions.azurewebsites.net/api"
 #define US_THRESHOLD_DIFF       5
 
 
@@ -85,6 +85,8 @@ void checkMaterial(){
             Serial.println("Ultrasoon left: material detected");
         else
             Serial.println("Ultrasoon left: no material detected");
+
+        updateDeviceStatus("ed1f152e-822d-4940-935c-70c40e1b8c3e", usLeftState);
     }
 
     if (usRightState != usRightLastState)
@@ -93,6 +95,8 @@ void checkMaterial(){
             Serial.println("Ultrasoon right: material detected");
         else
             Serial.println("Ultrasoon right: no material detected");
+
+        updateDeviceStatus("6e557e60-84a8-45b0-a026-37ae6d0d06fb", usRightState);
     }
     
     usLeftLastState = usLeftState;
