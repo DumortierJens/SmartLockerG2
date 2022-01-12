@@ -48,9 +48,9 @@ namespace SmartLockerFunctionApp
            
         }
 
-        [FunctionName("GetLatestLockerDetails")]
+        [FunctionName("GetLockerDetails")]
         public static async Task<IActionResult> GetLockerDetails(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "data/{lockerid}")] HttpRequest req, int lockerid,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "data/lockers")] HttpRequest req,
             ILogger log)
         {
             try
@@ -58,8 +58,6 @@ namespace SmartLockerFunctionApp
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
-
-                //    // Get all events
                 List<LockerDetails> lockerDetails = new List<LockerDetails>();
                 QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers");
                 FeedIterator<LockerDetails> iterator = container.GetItemQueryIterator<LockerDetails>(query);
@@ -68,7 +66,6 @@ namespace SmartLockerFunctionApp
                     FeedResponse<LockerDetails> response = await iterator.ReadNextAsync();
                     lockerDetails.AddRange(response);
                 }
-
                 return new OkObjectResult(lockerDetails);
 
             }
