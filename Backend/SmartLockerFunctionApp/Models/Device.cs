@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,9 +7,15 @@ namespace SmartLockerFunctionApp.Models
 {
     public class Device
     {
-        public string DeviceName { get; set; }
-        public Boolean Status { get; set; }
-        public DateTime Timestamp { get { return Timestamp; } set { Timestamp = DateTime.UtcNow; } }
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+        [JsonProperty("lockerId")]
+        public Guid LockerId { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
     }
 
 }

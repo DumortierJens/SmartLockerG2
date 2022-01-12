@@ -1,0 +1,8 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=stsmartlocker;AccountKey=H0Uho4fPFUu+CuoBC6ZQIsjwopZxOQS2LK0z8PFswT3f6ax9NJaZJo5fafkJSC4Y6qNajCL6pCrm7C2LZFMEmw==;EndpointSuffix=core.windows.net",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "CosmosAdmin": "AccountEndpoint=https://smartlockercosmos.documents.azure.com:443/;AccountKey=oCGsLU4rkHwHthztk0ArrcuiWCqWqdaWHG1qfe1mUCSVhwnAF3u7vRZCZOwIcV5KsI4q6hWcKnHp75PlVNlriA==;"
+  }
+}
