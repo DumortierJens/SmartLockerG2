@@ -9,16 +9,10 @@ namespace SmartLockerFunctionApp.Models
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
-
         [JsonProperty("deviceId")]
         public Guid DeviceId { get; set; }
-
-        [JsonProperty("deviceName")]
-        public String DeviceName { get; set; }
-
         [JsonProperty("value")]
         public Boolean Value { get; set; }
-
         [JsonProperty("timestamp")]
         public DateTime Timestamp { get; set; }
 

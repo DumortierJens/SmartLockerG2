@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SmartLockerFunctionApp.Models
 {
-    public class LockerDetails
+    public class Locker
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
