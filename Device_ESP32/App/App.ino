@@ -18,6 +18,8 @@
 #include <TaskScheduler.h>
 #include <NewPing.h>
 #include "Lock.h"
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 
 // Methods
@@ -26,6 +28,8 @@ bool checkMaterialOfUltrasoonSensor(NewPing, double);
 
 // Variables
 Scheduler taskRunner;
+HTTPClient httpClient;
+char jsonOutput[128];
 
 NewPing usLeft(US_LEFT_TRIGGER_PIN, US_LEFT_ECHO_PIN, 400);
 double usLeftThreshold = 22;
@@ -82,8 +86,34 @@ void checkLock() {
     {
         if (lockState)
             Serial.println("Locker: closed");
+        
         else
             Serial.println("Locker: opened");
+
+        httpClient.begin("http://192.168.1.51:7071/api/devices/fc5a0661-20fc-4eb1-95d7-e27e19f211df/log");
+        httpClient.addHeader("Content-Type", "application/json");
+
+        const size_t CAPACITY = JSON_OBJECT_SIZE(1);
+        StaticJsonDocument<CAPACITY> doc;
+
+        JsonObject object = doc.to<JsonObject>();
+        object["value"] = lockState;
+        
+        serializeJson(doc, jsonOutput);
+        Serial.println(jsonOutput);
+
+        int httpCode = httpClient.POST(String(jsonOutput));
+
+        if (httpCode > 0) {
+            String payload = httpClient.getString();
+            Serial.println("\nStatuscode: " + String(httpCode));
+            Serial.println(payload);
+
+            httpClient.end();
+        }
+        else {
+            Serial.println("Error on HTTP request");
+        }
     }
 
     lockLastState = lockState;
