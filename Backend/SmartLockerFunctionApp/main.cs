@@ -107,41 +107,20 @@ namespace SmartLockerFunctionApp
         }
         [FunctionName("GetMaterialStatusById")]
         public static async Task<IActionResult> GetMaterialStatusById(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{deviceId}/status")] HttpRequest req,
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "devices/{deviceId}/status")] HttpRequest req,
           string deviceId,
           ILogger log)
         {
             try
             {
-                string ultrasoon = null;
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container_devices = cosmosClient.GetContainer("SmartLocker", "Devices");
-                List<Device> devices = new List<Device>();
-                QueryDefinition query_devices = new QueryDefinition("SELECT * FROM Devices d WHERE d.id = @id");
-                query_devices.WithParameter("@id", deviceId);
-                FeedIterator<Device> iterator_devices = container_devices.GetItemQueryIterator<Device>(query_devices);
-                while (iterator_devices.HasMoreResults)
-                {
-                    FeedResponse<Device> response_device = await iterator_devices.ReadNextAsync();
-                    devices.AddRange(response_device);
-                }
-                foreach (Device device in devices)
-                {
-                    if (device.Type == "ultrasoon")
-                    {
-                        ultrasoon = device.Id.ToString();
-                    }
-                }
-                Container container_logs = cosmosClient.GetContainer("SmartLocker", "Logs");
+                Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
                 List<Log> logs = new List<Log>();
-                QueryDefinition query_logs = new QueryDefinition("SELECT * FROM Logs l WHERE l.deviceId = @id");
-                query_logs.WithParameter("@id", ultrasoon);
-                FeedIterator<Log> iterator_logs = container_logs.GetItemQueryIterator<Log>(query_logs);
-                while (iterator_logs.HasMoreResults)
-                {
-                    FeedResponse<Log> response_log = await iterator_logs.ReadNextAsync();
-                    logs.AddRange(response_log);
-                }
+                QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Logs l WHERE l.deviceId = @id ORDER BY l.timestamp DESC");
+                query.WithParameter("@id", deviceId);
+                FeedIterator<Log> iterator = container.GetItemQueryIterator<Log>(query);
+                FeedResponse<Log> response = await iterator.ReadNextAsync();
+                logs.AddRange(response);
                 return new OkObjectResult(logs);
 
             }
