@@ -266,11 +266,10 @@ a:focus {
 .overview_legende {
   position: absolute;
   z-index: 1;
-  left: 50%;
-  bottom: 3rem;
+  left: 1rem;
+  bottom: 1rem;
   height: 10rem;
   width: 8.5rem;
-  margin-left: -11.2rem;
   background-color: white;
   filter: drop-shadow(0 3px 6px rgba(17, 12, 46, 0.15));
   border-radius: 10px;
