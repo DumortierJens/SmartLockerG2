@@ -19,6 +19,10 @@ Startscherm adminpage = overzicht reservaties met status (bezig, wachten, verlop
 met in dat menu volgende tabs:
 	1) Openen locker
 	2) Geschiedenis uitleningen
-	3) Overzicht alle gebruikers
+	3) Overzicht alle gebruikers --> geschiedenis uitleningen
 
 Reservatie details: tijdslot, geleend, teruggebracht, opmerkingen
+
+Userdetails: 
+	- Reservatietab met optie om te reserveren en geschiedenis te zien
+	- Afmelden
