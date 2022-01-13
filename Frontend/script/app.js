@@ -5,7 +5,7 @@ const showBestemmishowLockerngen = function(jsonObject) {
 };
 
 const init = function() {
-    handleData(`http://127.0.0.1:5000/api/v1/bestemmingen`, showLocker);
+    handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers`, showLocker);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
