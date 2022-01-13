@@ -13,52 +13,52 @@ let extracontent;
 let backarrow;
 let lockerTitle;
 
-function FillCorrectTitle(){
+function FillCorrectTitle() {
     const urlParams = new URLSearchParams(window.location.search);
     const myParam = urlParams.get('sport');
     lockerTitle.innerHTML = myParam;
 }
 
-function ListenToClickBackArrow(){
-    backarrow.addEventListener('click',function(){
+function ListenToClickBackArrow() {
+    backarrow.addEventListener('click', function() {
         window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
     })
 }
 
-function DisplayNone(){
+function DisplayNone() {
     popup.style = "display: none;"
 }
 
-function ListenToTerug(){
-    popupterug.addEventListener('click',function(){
+function ListenToTerug() {
+    popupterug.addEventListener('click', function() {
         background.style = ""
         popup.style.animation = "fadeout 0.3s"
-        setTimeout(DisplayNone,300)
+        setTimeout(DisplayNone, 300)
     })
 }
 
-function ListenToOpen(){
-    popupopen.addEventListener('click',function(){
+function ListenToOpen() {
+    popupopen.addEventListener('click', function() {
         background.style = ""
         toggleLockerSvg.innerHTML = getSvg('locker open');
-      toggleInstructions.innerHTML = "Vergeet de locker niet manueel te sluiten"
-      popup.style.animation = "fadeout 0.3s"
-      setTimeout(DisplayNone,300)
+        toggleInstructions.innerHTML = "Vergeet de locker niet manueel te sluiten"
+        popup.style.animation = "fadeout 0.3s"
+        setTimeout(DisplayNone, 300)
     })
 }
 
 function ListenToClickToggleLocker() {
-    toggleLockerSvg.addEventListener('click', function () {
-    popup.style = "display:block"
-    popup.style.animation = "fadein 0.5s"
-    background.style = "filter: blur(8px);"
-    ListenToTerug();
-    ListenToOpen();
+    toggleLockerSvg.addEventListener('click', function() {
+        popup.style = "display:block"
+        popup.style.animation = "fadein 0.5s"
+        background.style = "filter: blur(8px);"
+        ListenToTerug();
+        ListenToOpen();
     })
 }
 
 function ListenToClickOpmerkingBtn() {
-    opmerkingbtn.addEventListener('click', function () {
+    opmerkingbtn.addEventListener('click', function() {
         if (schrijfOpmerking) {
             opmerkingdiv.style = "display: block;"
             opmerkingbtn.innerHTML = "Annuleren"
@@ -91,7 +91,7 @@ function init() {
     popupopen = document.querySelector('.js-popup-open')
     extracontent = document.querySelector('.locker_detail_extra_content')
     backarrow = document.querySelector('.js-backarrow')
-    lockerTitle = document.querySelector('.js-lockerTitle')
+    lockerTitle = document.querySelector('.js-lockertitle')
     FillCorrectTitle();
     ListenToClickToggleLocker();
     ListenToClickOpmerkingBtn(schrijfOpmerking);
