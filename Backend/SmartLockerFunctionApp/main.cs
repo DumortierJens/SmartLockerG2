@@ -30,7 +30,7 @@ namespace SmartLockerFunctionApp
                 Log newLog = JsonConvert.DeserializeObject<Log>(requestBody);
                 
                 newLog.Id = Guid.NewGuid();
-                newLog.Timestamp = DateTime.Now;
+                newLog.Timestamp = DateTime.UtcNow;
                 newLog.DeviceId = deviceId;
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
