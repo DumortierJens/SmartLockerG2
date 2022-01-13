@@ -266,11 +266,10 @@ a:focus {
 .overview_legende {
   position: absolute;
   z-index: 1;
-  left: 50%;
-  bottom: 3rem;
+  left: 1rem;
+  bottom: 1rem;
   height: 10rem;
-  width: 8.125rem;
-  margin-left: -11.2rem;
+  width: 8.5rem;
   background-color: white;
   filter: drop-shadow(0 3px 6px rgba(17, 12, 46, 0.15));
   border-radius: 10px;
@@ -279,8 +278,8 @@ a:focus {
 .overview_legende_grid {
   font-size: 14px;
   display: grid;
-  grid-template-columns: 40px calc(8.125rem - 40px);
-  grid-template-rows: 20px;
+  grid-template-columns: 2.5rem calc(8.125rem - 2.5rem);
+  grid-template-rows: 1.25rem;
   grid-template-areas:
     'icon1 sport1'
     'icon2 sport2'
@@ -318,8 +317,8 @@ a:focus {
 }
 
 .rect_green{
-  width: 24px;
-  height: 8px;
+  width: 1.5rem;
+  height: 0.5rem;
   background-color: var(--status-available-icon);
   grid-area: status1;
   justify-self: center;
@@ -332,8 +331,8 @@ a:focus {
 }
 
 .rect_orange{
-  width: 24px;
-  height: 8px;
+  width: 1.5rem;
+  height: 0.5rem;
   background-color: var(--status-soonAvailable);
   grid-area: status2;
   justify-self: center;
@@ -346,8 +345,8 @@ a:focus {
 }
 
 .rect_red{
-  width: 24px;
-  height: 8px;
+  width: 1.5rem;
+  height: 0.5rem;
   background-color: var(--status-unavailable);
   grid-area: status3;
   justify-self: center;
@@ -357,6 +356,59 @@ a:focus {
 .rect_red_text{
   grid-area: text3;
   align-self: center;
+}
+
+/* Login Page */
+.login_page_bg{
+  background-color: var(--blue-accent-color);
+  height: 100vh;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  width: 100vw;
+}
+
+.login_title{
+  height: 4.5rem;
+  width: 18.75rem;
+  font-size: 3rem;
+  color: white;
+  text-align: center;
+  border-bottom: 2px solid white;
+  margin: 1.5rem auto 0 auto;
+}
+
+.login_content_bg{
+  position: relative;
+  width: 18.75rem;
+  height: 8.5rem;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4rem;
+  border-radius: 0.5rem;
+}
+
+.login_content{
+  position: absolute;
+  font-size: 1.5rem;
+  color: var(--blue-accent-color);
+  text-align: center;
+  top: 1rem;
+}
+
+.facebook_login{
+  width: 250px;
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+.login_info{
+  font-size: 1rem;
+  text-align: center;
+  color: white;
+  margin: 4rem auto 0 auto;
+  width: 80%;
 }
 
 /* Animations*/
