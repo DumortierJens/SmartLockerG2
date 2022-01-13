@@ -24,8 +24,8 @@
     --blue-accent-color-dark: #1f48ff;
     --status-available: #008000;
     --status-available-icon: #00FF00;
-    --status-soonAvailable: #ffa500;
-    --status-unavailable: #b60000;
+    --status-unavailable: #ffa500;
+    --status-outofuse: #b60000;
     --grey-bg: #f2f2f2;
     -webkit-tap-highlight-color: transparent;
 }
@@ -125,8 +125,16 @@ a:focus {
     margin-top: 0;
 }
 
-.locker_detail_content_status_color {
+.locker_detail_content_status_color_available {
     color: var(--status-available);
+}
+
+.locker_detail_content_status_color_unavailable {
+    color: var(--status-unavailable);
+}
+
+.locker_detail_content_status_color_outofuse {
+    color: var(--status-outofuse);
 }
 
 .locker_detail_content_toggleInstructions {
@@ -219,7 +227,7 @@ a:focus {
 }
 
 .locker_detail_popup_terug {
-    background-color: var(--status-unavailable);
+    background-color: var(--status-outofuse);
     border-style: none;
     color: white;
     font-family: 'MyFont';
@@ -321,8 +329,8 @@ a:focus {
     fill: var(--status-unavailable);
 }
 
-.svg-soonavaible {
-    fill: var(--status-soonAvailable);
+.svg-outofuse {
+    fill: var(--status-outofuse);
 }
 
 .svg-avaible {
@@ -346,7 +354,7 @@ a:focus {
 .rect_orange {
     width: 1.5rem;
     height: 0.5rem;
-    background-color: var(--status-soonAvailable);
+    background-color: var(--status-unavailable);
     grid-area: status2;
     justify-self: center;
     align-self: center;
@@ -360,7 +368,7 @@ a:focus {
 .rect_red {
     width: 1.5rem;
     height: 0.5rem;
-    background-color: var(--status-unavailable);
+    background-color: var(--status-outofuse);
     grid-area: status3;
     justify-self: center;
     align-self: center;
