@@ -2,10 +2,10 @@ let soccer;
 let basketball;
 function ListenToCLickSport(){
     soccer.addEventListener('click',function(){
-        window.location.replace(`http://${window.location.hostname}:5500/lockerDetail.html?sport=Voetbal`);
+        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?sport=Voetbal`);
     })
     basketball.addEventListener('click',function(){
-        window.location.replace(`http://${window.location.hostname}:5500/lockerDetail.html?sport=Basketbal`);
+        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?sport=Basketbal`);
     })
 }
 
