@@ -9,7 +9,7 @@
 #define LOCK_FEEDBACK_PIN       23
 
 // Const values
-#define API_URL                 "http://smartlockerfunctions.azurewebsites.net/api"
+#define API_URL                 "https://smartlockerfunctions.azurewebsites.net/api"
 #define US_THRESHOLD_DIFF       5
 
 
@@ -17,9 +17,11 @@
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
 #include <TaskScheduler.h>
 #include <NewPing.h>
-#include "Lock.h"
 #include <HTTPClient.h>
+#include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
+#include "Lock.h"
+#include "CA_certificates.h"
 
 
 // Methods for tasks
@@ -48,30 +50,30 @@ Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
 Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
 
 void updateDeviceStatus(String deviceId, bool value){
-    HTTPClient httpClient;
-    char jsonOutput[128];
+    WiFiClientSecure *wifiClientSecure = new WiFiClientSecure;
     
-    httpClient.begin(String(API_URL) + "/devices/" + String(deviceId) + "/log");
-    httpClient.addHeader("Content-Type", "application/json");
+    if (wifiClientSecure) {
+        wifiClientSecure -> setCACert(rootCACertificateBaltimoreCyberTrust);
+    
+        {
+            HTTPClient https;
+            
+            Serial.print("[HTTPS] begin...\n");
+            if (https.begin(*wifiClientSecure, String(API_URL) + "/devices/" + String(deviceId) + "/log")) {
+                Serial.print("[HTTPS] POST...\n");
+                https.addHeader("Content-Type", "application/json");
+                
+                char jsonOutput[128];
+                const size_t CAPACITY = JSON_OBJECT_SIZE(1);
+                StaticJsonDocument<CAPACITY> doc;
 
-    const size_t CAPACITY = JSON_OBJECT_SIZE(1);
-    StaticJsonDocument<CAPACITY> doc;
+                JsonObject object = doc.to<JsonObject>();
+                object["value"] = value;
+                serializeJson(doc, jsonOutput);
 
-    JsonObject object = doc.to<JsonObject>();
-    object["value"] = value;
-    serializeJson(doc, jsonOutput);
-
-    int httpCode = httpClient.POST(String(jsonOutput));
-
-    if (httpCode > 0) {
-        String payload = httpClient.getString();
-        Serial.println("\nStatuscode: " + String(httpCode));
-        Serial.println(payload);
-
-        httpClient.end();
-    }
-    else {
-        Serial.println("Error on HTTP request");
+                int httpCode = https.POST(String(jsonOutput));
+            }
+        }
     }
 }
 
