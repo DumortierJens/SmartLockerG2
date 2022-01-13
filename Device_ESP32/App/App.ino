@@ -9,9 +9,8 @@
 #define LOCK_FEEDBACK_PIN       23
 
 // Const values
-#define IOTHUB_DEVICEID         "11cf21d4-03ef-4e0a-8a17-27c26ae80abd"
 #define IOTHUB_CONNSTRING       "HostName=smartlockeriothub.azure-devices.net;DeviceId=11cf21d4-03ef-4e0a-8a17-27c26ae80abd;SharedAccessKey=76vh2TvxkhMTTdQqsgM+yPIMaIXgCs03ryoCSmFRRt4="
-#define IOTHUB_MESSAGE_MAX_LEN  256
+#define IOTHUB_DEVICEID         "11cf21d4-03ef-4e0a-8a17-27c26ae80abd"
 #define US_THRESHOLD_DIFF       5
 
 
@@ -55,26 +54,6 @@ static void SendConfirmationCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result)
   }
 }
 
-static void MessageCallback(const char* payLoad, int size)
-{
-  Serial.println("Message callback:");
-  Serial.println(payLoad);
-}
-
-static void DeviceTwinCallback(DEVICE_TWIN_UPDATE_STATE updateState, const unsigned char *payLoad, int size)
-{
-  char *temp = (char *)malloc(size + 1);
-  if (temp == NULL)
-  {
-    return;
-  }
-  memcpy(temp, payLoad, size);
-  temp[size] = '\0';
-  // Display Twin message.
-  Serial.println(temp);
-  free(temp);
-}
-
 static int  DeviceMethodCallback(const char *methodName, const unsigned char *payload, int size, unsigned char **response, int *response_size)
 {
   LogInfo("Try to invoke method %s", methodName);
@@ -86,10 +65,6 @@ static int  DeviceMethodCallback(const char *methodName, const unsigned char *pa
     LogInfo("Open lock");
     lock.openLock();
   }
-  // else if (strcmp(methodName, "stop") == 0)
-  // {
-  //   LogInfo("Stop sending temperature and humidity data");
-  // }
   else
   {
     LogInfo("No method %s found", methodName);
@@ -109,39 +84,14 @@ Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
 
 void updateDeviceStatus(String deviceId, bool value){
 
-
     // Create json payload
     String messagePayload = "{\"iotDeviceId\":\"" + String(IOTHUB_DEVICEID) + "\", \"deviceId\":\"" + deviceId + "\", \"value\":" + value + "}";
     Serial.println(messagePayload);
+
+    // Send message with IoTHub
     EVENT_INSTANCE* message = Esp32MQTTClient_Event_Generate(messagePayload.c_str(), MESSAGE);
     Esp32MQTTClient_SendEventInstance(message);
 
-
-    // WiFiClientSecure *wifiClientSecure = new WiFiClientSecure;
-    
-    // if (wifiClientSecure) {
-    //     wifiClientSecure -> setCACert(rootCACertificateBaltimoreCyberTrust);
-    
-    //     {
-    //         HTTPClient https;
-            
-    //         Serial.print("[HTTPS] begin...\n");
-    //         if (https.begin(*wifiClientSecure, String(API_URL) + "/devices/" + String(deviceId) + "/log")) {
-    //             Serial.print("[HTTPS] POST...\n");
-    //             https.addHeader("Content-Type", "application/json");
-                
-    //             char jsonOutput[128];
-    //             const size_t CAPACITY = JSON_OBJECT_SIZE(1);
-    //             StaticJsonDocument<CAPACITY> doc;
-
-    //             JsonObject object = doc.to<JsonObject>();
-    //             object["value"] = value;
-    //             serializeJson(doc, jsonOutput);
-
-    //             int httpCode = https.POST(String(jsonOutput));
-    //         }
-    //     }
-    // }
 }
 
 void checkMaterial(){            
@@ -216,8 +166,6 @@ void setup() {
     Esp32MQTTClient_SetOption(OPTION_MINI_SOLUTION_NAME, "GetStarted");
     Esp32MQTTClient_Init((const uint8_t*)IOTHUB_CONNSTRING, true);
     Esp32MQTTClient_SetSendConfirmationCallback(SendConfirmationCallback);
-    Esp32MQTTClient_SetMessageCallback(MessageCallback);
-    Esp32MQTTClient_SetDeviceTwinCallback(DeviceTwinCallback);
     Esp32MQTTClient_SetDeviceMethodCallback(DeviceMethodCallback);
 
     // Pin initialisation
@@ -247,10 +195,6 @@ void loop() {
       WiFiManager wifiManager;
       wifiManager.setTimeout(120); // sets timeout until configuration portal gets turned off in sec
       wifiManager.startConfigPortal("SmartLockerSetup"); // wifi ap settings (ssid, password)
-    }
-
-    if ( !digitalRead(BUTTON_LOCK_PIN) ) {
-        lock.openLock();
     }
 
 }
