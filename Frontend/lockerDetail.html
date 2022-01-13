@@ -10,20 +10,20 @@
         <link rel="stylesheet" href="style/normalize.css">
         <link rel="stylesheet" href="style/screen.css">
         <script src="script/lockerdetailscript.js"></script>
+        <script src="script/svg.js"></script>
         <title>Locker Detail</title>
     </head>
     <body>
         <div class="locker_detail_blur">
-            <div class="header_locker_detail flex">
-                <p class="title_header_locker_detail flex">Locker</p>
-                <div class="backarrow_header_locker_detail flex">
+            <div class="header_smartlocker flex">
+                <p class="header_smartlocker_center flex">Locker</p>
+                <div class="header_left_icon flex js-backarrow">
                     <svg id="Back_Arrow" data-name="Back Arrow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24">
                         <rect id="Bounds" width="24" height="24" fill="none"/>
-                        <path id="Icon" d="M20,11H7.8l5.6-5.6L12,4,4,12l8,8,1.4-1.4L7.8,13H20Z" fill="#fff"/>
+                        <path id="Icon" d="M28,14.5H9.7l8.4-8.4L16,4,4,16,16,28l2.1-2.1L9.7,17.5H28Z" transform="translate(-4 -4)" fill="#fff"/>
                     </svg>
-
                 </div>
-                <div class="profile_header_locker_detail flex">
+                <div class="header_right_icon flex">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                         <defs>
                             <pattern id="pattern" preserveaspectratio="xMidYMid slice" width="100%" height="100%" viewbox="0 0 512 512">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="locker_detail_content">
-                <p class="locker_detail_content_title">Voetbal locker</p>
+                <p class="locker_detail_content_title js-lockerTitle">Voetbal locker</p>
                 <p class="locker_detail_content_info">Info over waar men de locker kan vinden en waar men het kan gebruiken
                 </p>
                 <div class="locker_detail_content_status">Status:
@@ -52,7 +52,7 @@
                 </svg>
             </div>
             <div class="locker_detail_content">
-                <p>Hoe correct het materiaal lenen?</p>
+                <p style="margin-bottom: 0.5rem;">Hoe correct het materiaal lenen?</p>
                 <p class="locker_detail_content_instructions">1. Ga naar de locker</p>
                 <p class="locker_detail_content_instructions">2. Haal het materiaal uit de locker en sluit hem</p>
                 <p class="locker_detail_content_instructions">3. Heb plezier !</p>
