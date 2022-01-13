@@ -13,11 +13,6 @@ let extracontent;
 let backarrow;
 let lockerTitle;
 
-function FillCorrectTitle() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const myParam = urlParams.get('sport');
-    lockerTitle.innerHTML = myParam;
-}
 
 function ListenToClickBackArrow() {
     backarrow.addEventListener('click', function() {
@@ -92,7 +87,6 @@ function init() {
     extracontent = document.querySelector('.locker_detail_extra_content')
     backarrow = document.querySelector('.js-backarrow')
     lockerTitle = document.querySelector('.js-lockertitle')
-    FillCorrectTitle();
     ListenToClickToggleLocker();
     ListenToClickOpmerkingBtn(schrijfOpmerking);
     ListenToClickBackArrow();
