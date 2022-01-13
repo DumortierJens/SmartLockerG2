@@ -47,8 +47,8 @@ namespace SmartLockerFunctionApp
            
         }
 
-        [FunctionName("GetLockerDetails")]
-        public static async Task<IActionResult> GetLockerDetails(
+        [FunctionName("GetLockers")]
+        public static async Task<IActionResult> GetLockers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers")] HttpRequest req,
             ILogger log)
         {
@@ -75,8 +75,8 @@ namespace SmartLockerFunctionApp
             }
 
         }
-        [FunctionName("GetLockerDetailsByID")]
-        public static async Task<IActionResult> GetLockerDetailsByID(
+        [FunctionName("GetLockerByID")]
+        public static async Task<IActionResult> GetLockerByID(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}")] HttpRequest req, 
           Guid lockerId,
           ILogger log)
@@ -95,10 +95,8 @@ namespace SmartLockerFunctionApp
                     FeedResponse<Locker> response = await iterator.ReadNextAsync();
                     lockers.AddRange(response);
                 }
-                return new OkObjectResult(lockers);
-
+                return new OkObjectResult(lockers[0]);
             }
-
             catch
             {
                 return new StatusCodeResult(500);
