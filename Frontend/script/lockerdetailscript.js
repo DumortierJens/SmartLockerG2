@@ -50,7 +50,7 @@ function ListenToOpen(){
 function ListenToClickToggleLocker() {
     toggleLockerSvg.addEventListener('click', function () {
     popup.style = "display:block"
-    popup.style.animation = "fadein 0.3s"
+    popup.style.animation = "fadein 0.5s"
     background.style = "filter: blur(8px);"
     ListenToTerug();
     ListenToOpen();
@@ -66,7 +66,7 @@ function ListenToClickOpmerkingBtn() {
             console.log("Schrijf een opmerking")
             schrijfOpmerking = false;
             submitbtn.style = "display: block;"
-            extracontent.style.animation = "fadein 0.3s"
+            extracontent.style.animation = "fadein 0.5s"
         } else {
             opmerkingbtn.style = "background-color : var(--blue-accent-color);"
             opmerkingbtn.innerHTML = "Opmerking toevoegen"
