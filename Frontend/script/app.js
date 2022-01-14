@@ -5,7 +5,8 @@ let OpmerkingClicked = false;
 
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow;
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail,
+    htmlInfo, htmlReserverenBtn;
 
 
 const showOverview = function(jsonObject) {
@@ -86,23 +87,31 @@ const showOverview = function(jsonObject) {
 const showLocker = function(jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
+    htmlInfo.innerHTML = jsonObject.description;
     if (jsonObject.status == "Beschikbaar") {
         htmlBeschikbaar.innerHTML = "Beschikbaar"
         htmlInstructions.innerHTML = "Tik op het slot om te openen"
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_available');
+        ListenToClickOpmerkingBtn(OpmerkingClicked);
+        ListenToClickReserverenBtn()
         ListenToClickToggleLocker();
     } else if (jsonObject.status == "Bezet") {
         htmlBeschikbaar.innerHTML = "Bezet"
-        htmlInstructions.innerHTML = ""
+        htmlInstructions.innerHTML = "Alle voorwerpen zijn voor het moment in gebruik"
+        htmlLockerSvg.style = "display:none"
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_unavailable');
+        htmlOpmerkingBtn.style = "display:none"
+        ListenToClickReserverenBtn()
     } else if (jsonObject.status == "Buiten gebruik") {
         htmlBeschikbaar.innerHTML = "Buiten gebruik";
         htmlInstructions.innerHTML = "Slot kan nu niet worden geopend"
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_outofuse');
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
+        htmlOpmerkingBtn.style = "display:none"
+        htmlUitlegLockerDetail.style = "display:none"
+        htmlReserverenBtn.style = "display:none"
     }
     ListenToClickBackArrow()
-    ListenToClickOpmerkingBtn(htmlOpmerkingClicked);
 };
 
 const ListenToCLickSport = function() {
@@ -156,6 +165,12 @@ function DisplayNone() {
     htmlPopUp.style = "display: none;"
 }
 
+function ListenToClickReserverenBtn() {
+    htmlReserverenBtn.addEventListener('click', function() {
+        console.log("Ga naar reserverenpagina.html")
+    })
+}
+
 function ListenToClickOpmerkingBtn() {
     htmlOpmerkingBtn.addEventListener('click', function() {
         if (OpmerkingClicked) {
@@ -201,6 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlPopUpOpen = document.querySelector('.js-popup-open')
     htmlExtraContent = document.querySelector('.js-extra-content')
     htmlBackArrow = document.querySelector('.js-backarrow')
+    htmlUitlegLockerDetail = document.querySelector('.js-uitleg')
+    htmlInfo = document.querySelector('.js-info')
+    htmlReserverenBtn = document.querySelector('.js-reserve')
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzichtpagina.html
         getOverzicht();
