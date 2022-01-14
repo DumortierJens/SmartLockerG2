@@ -3,11 +3,13 @@
 let currentLockerID;
 let OpmerkingClicked = false;
 
-let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
-    htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail,
-    htmlInfo, htmlReserverenBtn;
+let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar, htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn, htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn;
 
+let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
+
+ws.onmessage = (event) => {
+    console.log(event.data);
+};
 
 const showOverview = function(jsonObject) {
     console.log(jsonObject);
@@ -58,60 +60,58 @@ const showOverview = function(jsonObject) {
     for (const sport of jsonObject) {
         console.log(sport.status);
         if (sport.status == 'Beschikbaar') {
-            if (sport.sport == "Voetbal") {
+            if (sport.sport == 'Voetbal') {
                 htmlColorFootball.classList.add('svg-avaible');
             } else {
                 htmlColorBasketball.classList.add('svg-avaible');
             }
-
         } else if (sport.status == 'Bezet') {
-            if (sport.sport == "Voetbal") {
+            if (sport.sport == 'Voetbal') {
                 htmlColorFootball.classList.add('svg-unavaible');
             } else {
                 htmlColorBasketball.classList.add('svg-unavaible');
             }
-
         } else if (sport.status == 'Buiten gebruik') {
-            if (sport.sport == "Voetbal") {
+            if (sport.sport == 'Voetbal') {
                 htmlColorFootball.classList.add('svg-outofuse');
             } else {
                 htmlColorBasketball.classList.add('svg-outofuse');
             }
         }
     }
-    htmlSoccer = document.querySelector('.js-soccer')
-    htmlBasketball = document.querySelector('.js-basketball')
-    ListenToCLickSport()
+    htmlSoccer = document.querySelector('.js-soccer');
+    htmlBasketball = document.querySelector('.js-basketball');
+    ListenToCLickSport();
 };
 
 const showLocker = function(jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
     htmlInfo.innerHTML = jsonObject.description;
-    if (jsonObject.status == "Beschikbaar") {
-        htmlBeschikbaar.innerHTML = "Beschikbaar"
-        htmlInstructions.innerHTML = "Tik op het slot om te openen"
+    if (jsonObject.status == 'Beschikbaar') {
+        htmlBeschikbaar.innerHTML = 'Beschikbaar';
+        htmlInstructions.innerHTML = 'Tik op het slot om te openen';
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_available');
         ListenToClickOpmerkingBtn(OpmerkingClicked);
-        ListenToClickReserverenBtn()
-        ListenToClickToggleLocker();
-    } else if (jsonObject.status == "Bezet") {
-        htmlBeschikbaar.innerHTML = "Bezet"
-        htmlInstructions.innerHTML = "Alle voorwerpen zijn voor het moment in gebruik"
-        htmlLockerSvg.style = "display:none"
+        ListenToClickReserverenBtn();
+        ListenToClickToggleLocker(jsonObject.id);
+    } else if (jsonObject.status == 'Bezet') {
+        htmlBeschikbaar.innerHTML = 'Bezet';
+        htmlInstructions.innerHTML = 'Alle voorwerpen zijn voor het moment in gebruik';
+        htmlLockerSvg.style = 'display:none';
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_unavailable');
-        htmlOpmerkingBtn.style = "display:none"
-        ListenToClickReserverenBtn()
-    } else if (jsonObject.status == "Buiten gebruik") {
-        htmlBeschikbaar.innerHTML = "Buiten gebruik";
-        htmlInstructions.innerHTML = "Slot kan nu niet worden geopend"
+        htmlOpmerkingBtn.style = 'display:none';
+        ListenToClickReserverenBtn();
+    } else if (jsonObject.status == 'Buiten gebruik') {
+        htmlBeschikbaar.innerHTML = 'Buiten gebruik';
+        htmlInstructions.innerHTML = 'Slot kan nu niet worden geopend';
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_outofuse');
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
-        htmlOpmerkingBtn.style = "display:none"
-        htmlUitlegLockerDetail.style = "display:none"
-        htmlReserverenBtn.style = "display:none"
+        htmlOpmerkingBtn.style = 'display:none';
+        htmlUitlegLockerDetail.style = 'display:none';
+        htmlReserverenBtn.style = 'display:none';
     }
-    ListenToClickBackArrow()
+    ListenToClickBackArrow();
 };
 
 const ListenToCLickSport = function() {
@@ -123,73 +123,72 @@ const ListenToCLickSport = function() {
         currentLockerID = htmlBasketball.getAttribute('data');
         window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
     });
-}
+};
 
 function ListenToClickBackArrow() {
     htmlBackArrow.addEventListener('click', function() {
         window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
-    })
+    });
 }
 
-
-
-function ListenToClickToggleLocker() {
+function ListenToClickToggleLocker(id) {
     htmlLockerSvg.addEventListener('click', function() {
-        htmlPopUp.style = "display:block"
-        htmlPopUp.style.animation = "fadein 0.5s"
-        htmlBackground.style = "filter: blur(8px);"
+        htmlPopUp.style = 'display:block';
+        htmlPopUp.style.animation = 'fadein 0.5s';
+        htmlBackground.style = 'filter: blur(8px);';
         ListenToCancel();
-        ListenToOpen();
-    })
+        ListenToOpen(id);
+    });
 }
 
 function ListenToCancel() {
     htmlPopUpCancel.addEventListener('click', function() {
-        htmlBackground.style = ""
-        htmlPopUp.style.animation = "fadeout 0.3s"
-        setTimeout(DisplayNone, 300)
-    })
+        htmlBackground.style = '';
+        htmlPopUp.style.animation = 'fadeout 0.3s';
+        setTimeout(DisplayNone, 300);
+    });
 }
 
-function ListenToOpen() {
+function ListenToOpen(id) {
     htmlPopUpOpen.addEventListener('click', function() {
-        htmlBackground.style = ""
+        htmlBackground.style = '';
         htmlLockerSvg.innerHTML = getSvg('locker open');
-        htmlInstructions.innerHTML = "Vergeet de locker niet manueel te sluiten"
-        htmlPopUp.style.animation = "fadeout 0.3s"
-        setTimeout(DisplayNone, 300)
-    })
+        htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
+        htmlPopUp.style.animation = 'fadeout 0.3s';
+        setTimeout(DisplayNone, 300);
+        handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers/${id}/open`, null, null, 'POST');
+    });
 }
 
 function DisplayNone() {
-    htmlPopUp.style = "display: none;"
+    htmlPopUp.style = 'display: none;';
 }
 
 function ListenToClickReserverenBtn() {
     htmlReserverenBtn.addEventListener('click', function() {
-        console.log("Ga naar reserverenpagina.html")
-    })
+        console.log('Ga naar reserverenpagina.html');
+    });
 }
 
 function ListenToClickOpmerkingBtn() {
     htmlOpmerkingBtn.addEventListener('click', function() {
         if (OpmerkingClicked) {
-            htmlOpmerkingBtn.style = "background-color : var(--blue-accent-color);"
-            htmlOpmerkingBtn.innerHTML = "Opmerking toevoegen"
-            console.log("Annuleer")
-            htmlSubmitBtn.style = "display: none;"
-            htmlOpmerkingDiv.style = "display: none;"
+            htmlOpmerkingBtn.style = 'background-color : var(--blue-accent-color);';
+            htmlOpmerkingBtn.innerHTML = 'Opmerking toevoegen';
+            console.log('Annuleer');
+            htmlSubmitBtn.style = 'display: none;';
+            htmlOpmerkingDiv.style = 'display: none;';
             OpmerkingClicked = false;
         } else {
-            htmlOpmerkingDiv.style = "display: block;"
-            htmlOpmerkingBtn.innerHTML = "Annuleren"
-            htmlOpmerkingBtn.style = "background-color : var(--status-outofuse);"
-            console.log("Schrijf een opmerking")
-            htmlSubmitBtn.style = "display: block;"
-            htmlExtraContent.style.animation = "fadein 0.5s"
+            htmlOpmerkingDiv.style = 'display: block;';
+            htmlOpmerkingBtn.innerHTML = 'Annuleren';
+            htmlOpmerkingBtn.style = 'background-color : var(--status-outofuse);';
+            console.log('Schrijf een opmerking');
+            htmlSubmitBtn.style = 'display: block;';
+            htmlExtraContent.style.animation = 'fadein 0.5s';
             OpmerkingClicked = true;
         }
-    })
+    });
 }
 
 const getOverzicht = function() {
@@ -205,20 +204,20 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
     htmlBeschikbaar = document.querySelector('.js-beschikbaar');
-    htmlLockerSvg = document.querySelector(".js-toggleLocker")
-    htmlInstructions = document.querySelector(".js-instructions")
-    htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn')
-    htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv')
+    htmlLockerSvg = document.querySelector('.js-toggleLocker');
+    htmlInstructions = document.querySelector('.js-instructions');
+    htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn');
+    htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv');
     htmlSubmitBtn = document.querySelector('.js-submit');
-    htmlPopUp = document.querySelector('.js-popup')
-    htmlPopUpCancel = document.querySelector('.js-popup-cancel')
-    htmlBackground = document.querySelector('.js-background')
-    htmlPopUpOpen = document.querySelector('.js-popup-open')
-    htmlExtraContent = document.querySelector('.js-extra-content')
-    htmlBackArrow = document.querySelector('.js-backarrow')
-    htmlUitlegLockerDetail = document.querySelector('.js-uitleg')
-    htmlInfo = document.querySelector('.js-info')
-    htmlReserverenBtn = document.querySelector('.js-reserve')
+    htmlPopUp = document.querySelector('.js-popup');
+    htmlPopUpCancel = document.querySelector('.js-popup-cancel');
+    htmlBackground = document.querySelector('.js-background');
+    htmlPopUpOpen = document.querySelector('.js-popup-open');
+    htmlExtraContent = document.querySelector('.js-extra-content');
+    htmlBackArrow = document.querySelector('.js-backarrow');
+    htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
+    htmlInfo = document.querySelector('.js-info');
+    htmlReserverenBtn = document.querySelector('.js-reserve');
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzichtpagina.html
         getOverzicht();
