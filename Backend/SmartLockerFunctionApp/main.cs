@@ -43,8 +43,6 @@ namespace SmartLockerFunctionApp
             {
                 return new StatusCodeResult(500);
             }
-
-           
         }
 
         [FunctionName("GetLockers")]
