@@ -3,26 +3,12 @@
 let currentLockerID;
 let OpmerkingClicked = false;
 
-let htmlLockerTitle,
-    htmlOverview,
-    htmlSoccer,
-    htmlBasketball,
-    htmlBeschikbaar,
-    htmlLockerSvg,
-    htmlInstructions,
-    htmlOpmerkingBtn,
-    htmlOpmerkingDiv,
-    htmlSubmitBtn,
-    htmlPopUp,
-    htmlPopUpCancel,
-    htmlBackground,
-    htmlPopUpOpen,
-    htmlExtraContent,
-    htmlBackArrow,
-    htmlUserIcon;
+let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
+    htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow;
 
 
-const showOverview = function (jsonObject) {
+const showOverview = function(jsonObject) {
     console.log(jsonObject);
     let htmlstring = ``;
     let Sport,
@@ -54,9 +40,7 @@ const showOverview = function (jsonObject) {
             translate_elips = '699 382';
             translate_icon = '705 388';
         }
-        htmlstring += `<g id="${Sport}" data="${
-            sport.id
-        }" class="js-${sport_1}" transform="translate(${translate_location})">
+        htmlstring += `<g id="${Sport}" data="${sport.id}" class="js-${sport_1}" transform="translate(${translate_location})">
         <g id="Ellipse_1" data-name="Ellipse 1" class="js-color-${sport_1}" transform="translate(${translate_elips})">
           <circle class="cls-6" cx="18" cy="18" r="18"/>
           <circle class="cls-7" cx="18" cy="18" r="17.5"/>
@@ -97,10 +81,9 @@ const showOverview = function (jsonObject) {
     htmlSoccer = document.querySelector('.js-soccer')
     htmlBasketball = document.querySelector('.js-basketball')
     ListenToCLickSport()
-    ListenToClickUserIcon()
 };
 
-const showLocker = function (jsonObject) {
+const showLocker = function(jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
     if (jsonObject.status == "Beschikbaar") {
@@ -120,35 +103,29 @@ const showLocker = function (jsonObject) {
     }
     ListenToClickBackArrow()
     ListenToClickOpmerkingBtn();
-    ListenToClickUserIcon();
 };
 
-const ListenToCLickSport = function () {
-    htmlSoccer.addEventListener('click', function () {
+const ListenToCLickSport = function() {
+    htmlSoccer.addEventListener('click', function() {
         currentLockerID = htmlSoccer.getAttribute('data');
-        window.location.replace(`http://${
-            window.location.hostname
-        }:5500/lockerdetailpagina.html?id=${currentLockerID}`);
+        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
     });
-    htmlBasketball.addEventListener('click', function () {
+    htmlBasketball.addEventListener('click', function() {
         currentLockerID = htmlBasketball.getAttribute('data');
-        window.location.replace(`http://${
-            window.location.hostname
-        }:5500/lockerdetailpagina.html?id=${currentLockerID}`);
+        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
     });
 }
 
 function ListenToClickBackArrow() {
-    htmlBackArrow.addEventListener('click', function () {
-        window.location.replace(`http://${
-            window.location.hostname
-        }:5500/overzichtpagina.html`);
+    htmlBackArrow.addEventListener('click', function() {
+        window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
     })
 }
 
 
+
 function ListenToClickToggleLocker() {
-    htmlLockerSvg.addEventListener('click', function () {
+    htmlLockerSvg.addEventListener('click', function() {
         htmlPopUp.style = "display:block"
         htmlPopUp.style.animation = "fadein 0.5s"
         htmlBackground.style = "filter: blur(8px);"
@@ -158,7 +135,7 @@ function ListenToClickToggleLocker() {
 }
 
 function ListenToCancel() {
-    htmlPopUpCancel.addEventListener('click', function () {
+    htmlPopUpCancel.addEventListener('click', function() {
         htmlBackground.style = ""
         htmlPopUp.style.animation = "fadeout 0.3s"
         setTimeout(DisplayNone, 300)
@@ -166,7 +143,7 @@ function ListenToCancel() {
 }
 
 function ListenToOpen() {
-    htmlPopUpOpen.addEventListener('click', function () {
+    htmlPopUpOpen.addEventListener('click', function() {
         htmlBackground.style = ""
         htmlLockerSvg.innerHTML = getSvg('locker open');
         htmlInstructions.innerHTML = "Vergeet de locker niet manueel te sluiten"
@@ -175,18 +152,12 @@ function ListenToOpen() {
     })
 }
 
-function ListenToClickUserIcon() {
-    htmlUserIcon.addEventListener('click', function () {
-        console.log('UserIcon geklikt')
-    })
-}
-
 function DisplayNone() {
     htmlPopUp.style = "display: none;"
 }
 
 function ListenToClickOpmerkingBtn() {
-    htmlOpmerkingBtn.addEventListener('click', function () {
+    htmlOpmerkingBtn.addEventListener('click', function() {
         if (OpmerkingClicked) {
             htmlOpmerkingBtn.style = "background-color : var(--blue-accent-color);"
             htmlOpmerkingBtn.innerHTML = "Opmerking toevoegen"
@@ -206,15 +177,15 @@ function ListenToClickOpmerkingBtn() {
     })
 }
 
-const getOverzicht = function () {
+const getOverzicht = function() {
     handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers`, showOverview);
 };
 
-const getLockerDetail = function (id) {
+const getLockerDetail = function(id) {
     handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers/${id}`, showLocker);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     console.info('DOM geladen');
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
@@ -230,14 +201,14 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlPopUpOpen = document.querySelector('.js-popup-open')
     htmlExtraContent = document.querySelector('.js-extra-content')
     htmlBackArrow = document.querySelector('.js-backarrow')
-    htmlUserIcon = document.querySelector('.js-usericon')
-    if (htmlOverview) { // deze code wordt gestart vanaf overzichtpagina.html
+    if (htmlOverview) {
+        //deze code wordt gestart vanaf overzichtpagina.html
         getOverzicht();
     }
     if (htmlLockerTitle) {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        // deze code wordt gestart vanaf lockerdetailpagina.html
+        //deze code wordt gestart vanaf lockerdetailpagina.html
         getLockerDetail(id);
     }
 });

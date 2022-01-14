@@ -27,7 +27,6 @@
     --status-unavailable: #ffa500;
     --status-outofuse: #b60000;
     --grey-bg: #f2f2f2;
-    --dropshadow: drop-shadow(0 3px 6px rgba(17, 12, 46, 0.15));
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -187,18 +186,6 @@ a:focus {
     align-items: center;
 }
 
-.usericon{
-    cursor: pointer;
-}
-
-.user_menu{
-    position: fixed;
-    top: 4.5rem;
-    height: 5.25rem;
-    background-color: white;
-    filter: var(--dropshadow);
-}
-
 .locker_detail_sendbtn {
     margin: 1.5rem 0 1.5rem;
     background-color: var(--blue-accent-color);
@@ -252,7 +239,7 @@ a:focus {
     margin-left: -9.375rem;
     background-color: white;
     border-radius: 4px;
-    filter: var(--dropshadow);
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     text-align: center;
 }
 
@@ -315,7 +302,7 @@ a:focus {
     height: 10rem;
     width: 8.5rem;
     background-color: white;
-    filter: var(--dropshadow);
+    filter: drop-shadow(0 3px 6px rgba(17, 12, 46, 0.15));
     border-radius: 10px;
 }
 
