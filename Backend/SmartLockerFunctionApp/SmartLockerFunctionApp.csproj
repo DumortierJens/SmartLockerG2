@@ -4,6 +4,7 @@
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Messaging.WebPubSub" Version="1.0.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.23.0" />
     <PackageReference Include="Microsoft.Azure.Devices" Version="1.36.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="4.1.1" />

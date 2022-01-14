@@ -103,6 +103,7 @@ namespace SmartLockerFunctionApp
             }
 
         }
+        
         [FunctionName("GetMaterialStatusById")]
         public static async Task<IActionResult> GetMaterialStatusById(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "devices/{deviceId}/status")] HttpRequest req,
@@ -120,7 +121,6 @@ namespace SmartLockerFunctionApp
                 FeedResponse<Log> response = await iterator.ReadNextAsync();
                 logs.AddRange(response);
                 return new OkObjectResult(logs);
-
             }
 
             catch
