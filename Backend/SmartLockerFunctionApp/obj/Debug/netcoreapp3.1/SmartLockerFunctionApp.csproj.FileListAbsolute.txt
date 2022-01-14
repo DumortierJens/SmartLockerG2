@@ -185,3 +185,5 @@ D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debu
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Devices.Shared.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Rest.ClientRuntime.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Memory.Data.dll
+D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Azure.Messaging.WebPubSub.dll
+D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
