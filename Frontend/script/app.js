@@ -77,8 +77,8 @@ const showOverview = function(jsonObject) {
     htmlSoccer = document.querySelector('.js-soccer')
     htmlBasketball = document.querySelector('.js-basketball')
     ListenToCLickSport()
-
 };
+
 const showLocker = function(jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
@@ -92,19 +92,24 @@ const showLocker = function(jsonObject) {
         htmlBeschikbaar.innerHTML = "Buiten gebruik";
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_outofuse');
     }
-
+    ListenToClickBackArrow()
 };
 
 const ListenToCLickSport = function() {
     htmlSoccer.addEventListener('click', function() {
         currentLockerID = htmlSoccer.getAttribute('data');
         window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
-
     });
     htmlBasketball.addEventListener('click', function() {
         currentLockerID = htmlBasketball.getAttribute('data');
         window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
     });
+}
+
+function ListenToClickBackArrow() {
+    htmlBackArrow.addEventListener('click', function() {
+        window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
+    })
 }
 
 const getOverzicht = function() {

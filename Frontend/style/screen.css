@@ -460,15 +460,3 @@ a:focus {
         text-align: center;
     }
 }
-
-@media(min-height: 760px) {
-    .overview_legende {
-        bottom: 6rem;
-    }
-}
-
-@media(min-height: 860px) {
-    .overview_legende {
-        bottom: 8rem;
-    }
-}

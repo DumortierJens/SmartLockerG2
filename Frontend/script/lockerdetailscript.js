@@ -1,95 +1,76 @@
-let lockerStatus = "locked"
-let toggleLockerSvg;
-let toggleInstructions;
-let opmerkingbtn;
-let opmerkingdiv;
-let schrijfOpmerking = true;
-let submitbtn;
-let popup;
-let popupterug;
-let background;
-let popupopen;
-let extracontent;
-let backarrow;
-let lockerTitle;
+let htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow;
+let htmlOpmerkingClicked = false;
 
-
-function ListenToClickBackArrow() {
-    backarrow.addEventListener('click', function() {
-        window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
-    })
-}
 
 function DisplayNone() {
-    popup.style = "display: none;"
+    htmlPopUp.style = "display: none;"
 }
 
-function ListenToTerug() {
-    popupterug.addEventListener('click', function() {
-        background.style = ""
-        popup.style.animation = "fadeout 0.3s"
+function ListenToCancel() {
+    htmlPopUpCancel.addEventListener('click', function() {
+        htmlBackground.style = ""
+        htmlPopUp.style.animation = "fadeout 0.3s"
         setTimeout(DisplayNone, 300)
     })
 }
 
 function ListenToOpen() {
-    popupopen.addEventListener('click', function() {
-        background.style = ""
-        toggleLockerSvg.innerHTML = getSvg('locker open');
-        toggleInstructions.innerHTML = "Vergeet de locker niet manueel te sluiten"
-        popup.style.animation = "fadeout 0.3s"
+    htmlPopUpOpen.addEventListener('click', function() {
+        htmlBackground.style = ""
+        htmlLockerSvg.innerHTML = getSvg('locker open');
+        htmlInstructions.innerHTML = "Vergeet de locker niet manueel te sluiten"
+        htmlPopUp.style.animation = "fadeout 0.3s"
         setTimeout(DisplayNone, 300)
     })
 }
 
 function ListenToClickToggleLocker() {
-    toggleLockerSvg.addEventListener('click', function() {
-        popup.style = "display:block"
-        popup.style.animation = "fadein 0.5s"
-        background.style = "filter: blur(8px);"
-        ListenToTerug();
+    htmlLockerSvg.addEventListener('click', function() {
+        htmlPopUp.style = "display:block"
+        htmlPopUp.style.animation = "fadein 0.5s"
+        htmlBackground.style = "filter: blur(8px);"
+        ListenToCancel();
         ListenToOpen();
     })
 }
 
 function ListenToClickOpmerkingBtn() {
-    opmerkingbtn.addEventListener('click', function() {
-        if (schrijfOpmerking) {
-            opmerkingdiv.style = "display: block;"
-            opmerkingbtn.innerHTML = "Annuleren"
-            opmerkingbtn.style = "background-color : var(--status-unavailable);"
-            console.log("Schrijf een opmerking")
-            schrijfOpmerking = false;
-            submitbtn.style = "display: block;"
-            extracontent.style.animation = "fadein 0.5s"
-        } else {
-            opmerkingbtn.style = "background-color : var(--blue-accent-color);"
-            opmerkingbtn.innerHTML = "Opmerking toevoegen"
-            schrijfOpmerking = true
+    htmlOpmerkingBtn.addEventListener('click', function() {
+        if (htmlOpmerkingClicked) {
+            htmlOpmerkingBtn.style = "background-color : var(--blue-accent-color);"
+            htmlOpmerkingBtn.innerHTML = "Opmerking toevoegen"
             console.log("Annuleer")
-            submitbtn.style = "display: none;"
-            opmerkingdiv.style = "display: none;"
+            htmlSubmitBtn.style = "display: none;"
+            htmlOpmerkingDiv.style = "display: none;"
+            htmlOpmerkingClicked = false;
+        } else {
+            htmlOpmerkingDiv.style = "display: block;"
+            htmlOpmerkingBtn.innerHTML = "Annuleren"
+            htmlOpmerkingBtn.style = "background-color : var(--status-outofuse);"
+            console.log("Schrijf een opmerking")
+            htmlSubmitBtn.style = "display: block;"
+            htmlExtraContent.style.animation = "fadein 0.5s"
+            htmlOpmerkingClicked = true;
         }
     })
 }
 
 function init() {
     console.log('DOM Geladen')
-    toggleLockerSvg = document.querySelector(".js-toggleLocker")
-    toggleInstructions = document.querySelector(".locker_detail_content_toggleInstructions")
-    opmerkingbtn = document.querySelector('.js-opmerkingbtn')
-    opmerkingdiv = document.querySelector('.div_locker_detail_opmerking')
-    submitbtn = document.querySelector('.js-submit');
-    popup = document.querySelector('.js-popup')
-    popupterug = document.querySelector('.js-popup-terug')
-    background = document.querySelector('.locker_detail_blur')
-    popupopen = document.querySelector('.js-popup-open')
-    extracontent = document.querySelector('.locker_detail_extra_content')
-    backarrow = document.querySelector('.js-backarrow')
-    lockerTitle = document.querySelector('.js-lockertitle')
+    htmlLockerSvg = document.querySelector(".js-toggleLocker")
+    htmlInstructions = document.querySelector(".js-instructions")
+    htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn')
+    htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv')
+    htmlSubmitBtn = document.querySelector('.js-submit');
+    htmlPopUp = document.querySelector('.js-popup')
+    htmlPopUpCancel = document.querySelector('.js-popup-cancel')
+    htmlBackground = document.querySelector('.js-background')
+    htmlPopUpOpen = document.querySelector('.js-popup-open')
+    htmlExtraContent = document.querySelector('.js-extra-content')
+    htmlBackArrow = document.querySelector('.js-backarrow')
     ListenToClickToggleLocker();
-    ListenToClickOpmerkingBtn(schrijfOpmerking);
-    ListenToClickBackArrow();
+    ListenToClickOpmerkingBtn(htmlOpmerkingClicked);
 }
 
 document.addEventListener('DOMContentLoaded', init)
