@@ -147,6 +147,11 @@ a:focus {
     cursor: pointer;
 }
 
+.locker_detail_content_toggleSvg_outofuse {
+    opacity: 0.5;
+    cursor: auto;
+}
+
 .center {
     text-align: center;
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 let currentLockerID;
-let htmlOpmerkingClicked = false;
+let OpmerkingClicked = false;
 
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
@@ -88,16 +88,20 @@ const showLocker = function(jsonObject) {
     htmlLockerTitle.innerHTML = jsonObject.name;
     if (jsonObject.status == "Beschikbaar") {
         htmlBeschikbaar.innerHTML = "Beschikbaar"
+        htmlInstructions.innerHTML = "Tik op het slot om te openen"
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_available');
+        ListenToClickToggleLocker();
     } else if (jsonObject.status == "Bezet") {
         htmlBeschikbaar.innerHTML = "Bezet"
+        htmlInstructions.innerHTML = ""
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_unavailable');
     } else if (jsonObject.status == "Buiten gebruik") {
         htmlBeschikbaar.innerHTML = "Buiten gebruik";
+        htmlInstructions.innerHTML = "Slot kan nu niet worden geopend"
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_outofuse');
+        htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
     }
     ListenToClickBackArrow()
-    ListenToClickToggleLocker();
     ListenToClickOpmerkingBtn(htmlOpmerkingClicked);
 };
 
@@ -115,6 +119,18 @@ const ListenToCLickSport = function() {
 function ListenToClickBackArrow() {
     htmlBackArrow.addEventListener('click', function() {
         window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
+    })
+}
+
+
+
+function ListenToClickToggleLocker() {
+    htmlLockerSvg.addEventListener('click', function() {
+        htmlPopUp.style = "display:block"
+        htmlPopUp.style.animation = "fadein 0.5s"
+        htmlBackground.style = "filter: blur(8px);"
+        ListenToCancel();
+        ListenToOpen();
     })
 }
 
@@ -140,25 +156,15 @@ function DisplayNone() {
     htmlPopUp.style = "display: none;"
 }
 
-function ListenToClickToggleLocker() {
-    htmlLockerSvg.addEventListener('click', function() {
-        htmlPopUp.style = "display:block"
-        htmlPopUp.style.animation = "fadein 0.5s"
-        htmlBackground.style = "filter: blur(8px);"
-        ListenToCancel();
-        ListenToOpen();
-    })
-}
-
 function ListenToClickOpmerkingBtn() {
     htmlOpmerkingBtn.addEventListener('click', function() {
-        if (htmlOpmerkingClicked) {
+        if (OpmerkingClicked) {
             htmlOpmerkingBtn.style = "background-color : var(--blue-accent-color);"
             htmlOpmerkingBtn.innerHTML = "Opmerking toevoegen"
             console.log("Annuleer")
             htmlSubmitBtn.style = "display: none;"
             htmlOpmerkingDiv.style = "display: none;"
-            htmlOpmerkingClicked = false;
+            OpmerkingClicked = false;
         } else {
             htmlOpmerkingDiv.style = "display: block;"
             htmlOpmerkingBtn.innerHTML = "Annuleren"
@@ -166,7 +172,7 @@ function ListenToClickOpmerkingBtn() {
             console.log("Schrijf een opmerking")
             htmlSubmitBtn.style = "display: block;"
             htmlExtraContent.style.animation = "fadein 0.5s"
-            htmlOpmerkingClicked = true;
+            OpmerkingClicked = true;
         }
     })
 }
