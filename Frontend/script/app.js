@@ -102,7 +102,7 @@ const showLocker = function(jsonObject) {
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
     }
     ListenToClickBackArrow()
-    ListenToClickOpmerkingBtn(htmlOpmerkingClicked);
+    ListenToClickOpmerkingBtn();
 };
 
 const ListenToCLickSport = function() {
