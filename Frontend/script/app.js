@@ -118,10 +118,6 @@ function ListenToClickBackArrow() {
     })
 }
 
-function DisplayNone() {
-    htmlPopUp.style = "display: none;"
-}
-
 function ListenToCancel() {
     htmlPopUpCancel.addEventListener('click', function() {
         htmlBackground.style = ""
@@ -138,6 +134,10 @@ function ListenToOpen() {
         htmlPopUp.style.animation = "fadeout 0.3s"
         setTimeout(DisplayNone, 300)
     })
+}
+
+function DisplayNone() {
+    htmlPopUp.style = "display: none;"
 }
 
 function ListenToClickToggleLocker() {
