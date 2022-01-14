@@ -1,4 +1,4 @@
-let htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
+/*let htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
     htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow;
 let htmlOpmerkingClicked = false;
 
@@ -73,4 +73,4 @@ function init() {
     ListenToClickOpmerkingBtn(htmlOpmerkingClicked);
 }
 
-document.addEventListener('DOMContentLoaded', init)
+document.addEventListener('DOMContentLoaded', init)*/
