@@ -5,7 +5,8 @@ let OpmerkingClicked = false;
 
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow;
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail,
+    htmlInfo, htmlReserverenBtn;
 
 
 const showOverview = function(jsonObject) {
@@ -114,6 +115,7 @@ const showLocker = function(jsonObject) {
 <<<<<<< HEAD
 =======
     ListenToClickOpmerkingBtn();
+>>>>>>> develop
 };
 
 const ListenToCLickSport = function() {
@@ -218,6 +220,9 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlPopUpOpen = document.querySelector('.js-popup-open')
     htmlExtraContent = document.querySelector('.js-extra-content')
     htmlBackArrow = document.querySelector('.js-backarrow')
+    htmlUitlegLockerDetail = document.querySelector('.js-uitleg')
+    htmlInfo = document.querySelector('.js-info')
+    htmlReserverenBtn = document.querySelector('.js-reserve')
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzichtpagina.html
         getOverzicht();
