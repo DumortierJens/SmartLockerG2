@@ -31,3 +31,4 @@ Extra: bij lockers kunnen zien wie hem nu aan het gebruiken is, bij users de sta
 kunnen tonen
 
 Standaard fb-gegevens: leeftijd, woonplaats, mobiele telefoon, email, profielfoto + link naar reservatiegeschiedenis van de gebruiker
+Privacy policy pagina: 
