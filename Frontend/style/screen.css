@@ -108,6 +108,16 @@ a:focus {
     cursor: pointer;
 }
 
+.booking_icon{
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.reservatiebtntext{
+    align-self: center;
+    margin-left: 8px;
+}
+
 .locker_detail_content {
     margin: 1.5rem 1.75rem 1.75rem 1rem;
 }
@@ -172,6 +182,8 @@ a:focus {
     padding: 0.5rem;
     border-radius: 5px;
     cursor: pointer;
+    height: 2.5rem;
+    align-items: center;
 }
 
 .locker_detail_sendbtn {
