@@ -26,3 +26,8 @@ Reservatie details: tijdslot, geleend, teruggebracht, opmerkingen
 Userdetails: 
 	- Reservatietab met optie om te reserveren en geschiedenis van reservaties te zien
 	- Afmelden
+
+Extra: bij lockers kunnen zien wie hem nu aan het gebruiken is, bij users de standaard fb-gegevens tonen en apart de reservaties
+kunnen tonen
+
+Standaard fb-gegevens: leeftijd, woonplaats, mobiele telefoon, email, profielfoto + link naar reservatiegeschiedenis van de gebruiker
