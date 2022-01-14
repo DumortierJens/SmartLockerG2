@@ -112,10 +112,6 @@ const showLocker = function(jsonObject) {
         htmlReserverenBtn.style = "display:none"
     }
     ListenToClickBackArrow()
-<<<<<<< HEAD
-=======
-    ListenToClickOpmerkingBtn();
->>>>>>> develop
 };
 
 const ListenToCLickSport = function() {
