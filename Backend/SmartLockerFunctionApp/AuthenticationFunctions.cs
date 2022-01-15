@@ -11,6 +11,8 @@ using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Globalization;
+using System.Collections.Generic;
 
 namespace SmartLockerFunctionApp
 {
@@ -18,39 +20,69 @@ namespace SmartLockerFunctionApp
     {
         [FunctionName("Login")]
         public async Task<IActionResult> Login(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/login")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/login/{social}")] HttpRequest req,
+            string social,
             ILogger log)
         {
             try
             {
+                // Get access token from user
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
-                // Get user from facebook accesstoken
                 JObject jObject = JObject.Parse(requestBody);
                 JToken accessToken;
                 if (!jObject.TryGetValue("accessToken", out accessToken))
                     return new BadRequestObjectResult(JsonConvert.SerializeObject( new { errorMessage = "No accesstoken" } ));
 
-                var user = await getUserDetails(accessToken.ToString());
-
-                // Save new user in CosmosDB
-                user.Id = Guid.NewGuid();
-                user.Type = "user";
-                user.FirstLogin = DateTime.UtcNow;
-
+                // Create cosmosDB client
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Users");
-                await container.CreateItemAsync(user, new PartitionKey(user.Email));
+
+                // Get user by social access token & try to get user out of CosmosDB
+                Models.User user;
+                QueryDefinition query;
+                if (social == "facebook")
+                {
+                    user = await getUserFacebookDetails(accessToken.ToString());
+                    query = new QueryDefinition("SELECT * FROM Users u WHERE u.facebookId = @id");
+                    query.WithParameter("@id", user.FacebookId);
+                }
+                else
+                {
+                    return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "Social don't exist" }));
+                }
+
+                List<Models.User> foundUsers = new List<Models.User>();
+                FeedIterator <Models.User> iterator = container.GetItemQueryIterator<Models.User>(query);
+                while (iterator.HasMoreResults)
+                {
+                    FeedResponse<Models.User> response = await iterator.ReadNextAsync();
+                    foundUsers.AddRange(response);
+                }
+
+                // If user don't exists, create the user with its social details
+                if (foundUsers.Count == 0)
+                {
+                    // Set default properties
+                    user.Id = Guid.NewGuid();
+                    user.Type = "user";
+                    user.UserCreated = DateTime.UtcNow;
+                    await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
+                }
+                else
+                {
+                    user = foundUsers[0];
+                }
 
                 return new OkObjectResult(user);
             }
-            catch
+            catch (Exception ex)
             {
+                throw ex;
                 return new StatusCodeResult(500);
             }
         }
 
-        private static async Task<Models.User> getUserDetails(string accessToken)
+        private static async Task<Models.User> getUserFacebookDetails(string accessToken)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
@@ -59,22 +91,21 @@ namespace SmartLockerFunctionApp
             {
                 try
                 {
-                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,location,picture&{accessToken}";
+                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,location,picture&access_token={accessToken}";
                     
                     string json = await client.GetStringAsync(url);
                     if (json != null)
                     {
                         JObject jObject = JObject.Parse(json);
-                        Guid lockerId = Guid.Parse(jObject["iotDeviceId"].ToString());
 
                         Models.User user = new Models.User()
                         {
-                            FacebookId = int.Parse(jObject["int"].ToString()),
+                            FacebookId = jObject["id"].ToString(),
                             Name = jObject["name"].ToString(),
                             Email = jObject["email"].ToString(),
-                            Birthday = DateTime.Parse(jObject["birthday"].ToString()),
+                            Birthday = DateTime.ParseExact(jObject["birthday"].ToString(), "d", CultureInfo.InvariantCulture),
                             Location = jObject["location"]["name"].ToString(),
-                            Picture = jObject["picture"]["url"].ToString()
+                            Picture = jObject["picture"]["data"]["url"].ToString()
                         };
 
                         return user;

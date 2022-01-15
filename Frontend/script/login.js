@@ -17,8 +17,8 @@ const statusChangeCallback = function (response) {
     if (response.status === 'connected') {
         console.log('Logged in with Facebook and authenticated');
         if (document.querySelector('.js-login-page')) window.location.replace(`https://${window.location.hostname}/overzicht.html`);
-        loginUser();
-
+        console.log(response);
+        loginUser(response.authResponse.accessToken);
     } else {
         console.log('Not authenticated with Facebook');
         if (document.querySelector('.js-login-page') === null) window.location.replace(`https://${window.location.hostname}/`);
@@ -55,10 +55,11 @@ const callbackLoginFailed = function (response) {
 };
 
 const loginUser = function (accessToken) {
+    console.log(accessToken);
     const body = JSON.stringify({
         accessToken: accessToken
     });
-    handleData('http://localhost:7071/api/users/login', callbackLoginSucceed, callbackLoginFailed, 'POST', body);
+    handleData('http://localhost:7071/api/users/login/facebook', callbackLoginSucceed, callbackLoginFailed, 'POST', body);
 };
 
 (function (d, s, id) {
