@@ -12,6 +12,7 @@ let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartL
 
 ws.onmessage = (event) => {
     console.log(event.data);
+    htmlLockerSvg.innerHTML = getSvg('locker close');
 };
 
 const showOverview = function(jsonObject) {
