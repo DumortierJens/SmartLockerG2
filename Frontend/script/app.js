@@ -3,7 +3,10 @@
 let currentLockerID;
 let OpmerkingClicked = false;
 
-let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar, htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn, htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn;
+let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
+    htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
+    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 
@@ -187,6 +190,9 @@ function ListenToClickOpmerkingBtn() {
             htmlSubmitBtn.style = 'display: block;';
             htmlExtraContent.style.animation = 'fadein 0.5s';
             OpmerkingClicked = true;
+            htmlSubmitBtn.addEventListener('click', function() {
+                console.log(`Verzend ${htmlOpmerkingText.value} naar database`)
+            });
         }
     });
 }
@@ -209,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn');
     htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv');
     htmlSubmitBtn = document.querySelector('.js-submit');
+    htmlOpmerkingText = document.querySelector('.js-opmerkingtext');
     htmlPopUp = document.querySelector('.js-popup');
     htmlPopUpCancel = document.querySelector('.js-popup-cancel');
     htmlBackground = document.querySelector('.js-background');
