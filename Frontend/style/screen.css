@@ -460,11 +460,12 @@ a:focus {
 .reservation_legende {
   width: 80%;
   max-width: 20.5rem;
-  margin: 1.5rem auto 0 auto;
+  margin: 0 auto 0 auto;
   display: grid;
   grid-template-columns: 3.5rem;
   grid-template-areas: 'bezigicon bezigtekst' 'wachtenicon wachtentekst' 'verlopenicon verlopentekst';
   row-gap: 1rem;
+  padding-top: 96px;
 }
 
 .rect_bezig {
@@ -676,6 +677,12 @@ a:focus {
 
 .reservation_more_border{
   border-radius: 0.5rem 0.5rem 0 0 ;
+}
+
+.position_fixed{
+  position: fixed;
+  top:0;
+  z-index: 1;
 }
 
 /* Animations*/
