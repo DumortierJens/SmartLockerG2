@@ -6,6 +6,26 @@ let htmlBackground;
 let htmlPopupCancel;
 let htmlPopupTerug;
 let execute = true;
+let labelnr = 0;
+
+function ListenToClickDamage(){
+    let htmlCheckboxesDamage = document.querySelectorAll('.js-checkbox_damage')
+    for(let htmlCheckboxDamage of htmlCheckboxesDamage){
+        htmlCheckboxDamage.addEventListener('click',function(){
+            if(!htmlCheckboxDamage.classList.contains('box_checked')){
+                console.log(htmlCheckboxDamage)
+                htmlCheckboxDamage.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`
+                htmlCheckboxDamage.style.animation = "fadein 0.5s"
+                htmlCheckboxDamage.classList.add('box_checked');
+                console.log('Er is schade')
+            }
+            else{
+                htmlCheckboxDamage.style = ``
+                htmlCheckboxDamage.classList.remove('box_checked');
+            }
+        })
+    }
+}
 
 function DisplayNone() {
     htmlPopup.style = "display: none;"
@@ -33,7 +53,7 @@ function ListenToDelete() {
 }
 
 function ListenToCLickEditDelete() {
-    let htmlDeleteIcons = document.querySelectorAll('.js-deleteicon')
+    htmlDeleteIcons = document.querySelectorAll('.js-deleteicon')
     let htmlEditIcons = document.querySelectorAll('.js-editicon')
     for (let htmlDeleteIcon of htmlDeleteIcons) {
         htmlDeleteIcon.addEventListener('click', function () {
@@ -83,29 +103,54 @@ function ListenToClickArrowMore() {
                         </svg>
                     </div>
                 </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Tijdslot</p>
-                    <p class="reservation_detail_content">14:15-15:30</p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Geopend</p>
-                    <p class="reservation_detail_content">14:16</p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Teruggebracht</p>
-                    <p class="reservation_detail_content">15:32</p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Sport</p>
-                    <p class="reservation_detail_content">Voetbal</p>
-                </div>
-                <div class="reservation_opmerking">
-                    <p class="reservation_opmerking_title">Opmerking</p>
-                    <p class="reservation_opmerking_content">Tijdens het spelen is de bal kapotgegaan door een botsing met een stuk glas</p>
-                </div>
-            </div>`;
+                <form action="#">
+                    <div class="reservation_detail flex">
+                        <p class="reservation_detail_title">Tijdslot</p>
+                        <p class="reservation_detail_content"><input class="editinfo" type="time" value="14:15:00">
+                            -
+                            <input class="editinfo" type="time" value="15:30:00"></p>
+                    </div>
+                    <div class="reservation_detail flex">
+                        <p class="reservation_detail_title">Geopend</p>
+                        <p class="reservation_detail_content"><input class="editinfo" type="time" value="14:16:00"></p>
+                    </div>
+                    <div class="reservation_detail flex">
+                        <p class="reservation_detail_title">Teruggebracht</p>
+                        <p class="reservation_detail_content"><input class="editinfo" type="time" value="15:32:00"></p>
+                    </div>
+                    <div class="reservation_detail flex">
+                        <p class="reservation_detail_title">Sport</p>
+                        <p class="reservation_detail_content">
+                            <select style="width: 5rem;" class="editinfo" id="sports">
+                                <option selected>Voetbal</option>
+                                <option>Basketbal</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="reservation_detail flex">
+                        <label class="checkbox" for="damage${labelnr}">
+                            Materiële schade
+                        </label>
+                            <input class="checkbox_input" type="checkbox" name="damagebox${labelnr}" id="damage${labelnr}">
+                            <div class="checkbox_box js-checkbox_damage"></div>
+                    </div>
+                    <div class="reservation_detail flex">
+                        <label class="checkbox" for="missing${labelnr}">
+                            Ontbrekend materiaal
+                        </label>
+                            <input class="checkbox_input" type="checkbox" name="missingbox${labelnr}" id="missing${labelnr}">
+                            <div class="checkbox_box js-checkbox_damage"></div>
+                    </div>
+                                                <div class="reservation_opmerking">
+                                                    <label for="opmerking" class="reservation_opmerking_title">Opmerking
+                                                    <span class="textarea" role="textbox" contenteditable></span></label>
+                                                </div>
+                </form>
+            </div>`
+            labelnr += 1;
                 htmlExtraInfo.style.animation = 'fadein 0.5s'
                 ListenToCLickEditDelete()
+                ListenToClickDamage()
                 return;
             } else {
                 htmlReservation.classList.remove("reservation_more_border")
@@ -114,6 +159,7 @@ function ListenToClickArrowMore() {
                 htmlExtraInfo.innerHTML = ``;
                 htmlExtraInfo.style.animation = ''
                 ListenToCLickEditDelete()
+                ListenToClickDamage()
                 return;
             }
         })

@@ -34,7 +34,7 @@
   --red-verlopen: #b10303;
 
   --grey-bg: #f2f2f2;
-  --grey-bg-dark: #6B6969;
+  --grey-bg-dark: #6b6969;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -627,7 +627,7 @@ a:focus {
   border-top: 1px solid var(--grey-bg);
 }
 
-.reservation_detail{
+.reservation_detail {
   position: relative;
   width: 90%;
   max-width: 20.5rem;
@@ -638,7 +638,7 @@ a:focus {
   height: 2.1875rem;
 }
 
-.reservation_detail_title{
+.reservation_detail_title {
   color: var(--grey-bg-dark);
   font-size: 0.75rem;
   font-weight: 600;
@@ -647,58 +647,68 @@ a:focus {
   left: 1rem;
 }
 
-.reservation_detail_content{
+.reservation_detail_content {
   font-size: 0.75rem;
   align-self: center;
   position: absolute;
   right: 1rem;
 }
 
-.reservation_opmerking{
+.reservation_opmerking {
   background-color: white;
   width: 90%;
   max-width: 20.5rem;
   margin: 0 auto 0 auto;
   border-top: 1px solid var(--grey-bg);
   text-align: start;
-  padding: 0.53125rem 0 0.53125rem 1rem;
+  padding: 0 0 1rem 1rem;
   border-radius: 0 0 0.5rem 0.5rem;
 }
 
-.reservation_opmerking_title{
+.reservation_opmerking_title {
   color: var(--grey-bg-dark);
   font-size: 0.75rem;
   font-weight: 600;
 }
 
-.reservation_opmerking_content{
-  font-size: 0.75rem;
+.textarea {
+  display: block;
+  width: 90%;
+  overflow: hidden;
+  resize: both;
+  border: 1px solid var(--grey-bg);
+  border-radius: 0.2rem;
+  min-height: 40px;
+  line-height: 20px;
+  color: black;
+  font-weight: 400;
+  padding: 0.25rem;
 }
 
-.reservation_more_border{
-  border-radius: 0.5rem 0.5rem 0 0 ;
+.reservation_more_border {
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
-.position_fixed{
+.position_fixed {
   position: fixed;
-  top:0;
+  top: 0;
   z-index: 1;
 }
 
-.editicon{
+.editicon {
   cursor: pointer;
 }
 
-.deleteicon{
+.deleteicon {
   cursor: pointer;
 }
 
-.popupreservation{
+.popupreservation {
   height: auto;
   padding-bottom: 1rem;
 }
 
-.editinfo{
+.editinfo {
   width: 4rem;
   font-size: 0.75rem;
   font-family: 'MyFont';
@@ -707,6 +717,42 @@ a:focus {
   border: 1px solid var(--grey-bg);
   border-radius: 0.1rem;
   text-align: center;
+}
+
+.checkbox{
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  left: 1rem;
+  color: var(--grey-bg-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  align-self: center;
+  cursor: pointer;
+}
+
+.checkbox_input{
+  display: none;
+  align-self: center;
+  position: absolute;
+  right: 1rem;
+}
+
+.checkbox_box{
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--grey-bg);
+  border-radius: 3px;
+  align-self: center;
+  position: absolute;
+  right: 1rem;
+  content: '';
+  cursor: pointer;
+}
+
+.checkbox_input:checked + .checkbox_box{
+  border-color: var(--blue-accent-color);
+  content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
 /* Animations*/
