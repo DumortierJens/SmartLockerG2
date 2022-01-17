@@ -8,16 +8,10 @@ namespace SmartLockerFunctionApp.Models
     public class User
     {
         [JsonProperty("id")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
-        [JsonProperty("facebookId")]
-        public string FacebookId { get; set; } = null;
-
-        [JsonProperty("googleId")]
-        public string googleId { get; set; } = null;
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonProperty("role")]
+        public string Role { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -27,9 +21,6 @@ namespace SmartLockerFunctionApp.Models
 
         [JsonProperty("birthday")]
         public DateTime Birthday { get; set; }
-
-        [JsonProperty("location")]
-        public string Location { get; set; }
 
         [JsonProperty("picture")]
         public string Picture { get; set; }

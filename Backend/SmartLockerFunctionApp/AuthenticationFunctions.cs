@@ -20,8 +20,7 @@ namespace SmartLockerFunctionApp
     {
         [FunctionName("Login")]
         public async Task<IActionResult> Login(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/login/{social}")] HttpRequest req,
-            string social,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/login")] HttpRequest req,
             ILogger log)
         {
             try
@@ -40,44 +39,24 @@ namespace SmartLockerFunctionApp
                 // Get user by social access token & try to get user out of CosmosDB
                 Models.User user;
                 QueryDefinition query;
-                if (social == "facebook")
-                {
-                    user = await getUserFacebookDetails(accessToken.ToString());
-                    query = new QueryDefinition("SELECT * FROM Users u WHERE u.facebookId = @id");
-                    query.WithParameter("@id", user.FacebookId);
-                }
-                else
-                {
-                    return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "Social don't exist" }));
-                }
 
-                List<Models.User> foundUsers = new List<Models.User>();
-                FeedIterator <Models.User> iterator = container.GetItemQueryIterator<Models.User>(query);
-                while (iterator.HasMoreResults)
-                {
-                    FeedResponse<Models.User> response = await iterator.ReadNextAsync();
-                    foundUsers.AddRange(response);
-                }
+                user = await getUserFacebookDetails(accessToken.ToString());
 
-                // If user don't exists, create the user with its social details
-                if (foundUsers.Count == 0)
+                try
                 {
-                    // Set default properties
-                    user.Id = Guid.NewGuid();
-                    user.Type = "user";
+                    user = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound) 
+                {
+                    user.Role = "User";
                     user.UserCreated = DateTime.UtcNow;
                     await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
-                }
-                else
-                {
-                    user = foundUsers[0];
                 }
 
                 return new OkObjectResult(user);
             }
             catch (Exception ex)
             {
-                throw ex;
                 return new StatusCodeResult(500);
             }
         }
@@ -91,7 +70,7 @@ namespace SmartLockerFunctionApp
             {
                 try
                 {
-                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,location,picture&access_token={accessToken}";
+                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture&access_token={accessToken}";
                     
                     string json = await client.GetStringAsync(url);
                     if (json != null)
@@ -100,11 +79,10 @@ namespace SmartLockerFunctionApp
 
                         Models.User user = new Models.User()
                         {
-                            FacebookId = jObject["id"].ToString(),
+                            Id = jObject["id"].ToString(),
                             Name = jObject["name"].ToString(),
                             Email = jObject["email"].ToString(),
                             Birthday = DateTime.ParseExact(jObject["birthday"].ToString(), "d", CultureInfo.InvariantCulture),
-                            Location = jObject["location"]["name"].ToString(),
                             Picture = jObject["picture"]["data"]["url"].ToString()
                         };
 
