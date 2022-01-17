@@ -174,7 +174,6 @@ D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debu
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.AssemblyReference.cache
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.GeneratedMSBuildEditorConfig.editorconfig
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.AssemblyInfoInputs.cache
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.AssemblyInfo.cs

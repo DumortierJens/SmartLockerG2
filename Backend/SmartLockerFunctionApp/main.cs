@@ -13,13 +13,14 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Azure.Cosmos;
+using SmartLockerFunctionApp.Services.Authentication;
 
 namespace SmartLockerFunctionApp
 {
-    class main
+    class main : AuthorizedServiceBase
     {
         [FunctionName("StatusLog")]
-        public static async Task<IActionResult> StatusLog(
+        public async Task<IActionResult> StatusLog(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "devices/{deviceId}/log")] HttpRequest req, 
             Guid deviceId,
             ILogger log)
@@ -46,7 +47,7 @@ namespace SmartLockerFunctionApp
         }
 
         [FunctionName("GetLockers")]
-        public static async Task<IActionResult> GetLockers(
+        public async Task<IActionResult> GetLockers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers")] HttpRequest req,
             ILogger log)
         {
@@ -74,7 +75,7 @@ namespace SmartLockerFunctionApp
 
         }
         [FunctionName("GetLockerByID")]
-        public static async Task<IActionResult> GetLockerByID(
+        public async Task<IActionResult> GetLockerByID(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}")] HttpRequest req, 
           Guid lockerId,
           ILogger log)
@@ -103,7 +104,7 @@ namespace SmartLockerFunctionApp
         }
         
         [FunctionName("GetMaterialStatusById")]
-        public static async Task<IActionResult> GetMaterialStatusById(
+        public async Task<IActionResult> GetMaterialStatusById(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "devices/{deviceId}/status")] HttpRequest req,
           string deviceId,
           ILogger log)

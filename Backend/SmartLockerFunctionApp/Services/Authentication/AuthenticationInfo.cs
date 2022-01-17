@@ -13,7 +13,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
     public class AuthenticationInfo
     {
         public bool IsValid { get; }
-        public Guid Id { get; }
+        public string Id { get; }
         public string Name { get; }
         public string Role { get; }
 
@@ -71,7 +71,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
             }
 
             IsValid = true;
-            Id = Guid.Parse(Convert.ToString(claims["id"]));
+            Id = Convert.ToString(claims["id"]);
             Name = Convert.ToString(claims["name"]);
             Role = Convert.ToString(claims["role"]);
         }
