@@ -3,12 +3,19 @@
 let currentLockerID;
 let OpmerkingClicked = false;
 
-let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar, htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn, htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn;
+let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
+    htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
+    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 
 ws.onmessage = (event) => {
     console.log(event.data);
+    if (event.data.lockerId == currentLockerID && event.data.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && event.data.value == 1) {
+        htmlLockerSvg.innerHTML = getSvg('locker close');
+    }
+
 };
 
 const showOverview = function(jsonObject) {
@@ -187,6 +194,9 @@ function ListenToClickOpmerkingBtn() {
             htmlSubmitBtn.style = 'display: block;';
             htmlExtraContent.style.animation = 'fadein 0.5s';
             OpmerkingClicked = true;
+            htmlSubmitBtn.addEventListener('click', function() {
+                console.log(`Verzend ${htmlOpmerkingText.value} naar database`)
+            });
         }
     });
 }
@@ -209,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn');
     htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv');
     htmlSubmitBtn = document.querySelector('.js-submit');
+    htmlOpmerkingText = document.querySelector('.js-opmerkingtext');
     htmlPopUp = document.querySelector('.js-popup');
     htmlPopUpCancel = document.querySelector('.js-popup-cancel');
     htmlBackground = document.querySelector('.js-background');
@@ -217,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlBackArrow = document.querySelector('.js-backarrow');
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
-    htmlReserverenBtn = document.querySelector('.js-reserve');
+    htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzichtpagina.html
         getOverzicht();
