@@ -16,90 +16,90 @@ using System.Collections.Generic;
 
 namespace SmartLockerFunctionApp
 {
-    public class AuthenticationFunctions
-    {
-        [FunctionName("Login")]
-        public async Task<IActionResult> Login(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/login")] HttpRequest req,
-            ILogger log)
-        {
-            try
-            {
-                // Get access token from user
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                JObject jObject = JObject.Parse(requestBody);
-                JToken accessToken;
-                if (!jObject.TryGetValue("accessToken", out accessToken))
-                    return new BadRequestObjectResult(JsonConvert.SerializeObject( new { errorMessage = "No accesstoken" } ));
+    //public class AuthenticationFunctions
+    //{
+    //    [FunctionName("Login")]
+    //    public async Task<IActionResult> Login(
+    //        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/login")] HttpRequest req,
+    //        ILogger log)
+    //    {
+    //        try
+    //        {
+    //            // Get access token from user
+    //            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+    //            JObject jObject = JObject.Parse(requestBody);
+    //            JToken accessToken;
+    //            if (!jObject.TryGetValue("accessToken", out accessToken))
+    //                return new BadRequestObjectResult(JsonConvert.SerializeObject( new { errorMessage = "No accesstoken" } ));
 
-                // Create cosmosDB client
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+    //            // Create cosmosDB client
+    //            CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+    //            Container container = cosmosClient.GetContainer("SmartLocker", "Users");
 
-                // Get user by social access token & try to get user out of CosmosDB
-                Models.User user;
-                QueryDefinition query;
+    //            // Get user by social access token & try to get user out of CosmosDB
+    //            Models.User user;
+    //            QueryDefinition query;
 
-                user = await getUserFacebookDetails(accessToken.ToString());
+    //            user = await getUserFacebookDetails(accessToken.ToString());
 
-                try
-                {
-                    user = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
-                }
-                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound) 
-                {
-                    user.Role = "User";
-                    user.UserCreated = DateTime.UtcNow;
-                    await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
-                }
+    //            try
+    //            {
+    //                user = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+    //            }
+    //            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound) 
+    //            {
+    //                user.Role = "User";
+    //                user.UserCreated = DateTime.UtcNow;
+    //                await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
+    //            }
 
-                return new OkObjectResult(user);
-            }
-            catch (Exception ex)
-            {
-                return new StatusCodeResult(500);
-            }
-        }
+    //            return new OkObjectResult(user);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            return new StatusCodeResult(500);
+    //        }
+    //    }
 
-        private static async Task<Models.User> getUserFacebookDetails(string accessToken)
-        {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
+    //    private static async Task<Models.User> getUserFacebookDetails(string accessToken)
+    //    {
+    //        HttpClient client = new HttpClient();
+    //        client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-            using (client)
-            {
-                try
-                {
-                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture&access_token={accessToken}";
+    //        using (client)
+    //        {
+    //            try
+    //            {
+    //                string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture&access_token={accessToken}";
                     
-                    string json = await client.GetStringAsync(url);
-                    if (json != null)
-                    {
-                        JObject jObject = JObject.Parse(json);
+    //                string json = await client.GetStringAsync(url);
+    //                if (json != null)
+    //                {
+    //                    JObject jObject = JObject.Parse(json);
 
-                        Models.User user = new Models.User()
-                        {
-                            Id = jObject["id"].ToString(),
-                            Name = jObject["name"].ToString(),
-                            Email = jObject["email"].ToString(),
-                            Birthday = DateTime.ParseExact(jObject["birthday"].ToString(), "d", CultureInfo.InvariantCulture),
-                            Picture = jObject["picture"]["data"]["url"].ToString()
-                        };
+    //                    Models.User user = new Models.User()
+    //                    {
+    //                        Id = jObject["id"].ToString(),
+    //                        Name = jObject["name"].ToString(),
+    //                        Email = jObject["email"].ToString(),
+    //                        Birthday = DateTime.ParseExact(jObject["birthday"].ToString(), "d", CultureInfo.InvariantCulture),
+    //                        Picture = jObject["picture"]["data"]["url"].ToString()
+    //                    };
 
-                        return user;
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
+    //                    return user;
+    //                }
+    //                else
+    //                {
+    //                    throw new Exception();
+    //                }
+    //            }
+    //            catch (Exception ex)
+    //            {
+    //                throw ex;
+    //            }
+    //        }
 
-            return new Models.User();
-        }
-    }
+    //        return new Models.User();
+    //    }
+    //}
 }
