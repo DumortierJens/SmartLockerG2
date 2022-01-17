@@ -34,6 +34,7 @@ function ListenToDelete() {
 
 function ListenToCLickEditDelete() {
     let htmlDeleteIcons = document.querySelectorAll('.js-deleteicon')
+    let htmlEditIcons = document.querySelectorAll('.js-editicon')
     for (let htmlDeleteIcon of htmlDeleteIcons) {
         htmlDeleteIcon.addEventListener('click', function () {
             htmlPopup.style = "display:block"
@@ -41,6 +42,11 @@ function ListenToCLickEditDelete() {
             htmlBackground.style = "filter: blur(8px);"
             ListenToCancel();
             ListenToDelete();
+        })
+    }
+    for (let htmlEditIcon of htmlEditIcons){
+        htmlEditIcon.addEventListener('click',function(){
+            
         })
     }
 }

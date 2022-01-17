@@ -698,6 +698,17 @@ a:focus {
   padding-bottom: 1rem;
 }
 
+.editinfo{
+  width: 4rem;
+  font-size: 0.75rem;
+  font-family: 'MyFont';
+  outline: none;
+  background-color: white;
+  border: 1px solid var(--grey-bg);
+  border-radius: 0.1rem;
+  text-align: center;
+}
+
 /* Animations*/
 
 @keyframes fadein {
