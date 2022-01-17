@@ -12,7 +12,10 @@ let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartL
 
 ws.onmessage = (event) => {
     console.log(event.data);
-    htmlLockerSvg.innerHTML = getSvg('locker close');
+    if (event.data.lockerId == currentLockerID && event.data.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && event.data.value == 1) {
+        htmlLockerSvg.innerHTML = getSvg('locker close');
+    }
+
 };
 
 const showOverview = function(jsonObject) {
@@ -225,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlBackArrow = document.querySelector('.js-backarrow');
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
-    htmlReserverenBtn = document.querySelector('.js-reserve');
+    htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzichtpagina.html
         getOverzicht();

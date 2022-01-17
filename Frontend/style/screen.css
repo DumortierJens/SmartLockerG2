@@ -108,12 +108,12 @@ a:focus {
     cursor: pointer;
 }
 
-.booking_icon{
+.booking_icon {
     height: 1.5rem;
     width: 1.5rem;
 }
 
-.reservatiebtntext{
+.reservatiebtntext {
     align-self: center;
     margin-left: 8px;
 }
@@ -472,8 +472,6 @@ a:focus {
     }
 }
 
-@media (min-width: 550px) {
-    .locker_detail_blur {
-        text-align: center;
-    }
+.locker_detail_blur {
+    text-align: center;
 }
