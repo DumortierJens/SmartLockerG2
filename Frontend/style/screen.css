@@ -685,6 +685,19 @@ a:focus {
   z-index: 1;
 }
 
+.editicon{
+  cursor: pointer;
+}
+
+.deleteicon{
+  cursor: pointer;
+}
+
+.popupreservation{
+  height: auto;
+  padding-bottom: 1rem;
+}
+
 /* Animations*/
 
 @keyframes fadein {
