@@ -90,7 +90,7 @@ const showOverview = function(jsonObject) {
     ListenToCLickSport();
 };
 
-const showLocker = function (jsonObject) {
+const showLocker = function(jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
     htmlInfo.innerHTML = jsonObject.description;
@@ -120,12 +120,12 @@ const showLocker = function (jsonObject) {
     ListenToClickBackArrow();
 };
 
-const ListenToCLickSport = function () {
-    htmlSoccer.addEventListener('click', function () {
+const ListenToCLickSport = function() {
+    htmlSoccer.addEventListener('click', function() {
         currentLockerID = htmlSoccer.getAttribute('data');
         window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
     });
-    htmlBasketball.addEventListener('click', function () {
+    htmlBasketball.addEventListener('click', function() {
         currentLockerID = htmlBasketball.getAttribute('data');
         window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
     });
@@ -133,7 +133,7 @@ const ListenToCLickSport = function () {
 
 function ListenToClickBackArrow() {
     htmlBackArrow.addEventListener('click', function() {
-        window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
+        window.location.replace(`${location.origin}/overzichtpagina${WEBEXTENTION}`);
     });
 }
 
@@ -162,7 +162,7 @@ function ListenToOpen(id) {
         htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
         htmlPopUp.style.animation = 'fadeout 0.3s';
         setTimeout(DisplayNone, 300);
-        handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers/${id}/open`, null, null, 'POST');
+        handleData($ `${APIURI}/lockers/${id}/open`, null, null, 'POST', userToken);
     });
 }
 
@@ -177,7 +177,7 @@ function ListenToClickReserverenBtn() {
 }
 
 function ListenToClickOpmerkingBtn() {
-    htmlOpmerkingBtn.addEventListener('click', function () {
+    htmlOpmerkingBtn.addEventListener('click', function() {
         if (OpmerkingClicked) {
             htmlOpmerkingBtn.style = 'background-color : var(--blue-accent-color);';
             htmlOpmerkingBtn.innerHTML = 'Opmerking toevoegen';
@@ -200,15 +200,15 @@ function ListenToClickOpmerkingBtn() {
     });
 }
 
-const getOverzicht = function () {
+const getOverzicht = function() {
     handleData(`${APIURI}/lockers`, showOverview, null, 'GET', null, userToken);
 };
 
-const getLockerDetail = function (id) {
+const getLockerDetail = function(id) {
     handleData(`${APIURI}/lockers/${id}`, showLocker, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     console.info('DOM geladen');
 
     // user authentication
