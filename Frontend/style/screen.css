@@ -754,6 +754,20 @@ a:focus {
   content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
+.canceledit{
+  fill: var(--red-verlopen);
+  height: 1rem;
+  width: 1rem;
+  cursor: pointer;
+}
+
+.doneedit{
+  fill: var(--green-bezig);
+  height: 1.5rem;
+  width: 1.5rem;
+  cursor: pointer;
+}
+
 /* Animations*/
 
 @keyframes fadein {
