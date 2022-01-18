@@ -1,6 +1,5 @@
-'use strict';
-
 let currentLockerID;
+let userToken;
 let OpmerkingClicked = false;
 
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
@@ -91,7 +90,7 @@ const showOverview = function(jsonObject) {
     ListenToCLickSport();
 };
 
-const showLocker = function(jsonObject) {
+const showLocker = function (jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
     htmlInfo.innerHTML = jsonObject.description;
@@ -121,14 +120,14 @@ const showLocker = function(jsonObject) {
     ListenToClickBackArrow();
 };
 
-const ListenToCLickSport = function() {
-    htmlSoccer.addEventListener('click', function() {
+const ListenToCLickSport = function () {
+    htmlSoccer.addEventListener('click', function () {
         currentLockerID = htmlSoccer.getAttribute('data');
-        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
+        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
     });
-    htmlBasketball.addEventListener('click', function() {
+    htmlBasketball.addEventListener('click', function () {
         currentLockerID = htmlBasketball.getAttribute('data');
-        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
+        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
     });
 };
 
@@ -178,7 +177,7 @@ function ListenToClickReserverenBtn() {
 }
 
 function ListenToClickOpmerkingBtn() {
-    htmlOpmerkingBtn.addEventListener('click', function() {
+    htmlOpmerkingBtn.addEventListener('click', function () {
         if (OpmerkingClicked) {
             htmlOpmerkingBtn.style = 'background-color : var(--blue-accent-color);';
             htmlOpmerkingBtn.innerHTML = 'Opmerking toevoegen';
@@ -201,16 +200,22 @@ function ListenToClickOpmerkingBtn() {
     });
 }
 
-const getOverzicht = function() {
-    handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers`, showOverview);
+const getOverzicht = function () {
+    handleData(`${APIURI}/lockers`, showOverview, null, 'GET', null, userToken);
 };
 
-const getLockerDetail = function(id) {
-    handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers/${id}`, showLocker);
+const getLockerDetail = function (id) {
+    handleData(`${APIURI}/lockers/${id}`, showLocker, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.info('DOM geladen');
+
+    // user authentication
+    userToken = sessionStorage.getItem("usertoken");
+    if (userToken == null)
+        window.location.replace(location.origin);
+
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
     htmlBeschikbaar = document.querySelector('.js-beschikbaar');
@@ -230,13 +235,13 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlInfo = document.querySelector('.js-info');
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     if (htmlOverview) {
-        //deze code wordt gestart vanaf overzichtpagina.html
+        //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
     }
     if (htmlLockerTitle) {
+        //deze code wordt gestart vanaf locker.html
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        //deze code wordt gestart vanaf lockerdetailpagina.html
         getLockerDetail(id);
     }
 });

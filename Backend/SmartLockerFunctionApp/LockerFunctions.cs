@@ -23,7 +23,7 @@ namespace SmartLockerFunctionApp
     public class LockerFunctions
     {
         [FunctionName("ReceiveLockerMessages")]
-        public async Task ReceiveLockerMessages([IoTHubTrigger("messages/events", Connection = "IoTHub")]EventData message, ILogger log)
+        public async Task ReceiveLockerMessages([IoTHubTrigger("messages/events", Connection = "IoTHub")] EventData message, ILogger log)
         {
             string json = Encoding.UTF8.GetString(message.Body.Array);
             Log newLog = JsonConvert.DeserializeObject<Log>(json);
@@ -60,8 +60,6 @@ namespace SmartLockerFunctionApp
 
             catch (Exception ex)
             {
-                log.LogError(ex.ToString());
-                //throw ex;
                 return new StatusCodeResult(500);
             }
 
