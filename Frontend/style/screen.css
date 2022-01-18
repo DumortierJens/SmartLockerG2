@@ -768,6 +768,79 @@ a:focus {
   cursor: pointer;
 }
 
+/* Profielpagina */
+
+.profile_picture_content{
+  margin-top: 72px;
+  text-align: center;
+}
+
+.profile_picture{
+  height: 5rem;
+  width: 5rem;
+  border-radius: 5rem;
+  margin: 2rem 0 0.5rem 0;
+}
+
+.profile_name{
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.profile_icons_container{
+  display: grid;
+  width: 80%;
+  grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+  margin: 1.5rem auto 0 auto;
+  row-gap: 0.5rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.profile_icon_afmelden{
+  fill: var(--blue-accent-color);
+  width: 1.5rem;
+  height: 1.5rem;
+  grid-area: afmeldenicon;
+}
+
+.profile_icon_afmelden_text{
+  grid-area: afmeldentext;
+}
+
+.profile_icon_reservations{
+  width: 1.5rem;
+  height: 1.5rem;
+  grid-area: reservatieicon;
+}
+
+.profile_icon_reservations_text{
+  grid-area: reservatietext;
+}
+
+.profile_info_content{
+  margin: 1.5rem 2rem 0 2rem;
+}
+
+.lightgrey-bg{
+  background-color: var(--grey-bg);
+  min-height: calc(100vh - 72px);
+}
+
+.profile_info_title{
+  color: #525152;
+}
+
+.profile_info_data{
+  font-weight: 600;
+}
+
+.delete_account{
+  color: #8F3D3D;
+  margin-top: 3rem;
+}
+
 /* Animations*/
 
 @keyframes fadein {
