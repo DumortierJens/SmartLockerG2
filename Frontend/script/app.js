@@ -133,7 +133,7 @@ const ListenToCLickSport = function() {
 
 function ListenToClickBackArrow() {
     htmlBackArrow.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/overzichtpagina${WEBEXTENTION}`);
+        window.location.replace(`${location.origin}/overzicht${WEBEXTENTION}`);
     });
 }
 
