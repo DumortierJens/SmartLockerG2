@@ -41,7 +41,7 @@ const logout = function () {
 const callbackLoginSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
-    window.location.replace(`${WEBURI}/overzicht${WEBEXTENTION}`);
+    window.location.replace(`${location.origin}/overzicht${WEBEXTENTION}`);
 };
 
 const callbackLoginFailed = function (response) {
