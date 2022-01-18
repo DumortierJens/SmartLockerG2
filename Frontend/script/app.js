@@ -212,9 +212,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.info('DOM geladen');
 
     // user authentication
-    userToken = sessionStorage.getItem("usertoken");
-    if (userToken == null)
-        window.location.replace(location.origin);
+    //userToken = sessionStorage.getItem("usertoken");
+    //if (userToken == null)
+    //window.location.replace(location.origin);
 
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
