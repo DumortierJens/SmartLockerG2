@@ -472,6 +472,8 @@ a:focus {
     }
 }
 
-.locker_detail_blur {
-    text-align: center;
+@media (min-width: 550px) {
+    .locker_detail_blur {
+        text-align: center;
+    }
 }
