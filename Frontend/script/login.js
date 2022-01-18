@@ -1,6 +1,6 @@
 window.fbAsyncInit = function () {
     FB.init({
-        appId: '614695093159122',
+        appId: '4670544903052300',
         cookie: true,
         xfbml: true,
         version: 'v12.0'
@@ -16,12 +16,10 @@ window.fbAsyncInit = function () {
 const statusChangeCallback = function (response) {
     if (response.status === 'connected') {
         console.log('Logged in with Facebook and authenticated');
-        if (document.querySelector('.js-login-page')) window.location.replace(`https://${window.location.hostname}/overzicht.html`);
-        console.log(response);
-        loginUser(response.authResponse.accessToken);
+        if (document.querySelector('.js-login-page')) loginUser(response.authResponse.accessToken);
     } else {
         console.log('Not authenticated with Facebook');
-        if (document.querySelector('.js-login-page') === null) window.location.replace(`https://${window.location.hostname}/`);
+        if (document.querySelector('.js-login-page') === null) window.location.replace(location.origin);
     }
 };
 
@@ -32,26 +30,22 @@ const checkLoginState = function () {
 };
 
 const logout = function () {
+    sessionStorage.removeItem("usertoken");
+
     FB.logout(function (response) {
         console.log('Logged out');
         statusChangeCallback(response);
     });
 };
 
-// const getUserDetails = function () {
-//     FB.api('/me?fields=name,email,birthday,location,picture', function (response) {
-//         if (response && !response.error) {
-//             loginUser(response);
-//         }
-//     });
-// };
-
 const callbackLoginSucceed = function (response) {
-    console.log(response);
+    console.log("Login succeed");
+    sessionStorage.setItem("usertoken", response.token);
+    window.location.replace(`${WEBURI}/overzicht${WEBEXTENTION}`);
 };
 
 const callbackLoginFailed = function (response) {
-
+    console.log(response);
 };
 
 const loginUser = function (accessToken) {
@@ -59,7 +53,7 @@ const loginUser = function (accessToken) {
     const body = JSON.stringify({
         accessToken: accessToken
     });
-    handleData('http://localhost:7071/api/users/login/facebook', callbackLoginSucceed, callbackLoginFailed, 'POST', body);
+    handleData(`${APIURI}/users/login`, callbackLoginSucceed, callbackLoginFailed, 'POST', body);
 };
 
 (function (d, s, id) {

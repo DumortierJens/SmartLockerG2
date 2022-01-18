@@ -4,8 +4,10 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="style/normalize.css" />
-        <link rel="stylesheet" href="style/screen.css" />
+        <link rel="stylesheet" href="/style/normalize.css" />
+        <link rel="stylesheet" href="/style/screen.css" />
+        <script src="/script/constants.js"></script>
+        <script src="/script/datahandler.js"></script>
         <script src="/script/login.js"></script>
         <title>Loginpagina</title>
     </head>
@@ -15,7 +17,7 @@
             <div class="login_content_bg">
                 <div class="login_content">
                     Inloggen/aanmelden
-                    <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email,user_birthday,user_location" onlogin="checkLoginState();"></div>
+                    <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email,user_birthday" onlogin="checkLoginState();"></div>
                 </div>
             </div>
             <p class="login_info">Opmerking: een account is nodig voor een optimale ervaring en draagt bij tot de beveiliging van de app</p>

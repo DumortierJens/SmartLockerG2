@@ -60,7 +60,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                     await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
                 }
 
-                return new OkObjectResult(_tokenIssuer.IssueTokenForUser(user));
+                return new OkObjectResult(new { token = _tokenIssuer.IssueTokenForUser(user) });
             }
             catch (Exception ex)
             {

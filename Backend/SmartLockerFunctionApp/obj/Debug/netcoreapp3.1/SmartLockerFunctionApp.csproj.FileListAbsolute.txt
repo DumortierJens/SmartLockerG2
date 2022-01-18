@@ -188,3 +188,4 @@ D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debu
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\JWT.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Functions.Extensions.dll
+D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.AssemblyReference.cache
