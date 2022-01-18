@@ -791,6 +791,7 @@ a:focus {
 .profile_icons_container{
   display: grid;
   width: 80%;
+  max-width: 31.25rem;
   grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
   margin: 1.5rem auto 0 auto;
   row-gap: 0.5rem;
@@ -864,6 +865,9 @@ a:focus {
 @media (min-width: 550px) {
   .locker_detail_blur {
     text-align: center;
+  }
+  .profile_info_content{
+    margin: 1.5rem 30% 0 30%;
   }
 }
 
