@@ -289,3 +289,4 @@ C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\o
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.CopyComplete
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.dll
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
+C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.AssemblyReference.cache

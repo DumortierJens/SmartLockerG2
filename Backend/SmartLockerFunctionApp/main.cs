@@ -160,8 +160,8 @@ namespace SmartLockerFunctionApp
         }
         [FunctionName("GetReserevationsByLockerId")]
         public static async Task<IActionResult> GetReserevationsByLockerId(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "reservations/{lockerId}")] HttpRequest req,
-          string lockerId,
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/reservations/{lockerId}")] HttpRequest req,
+          Guid lockerId,
           ILogger log)
         {
             try
@@ -169,7 +169,7 @@ namespace SmartLockerFunctionApp
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
                 List<Reservation> reservations = new List<Reservation>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id DESC");
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id");
                 query.WithParameter("@id", lockerId);
                 FeedIterator<Reservation> iterator = container.GetItemQueryIterator<Reservation>(query);
                 FeedResponse<Reservation> response = await iterator.ReadNextAsync();
@@ -185,7 +185,7 @@ namespace SmartLockerFunctionApp
         }
         [FunctionName("GetReserevationsByUserId")]
         public static async Task<IActionResult> GetReserevationsByUserId(
-         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "reservations/{userId}")] HttpRequest req,
+         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/reservations/{userId}")] HttpRequest req,
          string userId,
          ILogger log)
         {
@@ -194,7 +194,7 @@ namespace SmartLockerFunctionApp
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
                 List<Reservation> reservations = new List<Reservation>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id DESC");
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.userId = @id");
                 query.WithParameter("@id", userId);
                 FeedIterator<Reservation> iterator = container.GetItemQueryIterator<Reservation>(query);
                 FeedResponse<Reservation> response = await iterator.ReadNextAsync();
