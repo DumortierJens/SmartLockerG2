@@ -212,9 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.info('DOM geladen');
 
     // user authentication
-    //userToken = sessionStorage.getItem("usertoken");
-    //if (userToken == null)
-    //window.location.replace(location.origin);
+    userToken = sessionStorage.getItem("usertoken");
+    userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiVXNlciJ9.9PqxSKs19MPQCU_6Lt38Krq1aZeHBbZ1Y2Sf4orTyao";
+    if (userToken == null)
+        window.location.replace(location.origin);
 
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
