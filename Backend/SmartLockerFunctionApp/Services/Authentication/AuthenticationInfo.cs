@@ -56,7 +56,6 @@ namespace SmartLockerFunctionApp.Services.Authentication
             }
             catch (Exception ex)
             {
-                throw ex;
                 IsValid = false;
 
                 return;
