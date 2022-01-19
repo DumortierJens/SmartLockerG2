@@ -27,5 +27,8 @@ namespace SmartLockerFunctionApp.Models
 
         [JsonProperty("userCreated")]
         public DateTime UserCreated { get; set; }
+
+        [JsonProperty("isBlocked")]
+        public bool IsBlocked { get; set; }
     }
 }
