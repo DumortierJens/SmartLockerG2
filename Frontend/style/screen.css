@@ -32,6 +32,7 @@
   --yellow-wachten: #944a00;
   --red-faded: #ffcccc;
   --red-verlopen: #b10303;
+  --red-dark: #8f3d3d;
 
   --grey-bg: #f2f2f2;
   --grey-bg-dark: #6b6969;
@@ -517,7 +518,7 @@ a:focus {
   justify-items: center;
 }
 
-.reservation {
+.reservation, .locker {
   position: relative;
   width: 90%;
   max-width: 20.5rem;
@@ -540,21 +541,21 @@ a:focus {
   margin: 1rem;
 }
 
-.reservation_grid {
+.reservation_grid, .locker_grid {
   display: grid;
   grid-template-rows: 1.5rem 1.5rem;
   grid-template-areas: 'name' 'date';
   align-self: center;
 }
 
-.reservation_name {
+.reservation_name, .locker_name {
   align-self: center;
   grid-area: name;
   font-size: 1.25rem;
   font-weight: 600;
 }
 
-.reservation_date {
+.reservation_date, .locker_status {
   align-self: center;
   grid-area: date;
   font-size: 0.75rem;
@@ -683,6 +684,7 @@ a:focus {
   color: black;
   font-weight: 400;
   padding: 0.25rem;
+  outline: none;
 }
 
 .reservation_more_border {
@@ -775,7 +777,7 @@ a:focus {
   text-align: center;
 }
 
-.profile_picture {
+.profile_picture{
   height: 5rem;
   width: 5rem;
   border-radius: 5rem;
@@ -841,7 +843,7 @@ a:focus {
 }
 
 .delete_account {
-  color: #8f3d3d;
+  color: var(--red-dark);
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
@@ -899,6 +901,30 @@ a:focus {
   text-align: center;
 }
 
+/* Lockerbeheer */
+.locker_management_content{
+  margin: 6rem 1rem 1rem 1rem;
+}
+
+.locker_svg{
+  align-self: center;
+  width: 2rem;
+  height: 2rem;
+  margin: 1rem;
+}
+
+.locker_status_out_of_use{
+  color: var(--red-dark);
+}
+
+.locker_status_occupied{
+  color: darkorange;
+}
+
+.locker_status_available{
+  color: var(--status-available);
+}
+
 /* Animations*/
 
 @keyframes fadein {
@@ -943,5 +969,8 @@ a:focus {
   }
   .confirm_reservationbtn{
     font-size: 0.75rem;
+  }
+  .locker_name{
+    font-size: 1rem;
   }
 }
