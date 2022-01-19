@@ -719,7 +719,7 @@ a:focus {
   text-align: center;
 }
 
-.checkbox{
+.checkbox {
   position: absolute;
   display: inline-flex;
   align-items: center;
@@ -730,14 +730,14 @@ a:focus {
   align-self: center;
 }
 
-.checkbox_input{
+.checkbox_input {
   display: none;
   align-self: center;
   position: absolute;
   right: 1rem;
 }
 
-.checkbox_box{
+.checkbox_box {
   width: 1rem;
   height: 1rem;
   border: 2px solid var(--grey-bg);
@@ -749,23 +749,154 @@ a:focus {
   cursor: pointer;
 }
 
-.checkbox_input:checked + .checkbox_box{
+.checkbox_input:checked + .checkbox_box {
   border-color: var(--blue-accent-color);
   content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
-.canceledit{
+.canceledit {
   fill: var(--red-verlopen);
   height: 1rem;
   width: 1rem;
   cursor: pointer;
 }
 
-.doneedit{
+.doneedit {
   fill: var(--green-bezig);
   height: 1.5rem;
   width: 1.5rem;
   cursor: pointer;
+}
+
+/* Profielpagina */
+
+.profile_picture_content {
+  margin-top: 72px;
+  text-align: center;
+}
+
+.profile_picture {
+  height: 5rem;
+  width: 5rem;
+  border-radius: 5rem;
+  margin: 2rem 0 0.5rem 0;
+}
+
+.profile_name {
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.profile_icons_container {
+  display: grid;
+  width: 80%;
+  max-width: 31.25rem;
+  grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+  margin: 1.5rem auto 0 auto;
+  row-gap: 0.5rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.profile_icon_afmelden {
+  fill: var(--blue-accent-color);
+  width: 1.5rem;
+  height: 1.5rem;
+  grid-area: afmeldenicon;
+}
+
+.profile_icon_afmelden_text {
+  grid-area: afmeldentext;
+}
+
+.profile_icon_reservations {
+  width: 1.5rem;
+  height: 1.5rem;
+  grid-area: reservatieicon;
+}
+
+.profile_icon_reservations_text {
+  grid-area: reservatietext;
+}
+
+.profile_info_content {
+  margin: 1.5rem 2rem 0 2rem;
+}
+
+.lightgrey-bg {
+  background-color: var(--grey-bg);
+  position: absolute;
+  width: 100%;
+  top: 0;
+  min-height: 100vh;
+}
+
+.profile_info_title {
+  color: #525152;
+}
+
+.profile_info_data {
+  font-weight: 600;
+}
+
+.delete_account {
+  color: #8f3d3d;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Add reservation */
+.add_reservation_container {
+  position: absolute;
+  margin: 6rem 0 0 0;
+  background-color: white;
+  border-radius: 0.5rem;
+  width: auto;
+  right: 1rem;
+  left: 1rem;
+  padding-bottom: 2rem;
+}
+
+.add_reservation_content {
+  margin: 2rem auto 0 auto;
+  text-align: center;
+  border-bottom: 2px solid var(--grey-bg);
+  width: 50%;
+}
+
+.add_reservation_title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--blue-accent-color);
+}
+
+.add_reservation_sport,
+.add_reservation_time {
+  border: none;
+  font-family: 'MyFont';
+  margin-top: 0.5rem;
+  background-color: white;
+  outline: none;
+  padding-left: 22px;
+  width: 100px;
+}
+
+.confirm_reservationbtn{
+  margin-top: 1.5rem;
+  text-align: center;
+  background-color: var(--blue-accent-color);
+  color: white;
+  border: none;
+  height: 2.5rem;
+  border-radius: 5px;
+  width: 50%;
+  font-family: 'MyFont';
+  cursor: pointer;
+}
+
+.confirm_reservationbtn_container{
+  text-align: center;
 }
 
 /* Animations*/
@@ -792,10 +923,25 @@ a:focus {
   .locker_detail_blur {
     text-align: center;
   }
+  .profile_info_content {
+    margin: 1.5rem 30% 0 30%;
+  }
+  .header_add_reservation {
+    font-size: 2rem;
+  }
 }
 
 @media (max-width: 360px) {
   .reservation_name {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .header_add_reservation {
+    font-size: 1.2rem;
+  }
+  .confirm_reservationbtn{
+    font-size: 0.75rem;
   }
 }

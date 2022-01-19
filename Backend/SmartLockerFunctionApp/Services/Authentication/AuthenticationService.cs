@@ -105,8 +105,6 @@ namespace SmartLockerFunctionApp.Services.Authentication
                     throw ex;
                 }
             }
-
-            return new Models.User();
         }
     }
 }
