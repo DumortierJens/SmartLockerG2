@@ -162,7 +162,7 @@ function ListenToOpen(id) {
         htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
         htmlPopUp.style.animation = 'fadeout 0.3s';
         setTimeout(DisplayNone, 300);
-        handleData($ `${APIURI}/lockers/${id}/open`, null, null, 'POST', userToken);
+        handleData(`${APIURI}/lockers/${id}/open`, null, null, 'POST', userToken);
     });
 }
 

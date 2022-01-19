@@ -876,15 +876,21 @@ a:focus {
     color: var(--blue-accent-color);
 }
 
-.add_reservation_sport,
 .add_reservation_time {
     border: none;
     font-family: 'MyFont';
     margin-top: 0.5rem;
     background-color: white;
     outline: none;
-    padding-left: 22px;
-    width: 100px;
+    align-items: center;
+}
+
+.add_reservation_sport {
+    border: none;
+    font-family: 'MyFont';
+    margin-top: 0.5rem;
+    background-color: white;
+    outline: none;
 }
 <<<<<<< HEAD
 
@@ -970,12 +976,11 @@ a:focus {
     }
 }
 
-@media (min-width: 800px){
-  .profile_info_content {
-    margin: 1.5rem 30% 0 30%;
-  }
+@media (min-width: 800px) {
+    .profile_info_content {
+        margin: 1.5rem 30% 0 30%;
+    }
 }
-
 
 @media (max-width: 360px) {
     .reservation_name {
