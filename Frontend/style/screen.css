@@ -426,6 +426,7 @@ a:focus {
 }
 
 .login_content_bg {
+<<<<<<< HEAD
   position: relative;
   width: 18.75rem;
   background-color: white;
@@ -445,6 +446,30 @@ a:focus {
   text-align: center;
   cursor: pointer;
   margin-top: 0.5rem;
+=======
+    position: relative;
+    width: 18.75rem;
+    height: 8.5rem;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4rem;
+    border-radius: 0.5rem;
+}
+
+.login_content {
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--blue-accent-color);
+    text-align: center;
+    top: 1rem;
+}
+
+.facebook_login {
+    width: 250px;
+    margin-top: 1.5rem;
+    cursor: pointer;
+>>>>>>> develop
 }
 
 .login_info {
@@ -886,6 +911,7 @@ a:focus {
     padding-left: 22px;
     width: 100px;
 }
+<<<<<<< HEAD
 
 .confirm_reservationbtn {
     margin-top: 1.5rem;
@@ -904,30 +930,26 @@ a:focus {
     text-align: center;
 }
 
+=======
+>>>>>>> develop
 
-.locker_svg{
-  align-self: center;
-  width: 2rem;
-  height: 2rem;
-  margin: 1rem;
+.confirm_reservationbtn {
+    margin-top: 1.5rem;
+    text-align: center;
+    background-color: var(--blue-accent-color);
+    color: white;
+    border: none;
+    height: 2.5rem;
+    border-radius: 5px;
+    width: 50%;
+    font-family: 'MyFont';
+    cursor: pointer;
 }
 
-.locker_status_out_of_use{
-  color: var(--red-dark);
+.confirm_reservationbtn_container {
+    text-align: center;
 }
 
-.locker_status_occupied{
-  color: darkorange;
-}
-
-.locker_status_available{
-  color: var(--status-available);
-}
-
-/* Overzicht gebruikers */
-.users_container{
-  cursor: pointer;
-}
 
 /* Loading screen */
 .loading_container{
