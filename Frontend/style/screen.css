@@ -427,7 +427,6 @@ a:focus {
 .login_content_bg {
   position: relative;
   width: 18.75rem;
-  height: 8.5rem;
   background-color: white;
   margin-left: auto;
   margin-right: auto;
@@ -436,17 +435,15 @@ a:focus {
 }
 
 .login_content {
-  position: absolute;
   font-size: 1.5rem;
   color: var(--blue-accent-color);
-  text-align: center;
-  top: 1rem;
+  padding: 1rem;
 }
 
 .facebook_login {
-  width: 250px;
-  margin-top: 1.5rem;
+  text-align: center;
   cursor: pointer;
+  margin-top: 0.5rem;
 }
 
 .login_info {
@@ -929,6 +926,18 @@ a:focus {
 .users_container{
   cursor: pointer;
 }
+
+/* Loading screen */
+.loading_container{
+  position: absolute;
+  width: 15rem;
+  height: 15rem;
+  top: 50%;
+  left: 50%;
+  margin-top: -7.5rem;
+  margin-left: -7.5rem;
+}
+
 
 /* Animations*/
 
