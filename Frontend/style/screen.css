@@ -940,6 +940,13 @@ a:focus {
     }
 }
 
+@media (min-width: 800px){
+  .profile_info_content {
+    margin: 1.5rem 30% 0 30%;
+  }
+}
+
+
 @media (max-width: 360px) {
     .reservation_name {
         font-size: 1rem;
