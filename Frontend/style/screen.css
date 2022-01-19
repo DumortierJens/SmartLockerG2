@@ -954,13 +954,18 @@ a:focus {
   .locker_detail_blur {
     text-align: center;
   }
-  .profile_info_content {
-    margin: 1.5rem 30% 0 30%;
-  }
+
   .header_add_reservation {
     font-size: 2rem;
   }
 }
+
+@media (min-width: 800px){
+  .profile_info_content {
+    margin: 1.5rem 30% 0 30%;
+  }
+}
+
 
 @media (max-width: 360px) {
   .reservation_name {
