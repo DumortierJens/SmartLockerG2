@@ -23,10 +23,17 @@
     --blue-accent-color-light: #4992ff;
     --blue-accent-color-dark: #1f48ff;
     --status-available: #008000;
-    --status-available-icon: #00FF00;
+    --status-available-icon: #00ff00;
     --status-unavailable: #ffa500;
     --status-outofuse: #b60000;
+    --green-faded: #a9e8a9;
+    --green-bezig: #186918;
+    --yellow-faded: #fffbc2;
+    --yellow-wachten: #944a00;
+    --red-faded: #ffcccc;
+    --red-verlopen: #b10303;
     --grey-bg: #f2f2f2;
+    --grey-bg-dark: #6b6969;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -108,12 +115,12 @@ a:focus {
     cursor: pointer;
 }
 
-.booking_icon{
+.booking_icon {
     height: 1.5rem;
     width: 1.5rem;
 }
 
-.reservatiebtntext{
+.reservatiebtntext {
     align-self: center;
     margin-left: 8px;
 }
@@ -351,7 +358,7 @@ a:focus {
 }
 
 .svg-avaible {
-    fill: var(--status-available-icon)
+    fill: var(--status-available-icon);
 }
 
 .rect_green {
@@ -419,28 +426,25 @@ a:focus {
 }
 
 .login_content_bg {
-    position: relative;
-    width: 18.75rem;
-    height: 8.5rem;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 4rem;
-    border-radius: 0.5rem;
+  position: relative;
+  width: 18.75rem;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4rem;
+  border-radius: 0.5rem;
 }
 
 .login_content {
-    position: absolute;
-    font-size: 1.5rem;
-    color: var(--blue-accent-color);
-    text-align: center;
-    top: 1rem;
+  font-size: 1.5rem;
+  color: var(--blue-accent-color);
+  padding: 1rem;
 }
 
 .facebook_login {
-    width: 250px;
-    margin-top: 1.5rem;
-    cursor: pointer;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 0.5rem;
 }
 
 .login_info {
@@ -449,6 +453,494 @@ a:focus {
     color: white;
     margin: 4rem auto 0 auto;
     width: 80%;
+}
+
+
+/* Reservatiepagina */
+
+.reservation_legende {
+    width: 80%;
+    max-width: 20.5rem;
+    margin: 0 auto 0 auto;
+    display: grid;
+    grid-template-columns: 3.5rem;
+    grid-template-areas: 'bezigicon bezigtekst' 'wachtenicon wachtentekst' 'verlopenicon verlopentekst';
+    row-gap: 1rem;
+    padding-top: 96px;
+}
+
+.rect_bezig {
+    display: grid;
+    grid-area: bezigicon;
+    height: 1.5rem;
+    width: 3.5rem;
+    background-color: var(--green-faded);
+    border-radius: 5px;
+    align-self: center;
+    font-size: 0.75rem;
+    color: var(--green-bezig);
+    align-items: center;
+    justify-items: center;
+}
+
+.reservation_info {
+    font-size: 0.75rem;
+    align-self: center;
+    margin-left: 1rem;
+    font-weight: 300;
+}
+
+.rect_wachten {
+    display: grid;
+    grid-area: wachtenicon;
+    height: 1.5rem;
+    width: 3.5rem;
+    background-color: var(--yellow-faded);
+    border-radius: 5px;
+    align-self: center;
+    font-size: 0.75rem;
+    color: var(--yellow-wachten);
+    align-items: center;
+    justify-items: center;
+}
+
+.rect_verlopen {
+    display: grid;
+    grid-area: verlopenicon;
+    height: 1.5rem;
+    width: 3.5rem;
+    background-color: var(--red-faded);
+    border-radius: 5px;
+    align-self: center;
+    font-size: 0.75rem;
+    color: var(--red-verlopen);
+    align-items: center;
+    justify-items: center;
+}
+
+.reservation {
+    position: relative;
+    width: 90%;
+    max-width: 20.5rem;
+    margin: 1.5rem auto 0 auto;
+    height: 4rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    text-align: start;
+}
+
+.reservations_bg {
+    background-color: var(--grey-bg);
+    min-height: 100vh;
+}
+
+.user_picture {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 5rem;
+    margin: 1rem;
+}
+
+.reservation_grid {
+    display: grid;
+    grid-template-rows: 1.5rem 1.5rem;
+    grid-template-areas: 'name' 'date';
+    align-self: center;
+}
+
+.reservation_name {
+    align-self: center;
+    grid-area: name;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.reservation_date {
+    align-self: center;
+    grid-area: date;
+    font-size: 0.75rem;
+    font-weight: 300;
+}
+
+.status_bezig_rect {
+    position: absolute;
+    right: 56px;
+    height: 1.5rem;
+    width: 3.5rem;
+    background-color: var(--green-faded);
+    border-radius: 5px;
+    font-size: 0.75rem;
+    color: var(--green-bezig);
+    align-self: center;
+    margin-left: 1rem;
+}
+
+.status_wachten_rect {
+    position: absolute;
+    right: 56px;
+    height: 1.5rem;
+    width: 3.5rem;
+    background-color: var(--yellow-faded);
+    border-radius: 5px;
+    font-size: 0.75rem;
+    color: var(--yellow-wachten);
+    align-self: center;
+    margin-left: 1rem;
+}
+
+.status_verlopen_rect {
+    position: absolute;
+    right: 56px;
+    height: 1.5rem;
+    width: 3.5rem;
+    background-color: var(--red-faded);
+    border-radius: 5px;
+    font-size: 0.75rem;
+    color: var(--red-verlopen);
+    align-self: center;
+    margin-left: 1rem;
+}
+
+.arrow_more {
+    position: absolute;
+    height: 1rem;
+    width: 1rem;
+    right: 1rem;
+    align-self: center;
+    cursor: pointer;
+    fill: black;
+}
+
+.reservation_details_edit_and_delete {
+    width: 90%;
+    max-width: 20.5rem;
+    height: 2.625rem;
+    background-color: white;
+    margin: 0 auto 0 auto;
+}
+
+.reservation_details_edit {
+    width: 50%;
+    border-top: 1px solid var(--grey-bg);
+}
+
+.reservation_details_delete {
+    width: 50%;
+    border-top: 1px solid var(--grey-bg);
+}
+
+.reservation_detail {
+    position: relative;
+    width: 90%;
+    max-width: 20.5rem;
+    margin: 0 auto 0 auto;
+    background-color: white;
+    border-top: 1px solid var(--grey-bg);
+    text-align: start;
+    height: 2.1875rem;
+}
+
+.reservation_detail_title {
+    color: var(--grey-bg-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    align-self: center;
+    position: absolute;
+    left: 1rem;
+}
+
+.reservation_detail_content {
+    font-size: 0.75rem;
+    align-self: center;
+    position: absolute;
+    right: 1rem;
+}
+
+.reservation_opmerking {
+    background-color: white;
+    width: 90%;
+    max-width: 20.5rem;
+    margin: 0 auto 0 auto;
+    border-top: 1px solid var(--grey-bg);
+    text-align: start;
+    padding: 0 0 1rem 1rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.reservation_opmerking_title {
+    color: var(--grey-bg-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.textarea {
+    display: block;
+    width: 90%;
+    overflow: hidden;
+    resize: both;
+    border: 1px solid var(--grey-bg);
+    border-radius: 0.2rem;
+    min-height: 40px;
+    line-height: 20px;
+    color: black;
+    font-weight: 400;
+    padding: 0.25rem;
+}
+
+.reservation_more_border {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.position_fixed {
+    position: fixed;
+    top: 0;
+    z-index: 1;
+}
+
+.editicon {
+    cursor: pointer;
+}
+
+.deleteicon {
+    cursor: pointer;
+}
+
+.popupreservation {
+    height: auto;
+    padding-bottom: 1rem;
+}
+
+.editinfo {
+    width: 4rem;
+    font-size: 0.75rem;
+    font-family: 'MyFont';
+    outline: none;
+    background-color: white;
+    border: 1px solid var(--grey-bg);
+    border-radius: 0.1rem;
+    text-align: center;
+}
+
+.checkbox {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    left: 1rem;
+    color: var(--grey-bg-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    align-self: center;
+}
+
+.checkbox_input {
+    display: none;
+    align-self: center;
+    position: absolute;
+    right: 1rem;
+}
+
+.checkbox_box {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--grey-bg);
+    border-radius: 3px;
+    align-self: center;
+    position: absolute;
+    right: 1rem;
+    content: '';
+    cursor: pointer;
+}
+
+.checkbox_input:checked+.checkbox_box {
+    border-color: var(--blue-accent-color);
+    content: url('/svg/iconmonstr-check-mark-17.svg');
+}
+
+.canceledit {
+    fill: var(--red-verlopen);
+    height: 1rem;
+    width: 1rem;
+    cursor: pointer;
+}
+
+.doneedit {
+    fill: var(--green-bezig);
+    height: 1.5rem;
+    width: 1.5rem;
+    cursor: pointer;
+}
+
+
+/* Profielpagina */
+
+.profile_picture_content {
+    margin-top: 72px;
+    text-align: center;
+}
+
+.profile_picture {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 5rem;
+    margin: 2rem 0 0.5rem 0;
+}
+
+.profile_name {
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.profile_icons_container {
+    display: grid;
+    width: 80%;
+    max-width: 31.25rem;
+    grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    margin: 1.5rem auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
+.profile_icon_afmelden {
+    fill: var(--blue-accent-color);
+    width: 1.5rem;
+    height: 1.5rem;
+    grid-area: afmeldenicon;
+}
+
+.profile_icon_afmelden_text {
+    grid-area: afmeldentext;
+}
+
+.profile_icon_reservations {
+    width: 1.5rem;
+    height: 1.5rem;
+    grid-area: reservatieicon;
+}
+
+.profile_icon_reservations_text {
+    grid-area: reservatietext;
+}
+
+.profile_info_content {
+    margin: 1.5rem 2rem 0 2rem;
+}
+
+.lightgrey-bg {
+    background-color: var(--grey-bg);
+    position: absolute;
+    width: 100%;
+    top: 0;
+    min-height: 100vh;
+}
+
+.profile_info_title {
+    color: #525152;
+}
+
+.profile_info_data {
+    font-weight: 600;
+}
+
+.delete_account {
+    color: #8f3d3d;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+
+/* Add reservation */
+
+.add_reservation_container {
+    position: absolute;
+    margin: 6rem 0 0 0;
+    background-color: white;
+    border-radius: 0.5rem;
+    width: auto;
+    right: 1rem;
+    left: 1rem;
+    padding-bottom: 2rem;
+}
+
+.add_reservation_content {
+    margin: 2rem auto 0 auto;
+    text-align: center;
+    border-bottom: 2px solid var(--grey-bg);
+    width: 50%;
+}
+
+.add_reservation_title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--blue-accent-color);
+}
+
+.add_reservation_time {
+    border: none;
+    font-family: 'MyFont';
+    margin-top: 0.5rem;
+    background-color: white;
+    outline: none;
+    align-items: center;
+}
+
+.add_reservation_sport {
+    border: none;
+    font-family: 'MyFont';
+    margin-top: 0.5rem;
+    background-color: white;
+    outline: none;
+}
+<<<<<<< HEAD
+
+.confirm_reservationbtn {
+    margin-top: 1.5rem;
+    text-align: center;
+    background-color: var(--blue-accent-color);
+    color: white;
+    border: none;
+    height: 2.5rem;
+    border-radius: 5px;
+    width: 50%;
+    font-family: 'MyFont';
+    cursor: pointer;
+}
+
+.confirm_reservationbtn_container {
+    text-align: center;
+}
+
+=======
+>>>>>>> develop
+
+.confirm_reservationbtn {
+    margin-top: 1.5rem;
+    text-align: center;
+    background-color: var(--blue-accent-color);
+    color: white;
+    border: none;
+    height: 2.5rem;
+    border-radius: 5px;
+    width: 50%;
+    font-family: 'MyFont';
+    cursor: pointer;
+}
+
+.confirm_reservationbtn_container {
+    text-align: center;
+}
+
+
+/* Loading screen */
+.loading_container{
+  position: absolute;
+  width: 15rem;
+  height: 15rem;
+  top: 50%;
+  left: 50%;
+  margin-top: -7.5rem;
+  margin-left: -7.5rem;
 }
 
 
@@ -475,5 +967,32 @@ a:focus {
 @media (min-width: 550px) {
     .locker_detail_blur {
         text-align: center;
+    }
+    .profile_info_content {
+        margin: 1.5rem 30% 0 30%;
+    }
+    .header_add_reservation {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 800px) {
+    .profile_info_content {
+        margin: 1.5rem 30% 0 30%;
+    }
+}
+
+@media (max-width: 360px) {
+    .reservation_name {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .header_add_reservation {
+        font-size: 1.2rem;
+    }
+    .confirm_reservationbtn {
+        font-size: 0.75rem;
     }
 }

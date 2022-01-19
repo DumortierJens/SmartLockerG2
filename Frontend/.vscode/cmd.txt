@@ -1,0 +1,1 @@
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout server.key.pem -out server.crt.pem -subj "/CN=smartlockerhome.jensdumortier.be" -days 3650

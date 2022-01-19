@@ -1,14 +1,20 @@
-'use strict';
-
 let currentLockerID;
+let userToken;
 let OpmerkingClicked = false;
 
-let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar, htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn, htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow, htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn;
+let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
+    htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
+    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 
 ws.onmessage = (event) => {
     console.log(event.data);
+    if (event.data.lockerId == currentLockerID && event.data.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && event.data.value == 1) {
+        htmlLockerSvg.innerHTML = getSvg('locker close');
+    }
+
 };
 
 const showOverview = function(jsonObject) {
@@ -117,17 +123,17 @@ const showLocker = function(jsonObject) {
 const ListenToCLickSport = function() {
     htmlSoccer.addEventListener('click', function() {
         currentLockerID = htmlSoccer.getAttribute('data');
-        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
+        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
     });
     htmlBasketball.addEventListener('click', function() {
         currentLockerID = htmlBasketball.getAttribute('data');
-        window.location.replace(`http://${window.location.hostname}:5500/lockerdetailpagina.html?id=${currentLockerID}`);
+        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
     });
 };
 
 function ListenToClickBackArrow() {
     htmlBackArrow.addEventListener('click', function() {
-        window.location.replace(`http://${window.location.hostname}:5500/overzichtpagina.html`);
+        window.location.replace(`${location.origin}/overzicht${WEBEXTENTION}`);
     });
 }
 
@@ -156,7 +162,7 @@ function ListenToOpen(id) {
         htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
         htmlPopUp.style.animation = 'fadeout 0.3s';
         setTimeout(DisplayNone, 300);
-        handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers/${id}/open`, null, null, 'POST');
+        handleData(`${APIURI}/lockers/${id}/open`, null, null, 'POST', userToken);
     });
 }
 
@@ -187,20 +193,30 @@ function ListenToClickOpmerkingBtn() {
             htmlSubmitBtn.style = 'display: block;';
             htmlExtraContent.style.animation = 'fadein 0.5s';
             OpmerkingClicked = true;
+            htmlSubmitBtn.addEventListener('click', function() {
+                console.log(`Verzend ${htmlOpmerkingText.value} naar database`)
+            });
         }
     });
 }
 
 const getOverzicht = function() {
-    handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers`, showOverview);
+    handleData(`${APIURI}/lockers`, showOverview, null, 'GET', null, userToken);
 };
 
 const getLockerDetail = function(id) {
-    handleData(`https://smartlockerfunctions.azurewebsites.net/api/lockers/${id}`, showLocker);
+    handleData(`${APIURI}/lockers/${id}`, showLocker, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     console.info('DOM geladen');
+
+    // user authentication
+    userToken = sessionStorage.getItem("usertoken");
+    userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiVXNlciJ9.9PqxSKs19MPQCU_6Lt38Krq1aZeHBbZ1Y2Sf4orTyao";
+    if (userToken == null)
+        window.location.replace(location.origin);
+
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
     htmlBeschikbaar = document.querySelector('.js-beschikbaar');
@@ -209,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn');
     htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv');
     htmlSubmitBtn = document.querySelector('.js-submit');
+    htmlOpmerkingText = document.querySelector('.js-opmerkingtext');
     htmlPopUp = document.querySelector('.js-popup');
     htmlPopUpCancel = document.querySelector('.js-popup-cancel');
     htmlBackground = document.querySelector('.js-background');
@@ -217,15 +234,15 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlBackArrow = document.querySelector('.js-backarrow');
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
-    htmlReserverenBtn = document.querySelector('.js-reserve');
+    htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     if (htmlOverview) {
-        //deze code wordt gestart vanaf overzichtpagina.html
+        //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
     }
     if (htmlLockerTitle) {
+        //deze code wordt gestart vanaf locker.html
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        //deze code wordt gestart vanaf lockerdetailpagina.html
         getLockerDetail(id);
     }
 });
