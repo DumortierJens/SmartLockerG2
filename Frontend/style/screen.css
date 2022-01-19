@@ -925,6 +925,11 @@ a:focus {
   color: var(--status-available);
 }
 
+/* Overzicht gebruikers */
+.users_container{
+  cursor: pointer;
+}
+
 /* Animations*/
 
 @keyframes fadein {
