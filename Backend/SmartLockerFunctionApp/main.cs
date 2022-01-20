@@ -128,10 +128,10 @@ namespace SmartLockerFunctionApp
             }
 
         }
-        [FunctionName("AddReservation")]
-        public static async Task<IActionResult> AddReservation(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "reservations/{lockerId}/{userId}")] HttpRequest req,
-            Guid lockerId, string userId,
+        [FunctionName("AddReservationMe")]
+        public async Task<IActionResult> AddReservationMe(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "reservations/{lockerId}")] HttpRequest req,
+            Guid lockerId,
             ILogger log)
         {
             try
@@ -144,11 +144,11 @@ namespace SmartLockerFunctionApp
                 newReservation.EndTime = DateTime.UtcNow;
                 newReservation.IsUsed = true;
                 newReservation.LockerId = lockerId;
-                newReservation.UserId = userId;
+                newReservation.UserId = Auth.Id;
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
-                await container.CreateItemAsync<Reservation>(newReservation, new PartitionKey(userId));
+                await container.CreateItemAsync<Reservation>(newReservation, new PartitionKey(Auth.Id));
                 return new StatusCodeResult(200);
             }
 
@@ -158,7 +158,7 @@ namespace SmartLockerFunctionApp
             }
         }
         [FunctionName("GetReserevationsByLockerId")]
-        public static async Task<IActionResult> GetReserevationsByLockerId(
+        public async Task<IActionResult> GetReserevationsByLockerId(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/reservations/{lockerId}")] HttpRequest req,
           Guid lockerId,
           ILogger log)
@@ -182,8 +182,32 @@ namespace SmartLockerFunctionApp
             }
 
         }
+        [FunctionName("GetReserevationsByMe")]
+        public async Task<IActionResult> GetReserevationsByMe(
+         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/reservations/me")] HttpRequest req,
+         ILogger log)
+        {
+            try
+            {
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
+                List<Reservation> reservations = new List<Reservation>();
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.userId = @id");
+                query.WithParameter("@id", Auth.Id);
+                FeedIterator<Reservation> iterator = container.GetItemQueryIterator<Reservation>(query);
+                FeedResponse<Reservation> response = await iterator.ReadNextAsync();
+                reservations.AddRange(response);
+                return new OkObjectResult(reservations);
+            }
+
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+
+        }
         [FunctionName("GetReserevationsByUserId")]
-        public static async Task<IActionResult> GetReserevationsByUserId(
+        public async Task<IActionResult> GetReserevationsByUserId(
          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/reservations/{userId}")] HttpRequest req,
          string userId,
          ILogger log)

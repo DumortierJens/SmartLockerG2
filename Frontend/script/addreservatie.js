@@ -5,6 +5,7 @@ let htmlConfirm;
 
 const showLockerReservation = function(jsonObject) {
     htmlSport.innerHTML = jsonObject.sport;
+    ListenToConfirmRegistration()
 }
 
 function ListenToConfirmRegistration() {
@@ -12,12 +13,11 @@ function ListenToConfirmRegistration() {
         let start = htmlStart.value;
         let end = htmlEnd.value;
         const body = {
-            sport,
             start,
             end
         }
         console.log(body)
-        handleData($ `${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', null, userToken);
+        handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', null, userToken);
     })
 }
 
@@ -27,11 +27,11 @@ const getLockerReservation = function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlSport = document.querySelector('.js-sport')
-    htmlStart = document.querySelector('.js-addreg_starttime')
-    htmlEnd = document.querySelector('.js-addreg_endtime')
+    htmlStart = document.querySelector('.js-addreg_start')
+    htmlEnd = document.querySelector('.js-addreg_end')
     htmlConfirm = document.querySelector('.js-addreg_confirm')
         //const urlParams = new URLSearchParams(window.location.search);
         //const id = urlParams.get('id');
     getLockerReservation() //later nog met id meesturen
-        //ListenToConfirmRegistration()
+
 });
