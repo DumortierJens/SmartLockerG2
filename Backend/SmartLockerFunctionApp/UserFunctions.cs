@@ -17,7 +17,6 @@ namespace SmartLockerFunctionApp
         [FunctionName("GetUsers")]
         public async Task<IActionResult> GetUsers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users")] HttpRequest req,
-            string userId,
             ILogger log)
         {
             try
