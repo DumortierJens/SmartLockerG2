@@ -426,25 +426,25 @@ a:focus {
 }
 
 .login_content_bg {
-  position: relative;
-  width: 18.75rem;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 4rem;
-  border-radius: 0.5rem;
+    position: relative;
+    width: 18.75rem;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4rem;
+    border-radius: 0.5rem;
 }
 
 .login_content {
-  font-size: 1.5rem;
-  color: var(--blue-accent-color);
-  padding: 1rem;
+    font-size: 1.5rem;
+    color: var(--blue-accent-color);
+    padding: 1rem;
 }
 
 .facebook_login {
-  text-align: center;
-  cursor: pointer;
-  margin-top: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 0.5rem;
 }
 
 .login_info {
@@ -892,27 +892,6 @@ a:focus {
     background-color: white;
     outline: none;
 }
-<<<<<<< HEAD
-
-.confirm_reservationbtn {
-    margin-top: 1.5rem;
-    text-align: center;
-    background-color: var(--blue-accent-color);
-    color: white;
-    border: none;
-    height: 2.5rem;
-    border-radius: 5px;
-    width: 50%;
-    font-family: 'MyFont';
-    cursor: pointer;
-}
-
-.confirm_reservationbtn_container {
-    text-align: center;
-}
-
-=======
->>>>>>> develop
 
 .confirm_reservationbtn {
     margin-top: 1.5rem;
@@ -933,14 +912,15 @@ a:focus {
 
 
 /* Loading screen */
-.loading_container{
-  position: absolute;
-  width: 15rem;
-  height: 15rem;
-  top: 50%;
-  left: 50%;
-  margin-top: -7.5rem;
-  margin-left: -7.5rem;
+
+.loading_container {
+    position: absolute;
+    width: 15rem;
+    height: 15rem;
+    top: 50%;
+    left: 50%;
+    margin-top: -7.5rem;
+    margin-left: -7.5rem;
 }
 
 

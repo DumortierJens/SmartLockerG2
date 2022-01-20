@@ -9,7 +9,6 @@ const showLockerReservation = function(jsonObject) {
 
 function ListenToConfirmRegistration() {
     htmlConfirm.addEventListener('click', function() {
-        let sport = htmlSport.value;
         let start = htmlStart.value;
         let end = htmlEnd.value;
         const body = {
@@ -18,7 +17,7 @@ function ListenToConfirmRegistration() {
             end
         }
         console.log(body)
-        handleData($ `${APIURI}/lockers/reservations`, null, null, 'POST', userToken);
+        handleData($ `${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', null, userToken);
     })
 }
 
