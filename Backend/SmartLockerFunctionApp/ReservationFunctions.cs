@@ -110,7 +110,7 @@ namespace SmartLockerFunctionApp
                 return new OkObjectResult(reservation);
             }
 
-            catch
+            catch (Exception ex)
             {
                 return new StatusCodeResult(500);
             }
@@ -124,9 +124,6 @@ namespace SmartLockerFunctionApp
         {
             try
             {
-                if (Auth.Role != "Admin")
-                    return new UnauthorizedResult();
-
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Reservation updatedReservation = JsonConvert.DeserializeObject<Reservation>(requestBody);
 
@@ -136,7 +133,7 @@ namespace SmartLockerFunctionApp
                 Reservation reservation;
                 try
                 {
-                    reservation = await container.ReadItemAsync<Reservation>(updatedReservation.Id.ToString(), new PartitionKey(updatedReservation.Id.ToString()));
+                    reservation = await container.ReadItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -151,7 +148,42 @@ namespace SmartLockerFunctionApp
 
                 await container.ReplaceItemAsync(reservation, reservation.Id.ToString(), new PartitionKey(reservation.Id.ToString()));
 
-                return new OkObjectResult(reservation);
+                return new StatusCodeResult(200);
+            }
+
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [FunctionName("DeleteReservation")]
+        public async Task<IActionResult> DeleteReservation(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "reservations/{reservationId}")] HttpRequest req,
+            Guid reservationId,
+            ILogger log)
+        {
+            try
+            {
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
+
+                Reservation reservation;
+                try
+                {
+                    reservation = await container.ReadItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                if (!(Auth.Role == "Admin" || reservation.UserId == Auth.Id))
+                    return new UnauthorizedResult();
+
+                await container.DeleteItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
+
+                return new StatusCodeResult(200);
             }
 
             catch
