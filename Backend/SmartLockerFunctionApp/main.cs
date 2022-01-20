@@ -140,8 +140,6 @@ namespace SmartLockerFunctionApp
                 Reservation newReservation = JsonConvert.DeserializeObject<Reservation>(requestBody);
 
                 newReservation.Id = Guid.NewGuid();
-                newReservation.StartTime = DateTime.UtcNow;
-                newReservation.EndTime = DateTime.UtcNow;
                 newReservation.IsUsed = true;
                 newReservation.LockerId = lockerId;
                 newReservation.UserId = Auth.Id;
