@@ -226,7 +226,7 @@ const showReservations = function (jsonObject) {
     ListenToClickMore();
 };
 
-const showUser = function(jsonObject) {
+const showUser = function (jsonObject) {
     usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
     for (const user of usersnames) {
         user.innerHTML = jsonObject.name
