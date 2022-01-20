@@ -22,7 +22,6 @@ const checkStatus = function (status) {
 
 const showMoreInfo = function (id, htmlArrow, json) {
     let sport, beschrijving
-    console.log(id)
     for (const i of json) {
         if (i.id == id) {
             sport = i.sport
@@ -31,11 +30,9 @@ const showMoreInfo = function (id, htmlArrow, json) {
     }
     let htmlLocker = document.querySelector(`.js-locker-${id}`)
     htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`)
-    console.log(htmlExtraInfo)
     if (htmlExtraInfo.innerHTML == '') {
         htmlLocker.classList.add("reservation_more_border")
         htmlArrow.style.transform = 'rotate(180deg)';
-        console.log('Open klappen');
         htmlExtraInfo.innerHTML = `<div class="reservation_details">
                         <div class=" reservation_details_edit_and_delete flex">
                             <div class="reservation_details_edit flex centerflex">
@@ -84,7 +81,6 @@ const showMoreInfo = function (id, htmlArrow, json) {
     else {
         htmlLocker.classList.remove("reservation_more_border")
         htmlArrow.style.transform = 'rotate(0deg)';
-        console.log('Dicht klappen')
         htmlExtraInfo.innerHTML = ``;
         htmlExtraInfo.style.animation = ''
     }
@@ -94,7 +90,6 @@ const listenToClickMore = function (json) {
     const buttons = document.querySelectorAll('.js-arrow');
     for (const btn of buttons) {
         btn.addEventListener('click', function () {
-            console.log(btn)
             const id = btn.dataset.id;
             showMoreInfo(id, this, json);
         });
@@ -137,7 +132,6 @@ const showLockers = function (jsonObject) {
 }
 
 const getLockers = function () {
-    console.log(userToken)
     handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
 };
 
