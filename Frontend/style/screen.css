@@ -477,6 +477,7 @@ a:focus {
     grid-template-areas: 'bezigicon bezigtekst' 'wachtenicon wachtentekst' 'verlopenicon verlopentekst';
     row-gap: 1rem;
     padding-top: 96px;
+    padding-bottom: 1rem;
 }
 
 .rect_bezig {
@@ -1025,6 +1026,9 @@ a:focus {
         grid-template-areas: 'reservation legende';
         max-width: 880px;
         margin: 0 auto 0 auto;
+    }
+    .reservations_table_content{
+        width: 440px;
     }
     .reservation_container{
         grid-area: reservation;
