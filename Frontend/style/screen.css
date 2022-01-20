@@ -461,6 +461,7 @@ a:focus {
 
 .reservations_table{
     padding-bottom: 1.5rem;
+    padding-top: 0.5rem;
 }
 
 .reservation_legende {
@@ -527,7 +528,7 @@ a:focus {
     position: relative;
     width: 90%;
     max-width: 20.5rem;
-    margin: 1.5rem auto 0 auto;
+    margin: 1rem auto 0 auto;
     height: 4rem;
     background-color: white;
     border-radius: 0.5rem;
