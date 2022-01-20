@@ -459,9 +459,13 @@ a:focus {
 
 /* Reservatiepagina */
 
-.reservations_table{
+.reservations_table, .users_table{
     padding-bottom: 1.5rem;
     padding-top: 0.5rem;
+}
+
+.user_management_content{
+    margin: 4.5rem 1rem 1rem 1rem;
 }
 
 .reservation_legende {
