@@ -6,17 +6,19 @@ function ShowLogin(){
     htmllogin.style.animation = "fadein 0.5s"
 }
 
-function ShowLoadingScreen(){
+function ShowLoadingScreen(timeout,callbackfunction){
     htmllogin.style.opacity = "0"
     htmlloading.style.animation = "fadeout 0.8s"
-    setTimeout(ShowLogin,800)
+    setTimeout(callbackfunction,timeout)
 }
 
 function init(){
     console.log('Dom geladen')
     htmlloading = document.querySelector('.loading_container')
     htmllogin = document.querySelector('.login_container')
-    ShowLoadingScreen();
+    if(htmllogin){
+        ShowLoadingScreen(800,ShowLogin);
+    }
 }
 
 document.addEventListener('DOMContentLoaded',init)
