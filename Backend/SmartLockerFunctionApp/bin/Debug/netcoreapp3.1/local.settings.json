@@ -6,6 +6,9 @@
     "CosmosAdmin": "AccountEndpoint=https://smartlockercosmos.documents.azure.com:443/;AccountKey=oCGsLU4rkHwHthztk0ArrcuiWCqWqdaWHG1qfe1mUCSVhwnAF3u7vRZCZOwIcV5KsI4q6hWcKnHp75PlVNlriA==;",
     "IoTHub": "Endpoint=sb://ihsuprodamres047dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=Q4TxjfspN0Gz12JptHyKouz+shZvrLSQPJGbUys3q74=;EntityPath=iothub-ehub-smartlocke-16844591-c9c5a864bf",
     "IoTHubAdmin": "HostName=smartlockeriothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q4TxjfspN0Gz12JptHyKouz+shZvrLSQPJGbUys3q74=",
-    "PubSub": "Endpoint=https://smartlocker.webpubsub.azure.com;AccessKey=6vsilS0MAZd3nEj2+7rpc9wqAVWxo/Ctoh9C5+HUQiA=;Version=1.0;"
+    "PubSub": "Endpoint=https://smartlocker.webpubsub.azure.com;AccessKey=6vsilS0MAZd3nEj2+7rpc9wqAVWxo/Ctoh9C5+HUQiA=;Version=1.0;",
+    "TwilioAccountSid": "ACafc1d1c9bb795c53f39098193d58e2e8",
+    "TwilioAuthToken": "969afe02ac34ca2da6ea4a0794fd321c",
+    "FromPhoneNumber": "+19378825833"
   }
 }

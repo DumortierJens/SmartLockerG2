@@ -12,7 +12,10 @@
           "Microsoft.Azure.Cosmos": "3.23.0",
           "Microsoft.Azure.Devices": "1.36.0",
           "Microsoft.Azure.WebJobs.Extensions.EventHubs": "4.1.1",
-          "Microsoft.NET.Sdk.Functions": "3.0.13"
+          "Microsoft.Azure.WebJobs.Extensions.Storage": "3.0.10",
+          "Microsoft.Azure.WebJobs.Extensions.Twilio": "3.0.2",
+          "Microsoft.NET.Sdk.Functions": "3.0.13",
+          "Microsoft.Web.Services3": "3.0.0"
         },
         "runtime": {
           "SmartLockerFunctionApp.dll": {}
@@ -515,6 +518,30 @@
           }
         }
       },
+      "Microsoft.Azure.WebJobs.Extensions.Storage/3.0.10": {
+        "dependencies": {
+          "Microsoft.Azure.WebJobs": "3.0.23",
+          "WindowsAzure.Storage": "9.3.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Azure.WebJobs.Extensions.Storage.dll": {
+            "assemblyVersion": "3.0.10.0",
+            "fileVersion": "3.0.10.0"
+          }
+        }
+      },
+      "Microsoft.Azure.WebJobs.Extensions.Twilio/3.0.2": {
+        "dependencies": {
+          "Microsoft.Azure.WebJobs": "3.0.23",
+          "Twilio": "5.6.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Azure.WebJobs.Extensions.Twilio.dll": {
+            "assemblyVersion": "3.0.2.0",
+            "fileVersion": "3.0.2.0"
+          }
+        }
+      },
       "Microsoft.Azure.WebJobs.Host.Storage/3.0.14": {
         "dependencies": {
           "Microsoft.Azure.WebJobs": "3.0.23",
@@ -915,6 +942,14 @@
           }
         }
       },
+      "Microsoft.Web.Services3/3.0.0": {
+        "runtime": {
+          "lib/net20/Microsoft.Web.Services3.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.5305.0"
+          }
+        }
+      },
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.0",
@@ -1113,6 +1148,27 @@
         }
       },
       "System.Collections.Immutable/1.7.0": {},
+      "System.Collections.NonGeneric/4.3.0": {
+        "dependencies": {
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Globalization": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Threading": "4.3.0"
+        }
+      },
+      "System.Collections.Specialized/4.3.0": {
+        "dependencies": {
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.Globalization": "4.3.0",
+          "System.Globalization.Extensions": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Threading": "4.3.0"
+        }
+      },
       "System.ComponentModel.Annotations/4.4.0": {},
       "System.Configuration.ConfigurationManager/4.7.0": {
         "dependencies": {
@@ -1991,6 +2047,22 @@
           "System.Xml.XmlDocument": "4.3.0"
         }
       },
+      "Twilio/5.6.3": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "5.2.4",
+          "Microsoft.IdentityModel.Tokens": "5.2.4",
+          "NETStandard.Library": "1.6.1",
+          "Newtonsoft.Json": "12.0.3",
+          "System.Collections.Specialized": "4.3.0",
+          "System.IdentityModel.Tokens.Jwt": "5.2.4"
+        },
+        "runtime": {
+          "lib/netstandard1.4/Twilio.dll": {
+            "assemblyVersion": "5.6.3.0",
+            "fileVersion": "5.6.3.0"
+          }
+        }
+      },
       "WindowsAzure.Storage/9.3.3": {
         "dependencies": {
           "NETStandard.Library": "1.6.1",
@@ -2256,6 +2328,20 @@
       "path": "microsoft.azure.webjobs.extensions.http/3.0.2",
       "hashPath": "microsoft.azure.webjobs.extensions.http.3.0.2.nupkg.sha512"
     },
+    "Microsoft.Azure.WebJobs.Extensions.Storage/3.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YVGXiXxF392B/8p9ZvnufajmAjVVhrxQ4PLlbL/eBY5R5dHd/8cI8k9FW1K40qlj21Lmx+DO2vM9L+pcl9M+fg==",
+      "path": "microsoft.azure.webjobs.extensions.storage/3.0.10",
+      "hashPath": "microsoft.azure.webjobs.extensions.storage.3.0.10.nupkg.sha512"
+    },
+    "Microsoft.Azure.WebJobs.Extensions.Twilio/3.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ZgcPS9dfWP5IOwVfMgOTsV0NEvXBg8BekyZg/YwoCqXTLo/cJ7bpuB4gbVVOIqEq2DFudQ/XdUeL6HKXg3nLcA==",
+      "path": "microsoft.azure.webjobs.extensions.twilio/3.0.2",
+      "hashPath": "microsoft.azure.webjobs.extensions.twilio.3.0.2.nupkg.sha512"
+    },
     "Microsoft.Azure.WebJobs.Host.Storage/3.0.14": {
       "type": "package",
       "serviceable": true,
@@ -2508,6 +2594,13 @@
       "path": "microsoft.rest.clientruntime/2.3.21",
       "hashPath": "microsoft.rest.clientruntime.2.3.21.nupkg.sha512"
     },
+    "Microsoft.Web.Services3/3.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f7TxDOPxdtxqgKma7PTUlpjeBVur9HFFvBR9UEhMU6qQiOOCG2RezmSdiMKuUlCpFB95AXoWB074ZpgCNbUupg==",
+      "path": "microsoft.web.services3/3.0.0",
+      "hashPath": "microsoft.web.services3.3.0.0.nupkg.sha512"
+    },
     "Microsoft.Win32.Primitives/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -2703,6 +2796,20 @@
       "sha512": "sha512-RVSM6wZUo6L2y6P3vN6gjUtyJ2IF2RVtrepF3J7nrDKfFQd5u/SnSUFclchYQis8/k5scHy9E+fVeKVQLnnkzw==",
       "path": "system.collections.immutable/1.7.0",
       "hashPath": "system.collections.immutable.1.7.0.nupkg.sha512"
+    },
+    "System.Collections.NonGeneric/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-prtjIEMhGUnQq6RnPEYLpFt8AtLbp9yq2zxOSrY7KJJZrw25Fi97IzBqY7iqssbM61Ek5b8f3MG/sG1N2sN5KA==",
+      "path": "system.collections.nongeneric/4.3.0",
+      "hashPath": "system.collections.nongeneric.4.3.0.nupkg.sha512"
+    },
+    "System.Collections.Specialized/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Epx8PoVZR0iuOnJJDzp7pWvdfMMOAvpUo95pC4ScH2mJuXkKA2Y4aR3cG9qt2klHgSons1WFh4kcGW7cSXvrxg==",
+      "path": "system.collections.specialized/4.3.0",
+      "hashPath": "system.collections.specialized.4.3.0.nupkg.sha512"
     },
     "System.ComponentModel.Annotations/4.4.0": {
       "type": "package",
@@ -3298,6 +3405,13 @@
       "sha512": "sha512-MYoTCP7EZ98RrANESW05J5ZwskKDoN0AuZ06ZflnowE50LTpbR5yRg3tHckTVm5j/m47stuGgCrCHWePyHS70Q==",
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    },
+    "Twilio/5.6.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-k2ujhgLrH74Gq7WeLKX3YZ/KTfmoGxZmQWriHf2SvwHGfMMEqB4szi28MiJbO+ArtnpLVJFbTcKW6UvyvBubwQ==",
+      "path": "twilio/5.6.3",
+      "hashPath": "twilio.5.6.3.nupkg.sha512"
     },
     "WindowsAzure.Storage/9.3.3": {
       "type": "package",
