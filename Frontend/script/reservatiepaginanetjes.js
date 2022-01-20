@@ -227,11 +227,18 @@ const showReservations = function(jsonObject) {
 };
 
 const showUser = function(jsonObject) {
-    document.querySelector(`.js-username-${jsonObject.id}`).innerHTML = jsonObject.name;
-    document.querySelector(`.js-userpicture-${jsonObject.id}`).src = jsonObject.picture;
+    usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
+    for (const user of usersnames) {
+        user.innerHTML = jsonObject.name
+    }
+    userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject.id}`)
+    for (const user of userspictures) {
+        user.src = jsonObject.picture
+    }
 };
 
 const getReservations = function() {
+    console.log(userToken)
     handleData(`${APIURI}/lockers/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, showReservations, null, 'GET', null, userToken);
 };
 const getUser = function(id) {
