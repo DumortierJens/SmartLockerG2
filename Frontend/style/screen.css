@@ -983,6 +983,9 @@ a:focus {
     .locker_detail_blur {
         text-align: center;
     }
+    .reservation_legende{
+        text-align: start;
+    }
     .profile_info_content {
         margin: 1.5rem 30% 0 30%;
     }
@@ -1015,16 +1018,22 @@ a:focus {
       }
 }
 
-@media (min-width: 712px){
+@media (min-width: 880px){
     .reservations_table{
+        padding-top: 6rem;
         display: grid;
-        grid-template-areas: 'reservation1 reservation2';
+        grid-template-areas: 'reservation legende';
+        max-width: 880px;
+        margin: 0 auto 0 auto;
     }
-}
-
-@media (min-width: 1064px){
-    .reservations_table{
-        display: grid;
-        grid-template-areas: 'reservation1 reservation2 reservation3';
+    .reservation_container{
+        grid-area: reservation;
+    }
+    .reservation_legende{
+        grid-area: legende;
+        max-height: 116px;
+        position: sticky;
+        top: 6rem;
+        padding: 1rem;
     }
 }
