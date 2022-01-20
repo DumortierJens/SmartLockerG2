@@ -16,11 +16,11 @@ namespace SmartLockerFunctionApp.Models
         [JsonProperty("userId")]
         public string UserId { get; set; }
 
-        [JsonProperty("start")]
-        public DateTime Start { get; set; }
+        [JsonProperty("startTime")]
+        public DateTime StartTime { get; set; }
 
-        [JsonProperty("end")]
-        public DateTime End { get; set; }
+        [JsonProperty("endTime")]
+        public DateTime EndTime { get; set; }
 
         [JsonProperty("note")]
         public string Note { get; set; }

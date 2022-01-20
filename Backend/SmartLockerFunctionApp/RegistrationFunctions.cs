@@ -30,7 +30,7 @@ namespace SmartLockerFunctionApp
                 // Set registration defaults
                 registration.Id = Guid.NewGuid();
                 registration.UserId = Auth.Id;
-                registration.Start = DateTime.Now;
+                registration.StartTime = DateTime.Now;
 
                 // Get cosmos container
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
@@ -74,7 +74,7 @@ namespace SmartLockerFunctionApp
                 }
 
                 // Set registration defaults
-                registration.End = DateTime.Now;
+                registration.EndTime = DateTime.Now;
                 registration.Note += "\nAfter:\n" + registrationEnd.Note;
 
                 // Update registration
