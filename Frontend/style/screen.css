@@ -458,6 +458,10 @@ a:focus {
 
 /* Reservatiepagina */
 
+.reservations_table{
+    padding-bottom: 1.5rem;
+}
+
 .reservation_legende {
     width: 80%;
     max-width: 20.5rem;
@@ -974,5 +978,19 @@ a:focus {
     }
     .confirm_reservationbtn {
         font-size: 0.75rem;
+    }
+}
+
+@media (min-width: 712px){
+    .reservations_table{
+        display: grid;
+        grid-template-areas: 'reservation1 reservation2';
+    }
+}
+
+@media (min-width: 1064px){
+    .reservations_table{
+        display: grid;
+        grid-template-areas: 'reservation1 reservation2 reservation3';
     }
 }
