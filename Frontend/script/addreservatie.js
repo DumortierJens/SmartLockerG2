@@ -12,12 +12,14 @@ function ListenToConfirmRegistration() {
     htmlConfirm.addEventListener('click', function() {
         let start = htmlStart.value;
         let end = htmlEnd.value;
-        var now = new Date()
+        var now = Date.now()
         if (start > end) {
             console.log("Het eindtijdstip moet later liggen dan het starttijdstip.")
-        } else if (start < now) {
+        }
+        if (start < now) {
             console.log("Het starttijsstip ligt in het verleden.")
-        } else if (end < now) {
+        }
+        if (end < now) {
             console.log("Het eindtijsstip ligt in het verleden.")
         }
         console.log(now)
