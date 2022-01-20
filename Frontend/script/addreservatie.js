@@ -28,7 +28,7 @@ function ListenToConfirmRegistration() {
             end
         }
         console.log(body)
-            //handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
+        handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
     })
 }
 
