@@ -1,6 +1,6 @@
 let userToken;
 
-let htmlLockerContent, htmlExtraInfo, htmlJson;
+let htmlLockerContent, htmlExtraInfo, htmlJson, htmlOpmerking;
 
 const checkStatus = function (status) {
     if (status.toLowerCase() == "beschikbaar") {
@@ -68,14 +68,14 @@ const showMoreInfo = function (id, htmlArrow, json) {
                             <p class="reservation_detail_title">Sport</p>
                             <p class="reservation_detail_content">${sport}</p>
                         </div>
-                        <div class="reservation_opmerking">
+                        <div class="reservation_opmerking js-reservation_opmerking-${id}">
                             <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Beschrijving</p>
                             <p style="font-size : 0.75rem;" class="reservation_opmerking_content">${beschrijving}</p>
                         </div>
                     </div>`
         htmlExtraInfo.style.animation = 'fadein 0.5s'
-        ListenToCLickEditReservation(id)
-        ListenToClickDeleteReservation(id)
+        listenToCLickEditLocker(id)
+        listenToLockerOpen(id)
     }
 
     else {
@@ -84,6 +84,60 @@ const showMoreInfo = function (id, htmlArrow, json) {
         htmlExtraInfo.innerHTML = ``;
         htmlExtraInfo.style.animation = ''
     }
+}
+
+const showEdit = function (id) {
+    htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`);
+    htmlExtraInfo.innerHTML = `<div class="reservation_details">
+                        <div class=" reservation_details_edit_and_delete flex">
+                            <div class="reservation_details_edit flex centerflex">
+                                <svg class="js-canceledit canceledit" version="1.1" id="Layer_1"
+                                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    x="0px" y="0px" viewbox="0 0 492 492" style="enable-background:new 0 0 492 492;"
+                                    xml:space="preserve">
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M300.188,246L484.14,62.04c5.06-5.064,7.852-11.82,7.86-19.024c0-7.208-2.792-13.972-7.86-19.028L468.02,7.872
+                                                                                       c-5.068-5.076-11.824-7.856-19.036-7.856c-7.2,0-13.956,2.78-19.024,7.856L246.008,191.82L62.048,7.872
+                                                                                       c-5.06-5.076-11.82-7.856-19.028-7.856c-7.2,0-13.96,2.78-19.02,7.856L7.872,23.988c-10.496,10.496-10.496,27.568,0,38.052
+                                                                                       L191.828,246L7.872,429.952c-5.064,5.072-7.852,11.828-7.852,19.032c0,7.204,2.788,13.96,7.852,19.028l16.124,16.116
+                                                                                       c5.06,5.072,11.824,7.856,19.02,7.856c7.208,0,13.968-2.784,19.028-7.856l183.96-183.952l183.952,183.952
+                                                                                       c5.068,5.072,11.824,7.856,19.024,7.856h0.008c7.204,0,13.96-2.784,19.028-7.856l16.12-16.116
+                                                                                       c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="reservation_details_delete flex centerflex">
+                                <svg class="js-doneedit doneedit" width="150" height="150"
+                                    xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                                    <path
+                                        d="M21 6.285l-11.16 12.733-6.84-6.018 1.319-1.49 5.341 4.686 9.865-11.196 1.475 1.285z" />
+                                </svg>
+
+                            </div>
+                        </div>
+                        <div class="reservation_detail flex">
+                            <p class="reservation_detail_title">Sport</p>
+                            <p class="reservation_detail_content">Voetbal</p>
+                        </div>
+
+                        <div class="reservation_opmerking">
+                            <label for="opmerking" class="reservation_opmerking_title">Beschrijving
+                                <span class="textarea" role="textbox" contenteditable>Dit is de beschrijving van de
+                                    locker</span>
+                            </label>
+                        </div>
+
+                    </div>`
+}
+
+const listenToCLickEditLocker = function (id) {
+    document.querySelector(`.js-editicon-${id}`).addEventListener("click", function () {
+        showEdit(id);
+    })
+
 }
 
 const listenToClickMore = function (json) {
