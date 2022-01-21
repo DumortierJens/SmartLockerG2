@@ -240,7 +240,6 @@ a:focus {
     display: none;
     position: fixed;
     width: 18.75rem;
-    height: 12.5rem;
     top: 50%;
     left: 50%;
     margin-top: -6.25rem;
@@ -274,8 +273,12 @@ a:focus {
 }
 
 .open_locker_message {
-    padding: 1rem 0.5rem 1rem 0.5rem;
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
     margin-bottom: 0rem;
+}
+
+.locker_detail_popup_buttons {
+    padding: 0.5rem 0rem 1rem 0rem;
 }
 
 
@@ -459,12 +462,13 @@ a:focus {
 
 /* Reservatiepagina */
 
-.reservations_table, .users_table{
+.reservations_table,
+.users_table {
     padding-bottom: 1.5rem;
     padding-top: 0.5rem;
 }
 
-.user_management_content{
+.user_management_content {
     margin: 4.5rem 1rem 1rem 1rem;
 }
 
@@ -529,7 +533,8 @@ a:focus {
     justify-items: center;
 }
 
-.reservation, .locker {
+.reservation,
+.locker {
     position: relative;
     width: 90%;
     max-width: 20.5rem;
@@ -552,21 +557,24 @@ a:focus {
     margin: 1rem;
 }
 
-.reservation_grid, .locker_grid {
+.reservation_grid,
+.locker_grid {
     display: grid;
     grid-template-rows: 1.5rem 1.5rem;
     grid-template-areas: 'name' 'date';
     align-self: center;
 }
 
-.reservation_name, .locker_name {
+.reservation_name,
+.locker_name {
     align-self: center;
     grid-area: name;
     font-size: 1.25rem;
     font-weight: 600;
 }
 
-.reservation_date, .locker_status {
+.reservation_date,
+.locker_status {
     align-self: center;
     grid-area: date;
     font-size: 0.75rem;
@@ -861,29 +869,31 @@ a:focus {
     margin-bottom: 1rem;
 }
 
+
 /* Lockerbeheer */
-.locker_management_content{
+
+.locker_management_content {
     margin: 6rem 1rem 1rem 1rem;
-  }
-  
-  .locker_svg{
+}
+
+.locker_svg {
     align-self: center;
     width: 2rem;
     height: 2rem;
     margin: 1rem;
-  }
-  
-  .locker_status_out_of_use{
+}
+
+.locker_status_out_of_use {
     color: var(--red-dark);
-  }
-  
-  .locker_status_occupied{
+}
+
+.locker_status_occupied {
     color: darkorange;
-  }
-  
-  .locker_status_available{
+}
+
+.locker_status_available {
     color: var(--status-available);
-  }
+}
 
 
 /* Add reservation */
@@ -984,7 +994,7 @@ a:focus {
     .locker_detail_blur {
         text-align: center;
     }
-    .reservation_legende{
+    .reservation_legende {
         text-align: start;
     }
     .profile_info_content {
@@ -1014,26 +1024,26 @@ a:focus {
     .confirm_reservationbtn {
         font-size: 0.75rem;
     }
-    .locker_name{
+    .locker_name {
         font-size: 1rem;
-      }
+    }
 }
 
-@media (min-width: 880px){
-    .reservations_table{
+@media (min-width: 880px) {
+    .reservations_table {
         padding-top: 6rem;
         display: grid;
         grid-template-areas: 'reservation legende';
         max-width: 880px;
         margin: 0 auto 0 auto;
     }
-    .reservations_table_content{
+    .reservations_table_content {
         width: 440px;
     }
-    .reservation_container{
+    .reservation_container {
         grid-area: reservation;
     }
-    .reservation_legende{
+    .reservation_legende {
         grid-area: legende;
         max-height: 116px;
         position: sticky;
