@@ -4,9 +4,9 @@
   "bindings": [
     {
       "type": "httpTrigger",
-      "route": "lockers",
+      "route": "devices/{deviceId}/log",
       "methods": [
-        "get"
+        "post"
       ],
       "authLevel": "anonymous",
       "name": "req"
@@ -14,5 +14,5 @@
   ],
   "disabled": false,
   "scriptFile": "../bin/SmartLockerFunctionApp.dll",
-  "entryPoint": "SmartLockerFunctionApp.main.GetLockers"
+  "entryPoint": "SmartLockerFunctionApp.main.StatusLog"
 }

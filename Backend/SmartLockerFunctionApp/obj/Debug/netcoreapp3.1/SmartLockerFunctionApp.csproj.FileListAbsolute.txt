@@ -208,6 +208,7 @@ C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\o
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.dll
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
 <<<<<<< HEAD
+<<<<<<< HEAD
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Buffers.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Codecs.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Codecs.Mqtt.dll
@@ -325,3 +326,5 @@ C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\ob
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
 >>>>>>> develop
+=======
+>>>>>>> parent of c189175... Merge branch 'feature/registrationLogicBackend' into develop
