@@ -995,6 +995,10 @@ a:focus {
     font-size: 0.75rem;
 }
 
+.error_message{
+    color: var(--red-verlopen);
+}
+
 
 /* Loading screen */
 
