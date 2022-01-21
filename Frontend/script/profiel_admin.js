@@ -88,8 +88,11 @@ const showUser = function(jsonObject) {
         <p class="delete_account">Account verwijderen</p>
     </div>
 </div>`;
-    //ListenToClickBlockUser(jsonObject.id);
-    //ListenToClickreservationsUser(jsonObject.id);
+    htmlDelete = document.querySelector('.js-delete');
+    htmlBlock = document.querySelector('.js-block');
+    htmlReservationsUser = document.querySelector('.js-reservations-admin-user');
+    ListenToClickBlockUser(jsonObject.id);
+    ListenToClickreservationsUser(jsonObject.id);
     ListenToClickDeleteUser(jsonObject.id);
 };
 
@@ -101,7 +104,7 @@ function ListenToClickBlockUser(id) {
 
 function ListenToClickreservationsUser(id) {
     htmlReservationsUser.addEventListener('click', function() {
-        console.log('Ga naar addreservatie.html met id van locker meesturen');
+        console.log('Ga naar profielreservatie.html met id van user meegestuurd');
     });
 }
 
@@ -116,9 +119,6 @@ const getUser = function(id) {
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlUserContent = document.querySelector('.js-profilepage');
-    htmlDelete = document.querySelector('.js-delete');
-    htmlBlock = document.querySelector('.js-block');
-    htmlReservationsUser = document.querySelector('.js-reservations-admin-user');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     getUser(id);
