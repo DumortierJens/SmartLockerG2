@@ -823,6 +823,16 @@ a:focus {
     justify-items: center;
 }
 
+.profile_icons_container_container {
+    display: grid;
+    max-width: 31.25rem;
+    grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    margin: 0 auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
 .profile_icon_afmelden {
     fill: var(--blue-accent-color);
     width: 1.5rem;
@@ -970,11 +980,12 @@ a:focus {
     margin-left: -7.5rem;
 }
 
-.locker_detail_blur{
+.locker_detail_blur {
     position: absolute;
     top: 0;
     width: 100%;
 }
+
 
 /* Animations*/
 

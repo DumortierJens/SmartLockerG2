@@ -19,7 +19,7 @@ const statusChangeCallback = function(response) {
         if (document.querySelector('.js-login-page')) loginUser(response.authResponse.accessToken);
     } else {
         console.log('Not authenticated with Facebook');
-        if (document.querySelector('.js-login-page') === null) window.location.replace(location.origin);
+        //if (document.querySelector('.js-login-page') === null) window.location.replace(location.origin);
     }
 };
 

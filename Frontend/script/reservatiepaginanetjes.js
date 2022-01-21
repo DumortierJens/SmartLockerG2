@@ -13,7 +13,7 @@ function ShowDeletePopUp(id) {
 }
 
 function ListenToDelete(id) {
-    htmlPopupDelete.addEventListener('click', function () {
+    htmlPopupDelete.addEventListener('click', function() {
         htmlBackground.style = "";
         htmlPopup.style.animation = "fadeout 0.3s";
         console.log(`Reservatie met id ${id} wordt verwijderd`);
@@ -22,7 +22,7 @@ function ListenToDelete(id) {
 }
 
 function ListenToCancel() {
-    htmlPopupCancel.addEventListener('click', function () {
+    htmlPopupCancel.addEventListener('click', function() {
         htmlBackground.style = "";
         htmlPopup.style.animation = "fadeout 0.3s";
         setTimeout(DisplayNone, 300);
@@ -30,7 +30,7 @@ function ListenToCancel() {
 }
 
 function ListenToClickDeleteReservation(id) {
-    document.querySelector(`.js-deleteicon-${id}`).addEventListener('click', function () {
+    document.querySelector(`.js-deleteicon-${id}`).addEventListener('click', function() {
         ShowDeletePopUp(id);
     });
 }
@@ -107,7 +107,6 @@ function ShowMoreInfo(id, htmlArrow) {
         htmlReservation.classList.add("reservation_more_border");
         htmlArrow.style.transform = 'rotate(180deg)';
         console.log('Open klappen');
-        reservationNr = htmlExtraInfo.data - id;
         htmlExtraInfo.innerHTML = `<div class="reservation_details">
                 <div class=" reservation_details_edit_and_delete flex">
                     <div class="reservation_details_edit flex centerflex">
@@ -175,7 +174,7 @@ function ShowMoreInfo(id, htmlArrow) {
 }
 
 function ListenToCLickEditReservation(id) {
-    document.querySelector(`.js-editicon-${id}`).addEventListener('click', function () {
+    document.querySelector(`.js-editicon-${id}`).addEventListener('click', function() {
         ShowEdit(id);
     });
 }
@@ -183,7 +182,7 @@ function ListenToCLickEditReservation(id) {
 function ListenToClickMore() {
     const buttons = document.querySelectorAll('.js-arrow');
     for (const btn of buttons) {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function() {
             //console.log(this);
             const id = btn.dataset.id;
             ShowMoreInfo(id, this);
@@ -191,7 +190,7 @@ function ListenToClickMore() {
     };
 };
 
-const showReservations = function (jsonObject) {
+const showReservations = function(jsonObject) {
     htmlReservationContent.innerHTML = ``;
     for (i = 0; i < jsonObject.length; i++) {
         //console.log(jsonObject[i]);
@@ -226,7 +225,7 @@ const showReservations = function (jsonObject) {
     ListenToClickMore();
 };
 
-const showUser = function (jsonObject) {
+const showUser = function(jsonObject) {
     usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
     for (const user of usersnames) {
         user.innerHTML = jsonObject.name
@@ -240,16 +239,15 @@ const showUser = function (jsonObject) {
 const getReservations = function() {
     handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, showReservations, null, 'GET', null, userToken);
 };
-const getUser = function (id) {
+const getUser = function(id) {
     handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     htmlReservationContent = document.querySelector('.js-reservations');
     htmlBackground = document.querySelector('.js-background');
     htmlPopup = document.querySelector('.js-popup');
     htmlPopupCancel = document.querySelector('.js-popup-cancel');
     htmlPopupDelete = document.querySelector('.js-popup-open');
-    reservationNr = 0;
     getReservations();
 });
