@@ -281,6 +281,10 @@ a:focus {
     padding: 0.5rem 0rem 1rem 0rem;
 }
 
+.locker {
+    cursor: pointer;
+}
+
 
 /* overview pagina */
 
@@ -883,14 +887,14 @@ a:focus {
 
 /* Lockerbeheer */
 
-.status_selector{
+.status_selector {
     outline: none;
     border: none;
     text-align: center;
     font-family: 'MyFont';
 }
 
-.lockermanagement_open_locker{
+.lockermanagement_open_locker {
     outline: 0;
     text-align: center;
     font-family: 'MyFont';

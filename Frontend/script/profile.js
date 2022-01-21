@@ -3,11 +3,11 @@ let userToken;
 let htmlName, htmlEmail, htmlBirhtday, htmlPicture, htmlUserCreated
 
 
-const getData = function () {
+const getData = function() {
     handleData(`${APIURI}/users/me`, showData, null, 'GET', null, userToken);
 };
 
-const convertDateTime = function (datetime) {
+const convertDateTime = function(datetime) {
     const d = new Date(datetime)
     var month = new Array();
     month[0] = "01";
@@ -25,7 +25,7 @@ const convertDateTime = function (datetime) {
     return d.getDate() + "/" + month[d.getMonth()] + "/" + d.getFullYear()
 }
 
-const showData = function (jsonObject) {
+const showData = function(jsonObject) {
     console.log(jsonObject);
     htmlName = jsonObject.name;
     htmlEmail = jsonObject.email;
@@ -38,10 +38,12 @@ const showData = function (jsonObject) {
     document.querySelector(".js-profile_created").innerHTML = convertDateTime(htmlUserCreated);
     document.querySelector(".js-email").innerHTML = htmlEmail;
     document.querySelector('.js-profile_picture').src = htmlPicture;
-
+    //listener js-delete
+    //listener js-reservations-user
+    //listerner js-blokkeren
 };
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     console.info('DOM geladen');
 
     // user authentication
