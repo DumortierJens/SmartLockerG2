@@ -1,8 +1,6 @@
 {
   "extensions":[
     { "name": "EventHubs", "typeName":"Microsoft.Azure.WebJobs.EventHubs.EventHubsWebJobsStartup, Microsoft.Azure.WebJobs.EventHubs, Version=4.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"},
-    { "name": "CosmosDB", "typeName":"Microsoft.Azure.WebJobs.Extensions.CosmosDB.CosmosDBWebJobsStartup, Microsoft.Azure.WebJobs.Extensions.CosmosDB, Version=3.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"},
-    { "name": "WebPubSub", "typeName":"Microsoft.Azure.WebJobs.Extensions.WebPubSub.WebPubSubWebJobsStartup, Microsoft.Azure.WebJobs.Extensions.WebPubSub, Version=1.1.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8"},
     { "name": "AppStartup", "typeName":"AuthenticationApp.AppStartup, SmartLockerFunctionApp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"}
   ]
 }
