@@ -873,6 +873,19 @@ a:focus {
 
 /* Lockerbeheer */
 
+.lockermanagement_open_locker{
+    outline: 0;
+    text-align: center;
+    font-family: 'MyFont';
+    background-color: white;
+    color: var(--blue-accent-color);
+    border: 1.5px solid var(--blue-accent-color);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    height: 1.5rem;
+}
+
 .locker_management_content {
     margin: 6rem 1rem 1rem 1rem;
 }
