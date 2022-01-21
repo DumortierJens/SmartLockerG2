@@ -1,14 +1,34 @@
-let htmlUserContent;
+let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser;
+
+const convertDateTime = function(datetime) {
+    const d = new Date(datetime)
+    var month = new Array();
+    month[0] = "01";
+    month[1] = "02";
+    month[2] = "03";
+    month[3] = "04";
+    month[4] = "05";
+    month[5] = "06";
+    month[6] = "07";
+    month[7] = "08";
+    month[8] = "09";
+    month[9] = "10";
+    month[10] = "11";
+    month[11] = "12";
+    return d.getDate() + "/" + month[d.getMonth()] + "/" + d.getFullYear()
+}
 
 const showUser = function(jsonObject) {
     htmlUserContent.innerHTML = ``;
     console.log(jsonObject)
+    let birthday = convertDateTime(jsonObject.birthday)
+    let userCreated = convertDateTime(jsonObject.userCreated)
     htmlUserContent.innerHTML = `        <div class="profile_picture_content">
     <img class="profile_picture" src="${jsonObject.picture}" alt="">
 </div>
 <p class="profile_name">${jsonObject.name}</p>
 <div class="profile_icons_container">
-<div class="js-blokkeren profile_icons_container_container">
+<div class="js-block profile_icons_container_container">
     <div class="profile_icon_afmelden">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                 <defs>
@@ -26,7 +46,7 @@ const showUser = function(jsonObject) {
     </div>
     <p class="profile_icon_afmelden_text">Blokkeren</p>
     </div>
-    <div class="js-reservations-user profile_icons_container_container">
+    <div class="js-reservations-admin-user profile_icons_container_container">
     <div class="profile_icon_reservations">
         <svg class="profile_icon_reservations" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                 <defs>
@@ -49,13 +69,13 @@ const showUser = function(jsonObject) {
     <div class="profile_info_content">
         <div class="profile_info">
             <p class="profile_info_title">Geboortedatum</p>
-            <p class="profile_info_data">${jsonObject.birthday}</p>
+            <p class="profile_info_data">${birthday}</p>
         </div>
     </div>
     <div class="profile_info_content">
         <div class="profile_info">
             <p class="profile_info_title">Eerst aangemeld</p>
-            <p class="profile_info_data">${jsonObject.userCreated}</p>
+            <p class="profile_info_data">${userCreated}</p>
         </div>
     </div>
     <div class="profile_info_content">
@@ -68,17 +88,37 @@ const showUser = function(jsonObject) {
         <p class="delete_account">Account verwijderen</p>
     </div>
 </div>`;
-    //listener js-delete
-    //listener js-reservations-user
-    //listerner js-blokkeren
+    //ListenToClickBlockUser(jsonObject.id);
+    //ListenToClickreservationsUser(jsonObject.id);
+    ListenToClickDeleteUser(jsonObject.id);
 };
 
+function ListenToClickBlockUser(id) {
+    htmlBlock.addEventListener('click', function() {
+        console.log(`Block ${id}`);
+    });
+}
+
+function ListenToClickreservationsUser(id) {
+    htmlReservationsUser.addEventListener('click', function() {
+        console.log('Ga naar addreservatie.html met id van locker meesturen');
+    });
+}
+
+function ListenToClickDeleteUser(id) {
+    htmlDelete.addEventListener('click', function() {
+        console.log(`Delete ${id}`);
+    });
+}
 const getUser = function(id) {
     handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlUserContent = document.querySelector('.js-profilepage');
+    htmlDelete = document.querySelector('.js-delete');
+    htmlBlock = document.querySelector('.js-block');
+    htmlReservationsUser = document.querySelector('.js-reservations-admin-user');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     getUser(id);

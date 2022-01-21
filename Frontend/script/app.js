@@ -99,7 +99,7 @@ const showLocker = function(jsonObject) {
         htmlInstructions.innerHTML = 'Tik op het slot om te openen';
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_available');
         ListenToClickOpmerkingBtn(OpmerkingClicked);
-        ListenToClickReserverenBtn();
+        ListenToClickReserverenBtn(jsonObject.id);
         //checken of registratie al gestart is van deze gebruiker 
         // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen 
         //        en je kan nog steeds de locker openen zolang de registratie bezig is
@@ -192,9 +192,9 @@ function DisplayNone() {
     htmlPopUp.style = 'display: none;';
 }
 
-function ListenToClickReserverenBtn() {
+function ListenToClickReserverenBtn(id) {
     htmlReserverenBtn.addEventListener('click', function() {
-        console.log('Ga naar reserverenpagina.html');
+        console.log('Ga naar addreservatie.html met id van locker meesturen');
     });
 }
 
