@@ -17,92 +17,8 @@ using SmartLockerFunctionApp.Services.Authentication;
 
 namespace SmartLockerFunctionApp
 {
-    class main : AuthorizedServiceBase
+    class Main : AuthorizedServiceBase
     {
-        [FunctionName("StatusLog")]
-        public async Task<IActionResult> StatusLog(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "devices/{deviceId}/log")] HttpRequest req, 
-            Guid deviceId,
-            ILogger log)
-        {
-            try
-            {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                Log newLog = JsonConvert.DeserializeObject<Log>(requestBody);
-                
-                newLog.Id = Guid.NewGuid();
-                newLog.Timestamp = DateTime.UtcNow;
-                newLog.DeviceId = deviceId;
-
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
-                await container.CreateItemAsync<Log>(newLog, new PartitionKey(deviceId.ToString()));
-                return new StatusCodeResult(200);
-            }
-
-            catch 
-            {
-                return new StatusCodeResult(500);
-            }
-        }
-
-        [FunctionName("GetLockers")]
-        public async Task<IActionResult> GetLockers(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers")] HttpRequest req,
-            ILogger log)
-        {
-            try
-            {
-
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
-                List<Locker> lockers = new List<Locker>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers");
-                FeedIterator<Locker> iterator = container.GetItemQueryIterator<Locker>(query);
-                while (iterator.HasMoreResults)
-                {
-                    FeedResponse<Locker> response = await iterator.ReadNextAsync();
-                    lockers.AddRange(response);
-                }
-                return new OkObjectResult(lockers);
-
-            }
-
-            catch
-            {
-                return new StatusCodeResult(500);
-            }
-
-        }
-        [FunctionName("GetLockerByID")]
-        public async Task<IActionResult> GetLockerByID(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}")] HttpRequest req, 
-          Guid lockerId,
-          ILogger log)
-        {
-            try
-            {
-
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
-                List<Locker> lockers = new List<Locker>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Lockers l WHERE l.id = @id");
-                query.WithParameter("@id", lockerId);
-                FeedIterator<Locker> iterator = container.GetItemQueryIterator<Locker>(query);
-                while (iterator.HasMoreResults)
-                {
-                    FeedResponse<Locker> response = await iterator.ReadNextAsync();
-                    lockers.AddRange(response);
-                }
-                return new OkObjectResult(lockers[0]);
-            }
-            catch
-            {
-                return new StatusCodeResult(500);
-            }
-
-        }
-        
         [FunctionName("GetMaterialStatusById")]
         public async Task<IActionResult> GetMaterialStatusById(
           [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "devices/{deviceId}/status")] HttpRequest req,
@@ -121,7 +37,6 @@ namespace SmartLockerFunctionApp
                 logs.AddRange(response);
                 return new OkObjectResult(logs);
             }
-
             catch
             {
                 return new StatusCodeResult(500);
