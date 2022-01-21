@@ -207,13 +207,4 @@ C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\o
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.CopyComplete
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.dll
 C:\Users\Michiel\2MCT\TeamProject\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Buffers.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Codecs.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Codecs.Mqtt.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Common.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Handlers.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\DotNetty.Transport.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Devices.Client.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
-D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.CopyComplete

@@ -9,8 +9,8 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 {
     public class LockerConnector
     {
-        private static CosmosClient _cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-        public static Container Container = _cosmosClient.GetContainer("SmartLocker", "Lockers");
+        private static readonly CosmosClient _cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+        public static readonly Container Container = _cosmosClient.GetContainer("SmartLocker", "Lockers");
 
         public static async Task<List<Locker>> GetLockersAsync()
         {

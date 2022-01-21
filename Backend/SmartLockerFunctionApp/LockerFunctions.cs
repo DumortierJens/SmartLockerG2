@@ -28,7 +28,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(lockers);
             }
-            catch
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }
@@ -55,7 +55,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(locker);
             }
-            catch
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }
@@ -87,7 +87,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult("Locker opened");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }

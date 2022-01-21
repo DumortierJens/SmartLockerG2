@@ -54,7 +54,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                     .MustVerifySignature()
                     .Decode<IDictionary<string, object>>(authorizationHeader);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 IsValid = false;
 

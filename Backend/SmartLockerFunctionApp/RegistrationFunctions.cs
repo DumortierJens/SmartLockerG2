@@ -114,7 +114,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }
@@ -135,7 +135,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }
@@ -163,7 +163,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }

@@ -17,7 +17,7 @@ using SmartLockerFunctionApp.Services.Authentication;
 
 namespace SmartLockerFunctionApp
 {
-    class main : AuthorizedServiceBase
+    class Main : AuthorizedServiceBase
     {
         [FunctionName("GetMaterialStatusById")]
         public async Task<IActionResult> GetMaterialStatusById(

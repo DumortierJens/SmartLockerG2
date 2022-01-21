@@ -38,8 +38,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                 // Get access token from user
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 JObject jObject = JObject.Parse(requestBody);
-                JToken accessToken;
-                if (!jObject.TryGetValue("accessToken", out accessToken))
+                if (!jObject.TryGetValue("accessToken", out JToken accessToken))
                     return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "No accesstoken" }));
 
                 // Create cosmosDB client
@@ -47,7 +46,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                 Container container = cosmosClient.GetContainer("SmartLocker", "Users");
 
                 // Get user by social access token & try to get user out of CosmosDB
-                Models.User user = await getUserFacebookDetails(accessToken.ToString());
+                Models.User user = await GetUserFacebookDetails(accessToken.ToString());
 
                 try
                 {
@@ -62,13 +61,13 @@ namespace SmartLockerFunctionApp.Services.Authentication
 
                 return new OkObjectResult(new { token = _tokenIssuer.IssueTokenForUser(user) });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }
         }
 
-        private async Task<Models.User> getUserFacebookDetails(string accessToken)
+        private async Task<Models.User> GetUserFacebookDetails(string accessToken)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
