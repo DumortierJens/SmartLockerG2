@@ -1,5 +1,3 @@
-let userToken;
-
 let htmlLockerContent, htmlExtraInfo, htmlJson, htmlOpmerking, htmlConfirm, htmlCancel;
 
 const checkStatus = function (status) {
@@ -78,6 +76,7 @@ const showMoreInfo = function (id, htmlArrow, json) {
 const showEdit = function (id) {
 
     htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`);
+    let lockernr = htmlExtraInfo.getAttribute('locker-nr');
     htmlExtraInfo.innerHTML = `<div class="reservation_details">
                         <div class=" reservation_details_edit_and_delete flex">
                             <div class="reservation_details_edit flex centerflex">
@@ -112,18 +111,34 @@ const showEdit = function (id) {
                             <p class="reservation_detail_title">Sport</p>
                             <p class="reservation_detail_content">Voetbal</p>
                         </div>
-
+                        <div class="reservation_detail flex">
+                            <p class="reservation_detail_title">Status</p>
+                            <select class="reservation_detail_content status_selector js-status_selector" name="status" id="status">
+                                <option value="Beschikbaar">Beschikbaar</option>
+                                <option value="Bezet">Bezet</option>
+                                <option value="Buiten gebruik">Buiten gebruik</option>
+                            </select>
+                        </div>
                         <div class="reservation_opmerking">
                             <label for="opmerking" class="reservation_opmerking_title">Beschrijving
-                                <span class="textarea js-textarea-${id}" role="textbox" contenteditable></span>
+                                <span class="textarea js-textarea-${id}" role="textbox" contenteditable>${htmlJson[lockernr].description}</span>
                             </label>
                         </div>
-
                     </div>`
-
+    var select = document.querySelector(".js-status_selector");
+    for (var i = 0; i < select.length; i++){
+        var option = select.options[i];
+        if (option.text == htmlJson[lockernr].status){
+            option.selected = true;
+        }
+    }
     document.querySelector(`.js-textarea-${id}`).focus()
     listenToConfirm(id)
     listenToCancel(id)
+}
+
+const listenToLockerOpen = function(id){
+    console.log('id',id)
 }
 
 const listenToConfirm = function (id) {
@@ -132,8 +147,12 @@ const listenToConfirm = function (id) {
         updatedDescription = document.querySelector(`.js-textarea-${id}`).innerHTML
         const body = { "Description": updatedDescription }
         handleData(`${APIURI}/lockers/${id}`, showLockers, null, 'PUT', JSON.stringify(body), userToken);
-        location.reload();
+        setTimeout(ReloadScreen,500)
     })
+}
+
+const ReloadScreen = function(){
+    location.reload();
 }
 
 const listenToCancel = function (id) {
@@ -239,7 +258,7 @@ const showLockers = function (jsonObject) {
                         </svg>
                     </div>
                 </div>
-                <div class="js-extrainfo-${jsonObject[i].id}"></div>`
+                <div class="js-extrainfo-${jsonObject[i].id}" locker-nr="${i}"></div>`
     }
     listenToClickMore(htmlJson);
 }

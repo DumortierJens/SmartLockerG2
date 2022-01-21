@@ -873,6 +873,13 @@ a:focus {
 
 /* Lockerbeheer */
 
+.status_selector{
+    outline: none;
+    border: none;
+    text-align: center;
+    font-family: 'MyFont';
+}
+
 .lockermanagement_open_locker{
     outline: 0;
     text-align: center;
