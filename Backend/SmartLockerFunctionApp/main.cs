@@ -130,7 +130,7 @@ namespace SmartLockerFunctionApp
         }
 
         [FunctionName("UpdateLockerDescription")]
-        public async Task<IActionResult> UpdateReservation(
+        public async Task<IActionResult> UpdateLockerDescription(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "lockers/{lockerId}")] HttpRequest req,
             Guid lockerId,
             ILogger log)
