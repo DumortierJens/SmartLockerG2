@@ -70,20 +70,20 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.Role != "Admin" && !await LockerManagementService.CheckRegistrationAsync(lockerId, Auth.Id))
+                    return new UnauthorizedResult();
+
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Environment.GetEnvironmentVariable("IoTHubAdmin"));
-                
+
                 CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("open");
                 await serviceClient.InvokeDeviceMethodAsync(lockerId.ToString(), cloudToDeviceMethod);
 
-                return new OkResult();
+                return new OkObjectResult("Locker opened");
             }
-
             catch (Exception ex)
             {
                 return new StatusCodeResult(500);
             }
         }
-
-
     }
 }

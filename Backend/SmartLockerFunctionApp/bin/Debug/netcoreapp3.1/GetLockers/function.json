@@ -14,5 +14,5 @@
   ],
   "disabled": false,
   "scriptFile": "../bin/SmartLockerFunctionApp.dll",
-  "entryPoint": "SmartLockerFunctionApp.main.GetLockers"
+  "entryPoint": "SmartLockerFunctionApp.LockerFunctions.GetLockers"
 }
