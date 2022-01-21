@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using SmartLockerFunctionApp.Models;
 
-namespace SmartLockerFunctionApp.Services.ReservationControl
+namespace SmartLockerFunctionApp.Services.LockerManagement
 {
-    public static class ReservationService
+    public static class LockerManagementService
     {
         public static async Task<bool> ValidateReservation(Reservation reservation)
         {
@@ -31,13 +31,29 @@ namespace SmartLockerFunctionApp.Services.ReservationControl
             return true;
         }
 
+        public static async Task<bool> ValidateRegistration(Registration registration)
+        {
+            if (registration.StartTime > registration.EndTime || registration.EndTime < DateTime.Now)
+                return false;
+
+            var currentRegistration = await GetCurrentRegistration(registration.LockerId);
+            if (currentRegistration != null)
+                return false;
+
+            var currentReservation = await GetCurrentReservation(registration.LockerId);
+            if (currentReservation != null && currentReservation.StartTime < DateTime.Now)
+                return false;
+
+            return true;
+        }
+
         private static async Task<List<Reservation>> GetReservations(Guid lockerId)
         {
             CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
             Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
 
             List<Reservation> reservations = new List<Reservation>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @endTime ORDER BY r.startTime");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @endTime ORDER BY r.startTime LIMIT 1");
             query.WithParameter("@id", lockerId);
             query.WithParameter("@endTime", DateTime.Now);
 
@@ -51,13 +67,33 @@ namespace SmartLockerFunctionApp.Services.ReservationControl
             return reservations;
         }
 
+        private static async Task<Reservation> GetCurrentReservation(Guid lockerId)
+        {
+            CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+            Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
+
+            List<Reservation> reservations = new List<Reservation>();
+            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @endTime ORDER BY r.startTime");
+            query.WithParameter("@id", lockerId);
+            query.WithParameter("@endTime", DateTime.Now);
+
+            FeedIterator<Reservation> iterator = container.GetItemQueryIterator<Reservation>(query);
+            while (iterator.HasMoreResults)
+            {
+                FeedResponse<Reservation> response = await iterator.ReadNextAsync();
+                reservations.AddRange(response);
+            }
+
+            return reservations.Count > 0 ? reservations[0] : null;
+        }
+
         private static async Task<Registration> GetCurrentRegistration(Guid lockerId)
         {
             CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
             Container container = cosmosClient.GetContainer("SmartLocker", "Registration");
 
             List<Registration> registrations = new List<Registration>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.lockerId = @id and r.endTime = @endTime");
+            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Registrations r WHERE r.lockerId = @id and r.endTime = @endTime");
             query.WithParameter("@id", lockerId);
             query.WithParameter("@endTime", DateTime.Now);
 
