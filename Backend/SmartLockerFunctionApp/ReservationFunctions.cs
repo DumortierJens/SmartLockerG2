@@ -110,7 +110,7 @@ namespace SmartLockerFunctionApp
                 return new OkObjectResult(reservation);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new StatusCodeResult(500);
             }
