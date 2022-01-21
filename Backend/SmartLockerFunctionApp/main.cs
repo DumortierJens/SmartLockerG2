@@ -130,7 +130,7 @@ namespace SmartLockerFunctionApp
         }
 
         [FunctionName("UpdateLockerDescription")]
-        public async Task<IActionResult> UpdateReservation(
+        public async Task<IActionResult> UpdateLockerDescription(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "lockers/{lockerId}")] HttpRequest req,
             Guid lockerId,
             ILogger log)
@@ -157,6 +157,7 @@ namespace SmartLockerFunctionApp
                 //    return new UnauthorizedResult();
 
                 locker.Description = updatedLocker.Description;
+                locker.Status = updatedLocker.Status;
 
 
                 await container.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));

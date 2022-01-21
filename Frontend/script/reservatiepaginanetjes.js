@@ -81,14 +81,14 @@ function ShowEdit(id) {
                         Materiële schade
                     </label>
                         <input class="checkbox_input" type="checkbox">
-                        <div class="checkbox_box js-checkbox_damage"></div>
+                        <div class="checkbox_box js-checkbox"></div>
                 </div>
                 <div class="reservation_detail flex">
                     <label class="checkbox">
                         Ontbrekend materiaal
                     </label>
                         <input class="checkbox_input" type="checkbox">
-                        <div class="checkbox_box js-checkbox_damage"></div>
+                        <div class="checkbox_box js-checkbox"></div>
                 </div>
                                             <div class="reservation_opmerking">
                                                 <label for="opmerking" class="reservation_opmerking_title">Opmerking
@@ -97,6 +97,7 @@ function ShowEdit(id) {
                                             </div>
             </form>
         </div>`;
+        ListenToClickCheckBoxes();
 }
 
 function ShowMoreInfo(id, htmlArrow) {
@@ -170,6 +171,24 @@ function ShowMoreInfo(id, htmlArrow) {
         htmlExtraInfo.innerHTML = ``;
         htmlExtraInfo.style.animation = '';
         return;
+    }
+}
+
+function ListenToClickCheckBoxes(){
+    const checkboxes = document.querySelectorAll('.js-checkbox')
+    for (let checkbox of checkboxes){
+        checkbox.addEventListener('click',function(){
+            console.log(this)
+            if(!checkbox.classList.contains('box_checked')){
+                checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`
+                checkbox.style.animation = "fadein 0.5s"
+                checkbox.classList.add('box_checked');
+            }
+            else{
+                checkbox.style = ``
+                checkbox.classList.remove('box_checked');
+            }
+        })
     }
 }
 
