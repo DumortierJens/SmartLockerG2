@@ -17,7 +17,7 @@ using SmartLockerFunctionApp.Services.Authentication;
 
 namespace SmartLockerFunctionApp
 {
-    class Main : AuthorizedServiceBase
+    class main : AuthorizedServiceBase
     {
         [FunctionName("StatusLog")]
         public async Task<IActionResult> StatusLog(

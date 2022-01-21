@@ -1,96 +1,69 @@
-using System;
-using System.IO;
+using IoTHubTrigger = Microsoft.Azure.WebJobs.EventHubTriggerAttribute;
+
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Azure.EventHubs;
+using System.Text;
+using System.Net.Http;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using System;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using SmartLockerFunctionApp.Services.Authentication;
 using Microsoft.Azure.Devices;
-using SmartLockerFunctionApp.Services.LockerManagement;
 using SmartLockerFunctionApp.Models;
+using Newtonsoft.Json;
 using Microsoft.Azure.Cosmos;
+using Azure.Messaging.WebPubSub;
+using Newtonsoft.Json.Linq;
 
 namespace SmartLockerFunctionApp
 {
-    public class LockerFunctions : AuthorizedServiceBase
+    public class LockerFunctions
     {
-        [FunctionName("GetLockers")]
-        public async Task<IActionResult> GetLockers(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers")] HttpRequest req,
-            ILogger log)
+        [FunctionName("ReceiveLockerMessages")]
+        public async Task ReceiveLockerMessages([IoTHubTrigger("messages/events", Connection = "IoTHub")] EventData message, ILogger log)
         {
-            try
-            {
-                var lockers = await LockerConnector.GetLockersAsync();
+            string json = Encoding.UTF8.GetString(message.Body.Array);
+            Log newLog = JsonConvert.DeserializeObject<Log>(json);
+            newLog.Id = Guid.NewGuid();
+            newLog.Timestamp = DateTime.UtcNow;
 
-                return new OkObjectResult(lockers);
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
+            JObject jObject = JObject.Parse(json);
+            Guid lockerId = Guid.Parse(jObject["iotDeviceId"].ToString());
 
-        }
+            // Save in CosmosDB
+            CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+            Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
+            await container.CreateItemAsync<Log>(newLog, new PartitionKey(newLog.DeviceId.ToString()));
 
-        [FunctionName("GetLockerById")]
-        public async Task<IActionResult> GetLockerByID(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}")] HttpRequest req,
-          Guid lockerId,
-          ILogger log)
-        {
-            try
-            {
-                Locker locker;
-                try
-                {
-                    locker = await LockerConnector.Container.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
-                }
-                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return new NotFoundResult();
-                }
-
-                return new OkObjectResult(locker);
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
-
+            // Send to all users with websockets
+            WebPubSubServiceClient serviceClient = new WebPubSubServiceClient(Environment.GetEnvironmentVariable("PubSub"), "SmartLockerHub");
+            await serviceClient.SendToAllAsync(JsonConvert.SerializeObject(new { lockerId = lockerId, lastLog = newLog }));
         }
 
         [FunctionName("OpenLocker")]
-        public async Task<IActionResult> OpenLocker(
+        public static async Task<IActionResult> OpenLocker(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "lockers/{lockerId}/open")] HttpRequest req,
             Guid lockerId,
             ILogger log)
         {
             try
             {
-                if (Auth.Role != "Admin" && !await LockerManagementService.CheckRegistrationAsync(lockerId, Auth.Id))
-                    return new UnauthorizedResult();
-
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Environment.GetEnvironmentVariable("IoTHubAdmin"));
+                CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("open");
+                await serviceClient.InvokeDeviceMethodAsync(lockerId.ToString(), cloudToDeviceMethod);
 
-                try
-                {
-                    CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("open");
-                    await serviceClient.InvokeDeviceMethodAsync(lockerId.ToString(), cloudToDeviceMethod);
-                }
-                catch (Exception)
-                {
-                    return new StatusCodeResult(503);
-                }
-
-                return new OkObjectResult("Locker opened");
+                return new StatusCodeResult(200);
             }
-            catch (Exception)
+
+            catch (Exception ex)
             {
                 return new StatusCodeResult(500);
             }
+
+
         }
     }
 }
