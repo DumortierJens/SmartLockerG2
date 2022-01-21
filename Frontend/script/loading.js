@@ -3,7 +3,7 @@ let htmloading, globalhtmlelement, htmllogin, htmlusers, htmloverview, htmllocke
 function ShowPage() {
     htmloading.style = "display: none"
     globalhtmlelement.style.opacity = "1"
-    globalhtmlelement.style.animation = "fadein 0.5s"
+    globalhtmlelement.style.animation = "fadein 0.3s"
 }
 
 function ShowLoadingScreen(timeout) {
