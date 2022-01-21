@@ -34,7 +34,7 @@ namespace SmartLockerFunctionApp
                 registration.StartTime = DateTime.Now;
                 registration.EndTime = DateTime.MinValue;
 
-                // Validate registration
+                // Validate start registration
                 if (!await LockerManagementService.ValidateStartRegistrationAsync(registration))
                     return new ConflictResult();
 
@@ -84,8 +84,8 @@ namespace SmartLockerFunctionApp
                 registration.EndTime = DateTime.Now;
                 registration.Note = registrationEnd.Note;
 
-                // Validate registration
-                if (!await LockerManagementService.ValidateStopRegistrationAsync(registration))
+                // Validate end registration
+                if (!await LockerManagementService.ValidateEndRegistrationAsync(registration))
                     return new ConflictResult();
 
                 // Update registration
@@ -110,17 +110,7 @@ namespace SmartLockerFunctionApp
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
-
-                List<Registration> registrations = new List<Registration>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r");
-                FeedIterator<Registration> iterator = container.GetItemQueryIterator<Registration>(query);
-                while (iterator.HasMoreResults)
-                {
-                    FeedResponse<Registration> response = await iterator.ReadNextAsync();
-                    registrations.AddRange(response);
-                }
+                var registrations = await RegistrationService.GetRegistrationsAsync();
 
                 return new OkObjectResult(registrations);
             }
