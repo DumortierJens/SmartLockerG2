@@ -113,7 +113,7 @@ const showEdit = function (id) {
                         </div>
                         <div class="reservation_detail flex">
                             <p class="reservation_detail_title">Status</p>
-                            <select class="reservation_detail_content status_selector js-status_selector" name="status" id="status">
+                            <select class="reservation_detail_content status_selector js-status_selector-${id}" name="status" id="status">
                                 <option value="Beschikbaar">Beschikbaar</option>
                                 <option value="Bezet">Bezet</option>
                                 <option value="Buiten gebruik">Buiten gebruik</option>
@@ -125,7 +125,7 @@ const showEdit = function (id) {
                             </label>
                         </div>
                     </div>`
-    var select = document.querySelector(".js-status_selector");
+    var select = document.querySelector(`.js-status_selector-${id}`);
     for (var i = 0; i < select.length; i++) {
         var option = select.options[i];
         if (option.text == htmlJson[lockernr].status) {
@@ -142,10 +142,11 @@ const listenToLockerOpen = function (id) {
 }
 
 const listenToConfirm = function (id) {
-    let updatedDescription, jsonDescription
+    let updatedDescription, updatedStatus
     document.querySelector(`.js-doneedit-${id}`).addEventListener("click", function () {
         updatedDescription = document.querySelector(`.js-textarea-${id}`).innerHTML
-        const body = { "Description": updatedDescription }
+        updatedStatus = document.querySelector(`.js-status_selector-${id}`).value
+        const body = { "Description": updatedDescription, "Status": updatedStatus }
         handleData(`${APIURI}/lockers/${id}`, showLockers, null, 'PUT', JSON.stringify(body), userToken);
         setTimeout(ReloadScreen, 500)
     })
