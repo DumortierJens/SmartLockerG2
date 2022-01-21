@@ -12,11 +12,11 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<bool> ValidateStartRegistrationAsync(Registration registration )
         {
             // Check for open registration
-            var currentRegistration = await RegistrationService.GetCurrentRegistrationAsync(registration.LockerId);
+            var currentRegistration = await RegistrationConnector.GetCurrentRegistrationAsync(registration.LockerId);
             if (currentRegistration != null) return false;
 
             // Check for open reservation
-            var currentReservation = await ReservationService.GetCurrentOrNextReservationAsync(registration.LockerId);
+            var currentReservation = await ReservationConnector.GetCurrentOrNextReservationAsync(registration.LockerId);
             if (currentReservation != null && currentReservation.StartTime < DateTime.Now) return false;
 
             return true;
@@ -25,7 +25,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<bool> ValidateEndRegistrationAsync(Registration registration)
         {
             // Check for open registration
-            var currentRegistration = await RegistrationService.GetCurrentRegistrationAsync(registration.LockerId);
+            var currentRegistration = await RegistrationConnector.GetCurrentRegistrationAsync(registration.LockerId);
             if (currentRegistration == null) return false;
             if (currentRegistration.Id != registration.Id) return false;
 
@@ -39,7 +39,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
             // Check current registration
 
-            var reservations = await ReservationService.GetReservationsAsync(reservation.LockerId);
+            var reservations = await ReservationConnector.GetReservationsAsync(reservation.LockerId);
             foreach (var validReservation in reservations)
             {
                 if (reservation.StartTime < validReservation.EndTime)
@@ -56,7 +56,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
         public static async Task<bool> CheckRegistrationAsync(Guid lockerId, string userId)
         {
-            var currentUserRegistration = await RegistrationService.GetCurrentRegistrationAsync(lockerId, userId);
+            var currentUserRegistration = await RegistrationConnector.GetCurrentRegistrationAsync(lockerId, userId);
 
             if (currentUserRegistration == null)
                 return false;

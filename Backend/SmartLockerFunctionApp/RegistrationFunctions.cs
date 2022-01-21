@@ -110,7 +110,7 @@ namespace SmartLockerFunctionApp
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
-                var registrations = await RegistrationService.GetRegistrationsAsync();
+                var registrations = await RegistrationConnector.GetRegistrationsAsync();
 
                 return new OkObjectResult(registrations);
             }
@@ -131,7 +131,7 @@ namespace SmartLockerFunctionApp
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
-                var registrations = await RegistrationService.GetRegistrationsAsync(lockerId);
+                var registrations = await RegistrationConnector.GetRegistrationsAsync(lockerId);
 
                 return new OkObjectResult(registrations);
             }
@@ -157,9 +157,9 @@ namespace SmartLockerFunctionApp
                 List<Registration> registrations = new List<Registration>();
                 IDictionary<string, string> queryParams = req.GetQueryParameterDictionary();
                 if (Guid.TryParse(queryParams["lockerId"], out Guid lockerId))
-                    registrations.Add(await RegistrationService.GetCurrentRegistrationAsync(lockerId, userId));
+                    registrations.Add(await RegistrationConnector.GetCurrentRegistrationAsync(lockerId, userId));
                 else
-                    registrations.AddRange(await RegistrationService.GetCurrentRegistrationsAsync(userId));
+                    registrations.AddRange(await RegistrationConnector.GetCurrentRegistrationsAsync(userId));
 
                 return new OkObjectResult(registrations);
             }
