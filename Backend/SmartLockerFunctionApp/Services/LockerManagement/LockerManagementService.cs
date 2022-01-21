@@ -14,9 +14,9 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             if (reservation.StartTime > reservation.EndTime || reservation.EndTime < DateTime.Now)
                 return false;
 
-            var reservations = await GetReservations(reservation.LockerId);
-            var currentRegistration = await GetCurrentRegistration(reservation.LockerId);
+            //var currentRegistration = await GetCurrentRegistration(reservation.LockerId);
 
+            var reservations = await GetReservations(reservation.LockerId);
             foreach (var validReservation in reservations)
             {
                 if (reservation.StartTime < validReservation.EndTime)
@@ -42,6 +42,16 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
             var currentReservation = await GetCurrentReservation(registration.LockerId);
             if (currentReservation != null && currentReservation.StartTime < DateTime.Now)
+                return false;
+
+            return true;
+        }
+
+        public static async Task<bool> CheckRegistration(Guid lockerId, string userId)
+        {
+            var currentUserRegistration = await GetCurrentUserRegistration(lockerId, userId);
+
+            if (currentUserRegistration == null)
                 return false;
 
             return true;
@@ -73,9 +83,9 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
 
             List<Reservation> reservations = new List<Reservation>();
-            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @endTime ORDER BY r.startTime");
+            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @now ORDER BY r.startTime");
             query.WithParameter("@id", lockerId);
-            query.WithParameter("@endTime", DateTime.Now);
+            query.WithParameter("@now", DateTime.Now);
 
             FeedIterator<Reservation> iterator = container.GetItemQueryIterator<Reservation>(query);
             while (iterator.HasMoreResults)
@@ -93,9 +103,30 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             Container container = cosmosClient.GetContainer("SmartLocker", "Registration");
 
             List<Registration> registrations = new List<Registration>();
-            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Registrations r WHERE r.lockerId = @id and r.endTime = @endTime");
+            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Registrations r WHERE r.lockerId = @id and r.endTime > @now ORDER BY r.startTime");
             query.WithParameter("@id", lockerId);
-            query.WithParameter("@endTime", DateTime.Now);
+            query.WithParameter("@now", DateTime.Now);
+
+            FeedIterator<Registration> iterator = container.GetItemQueryIterator<Registration>(query);
+            while (iterator.HasMoreResults)
+            {
+                FeedResponse<Registration> response = await iterator.ReadNextAsync();
+                registrations.AddRange(response);
+            }
+
+            return registrations.Count > 0 ? registrations[0] : null;
+        }
+
+        private static async Task<Registration> GetCurrentUserRegistration(Guid lockerId, string userId)
+        {
+            CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+            Container container = cosmosClient.GetContainer("SmartLocker", "Registration");
+
+            List<Registration> registrations = new List<Registration>();
+            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Registrations r WHERE (r.lockerId = @id and r.userId = @userId) and r.endTime = @now ORDER BY r.startTime");
+            query.WithParameter("@id", lockerId);
+            query.WithParameter("@userId", userId);
+            query.WithParameter("@now", DateTime.Now);
 
             FeedIterator<Registration> iterator = container.GetItemQueryIterator<Registration>(query);
             while (iterator.HasMoreResults)
