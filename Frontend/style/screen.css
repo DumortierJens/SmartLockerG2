@@ -969,6 +969,11 @@ a:focus {
     margin-left: -7.5rem;
 }
 
+.locker_detail_blur{
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
 
 /* Animations*/
 
