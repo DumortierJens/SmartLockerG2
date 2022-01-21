@@ -15,7 +15,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Registration>> GetRegistrationsAsync()
         {
             List<Registration> registrations = new List<Registration>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r ORDER BY r._ts DESC");
 
             FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
             while (iterator.HasMoreResults)
@@ -30,7 +30,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Registration>> GetRegistrationsAsync(Guid lockerId)
         {
             List<Registration> registrations = new List<Registration>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.lockerId = @id ORDER BY r.startTime ASC");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.lockerId = @id ORDER BY r._ts DESC");
             query.WithParameter("@id", lockerId);
 
             FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
@@ -66,21 +66,30 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             query.WithParameter("@id", lockerId);
             query.WithParameter("@userId", userId);
 
-            try
+            FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
+            while (iterator.HasMoreResults)
             {
-                FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
-                while (iterator.HasMoreResults)
-                {
-                    FeedResponse<Registration> response = await iterator.ReadNextAsync();
-                    registrations.AddRange(response);
-                }
-            }
-            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return null;
+                FeedResponse<Registration> response = await iterator.ReadNextAsync();
+                registrations.AddRange(response);
             }
 
             return registrations.Count > 0 ? registrations[0] : null;
+        }
+
+        public static async Task<List<Registration>> GetCurrentRegistrationsAsync(string userId)
+        {
+            List<Registration> registrations = new List<Registration>();
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.userId = @userId and r.endTime = '0001-01-01T00:00:00' ORDER BY r.startTime");
+            query.WithParameter("@userId", userId);
+
+            FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
+            while (iterator.HasMoreResults)
+            {
+                FeedResponse<Registration> response = await iterator.ReadNextAsync();
+                registrations.AddRange(response);
+            }
+
+            return registrations;
         }
     }
 }

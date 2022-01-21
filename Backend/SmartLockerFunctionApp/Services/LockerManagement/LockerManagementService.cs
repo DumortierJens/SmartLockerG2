@@ -17,7 +17,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
             // Check for open reservation
             var currentReservation = await ReservationService.GetCurrentOrNextReservationAsync(registration.LockerId);
-            if (currentReservation.StartTime < DateTime.Now) return false;
+            if (currentReservation != null && currentReservation.StartTime < DateTime.Now) return false;
 
             return true;
         }

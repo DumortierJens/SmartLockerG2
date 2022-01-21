@@ -100,9 +100,9 @@ namespace SmartLockerFunctionApp
             }
         }
 
-        [FunctionName("GetRegistrations")]
-        public async Task<IActionResult> GetUsers(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations")] HttpRequest req,
+        [FunctionName("GetAllRegistrations")]
+        public async Task<IActionResult> GetRegistrations(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/all")] HttpRequest req,
             ILogger log)
         {
             try
@@ -111,6 +111,55 @@ namespace SmartLockerFunctionApp
                     return new UnauthorizedResult();
 
                 var registrations = await RegistrationService.GetRegistrationsAsync();
+
+                return new OkObjectResult(registrations);
+            }
+            catch (Exception ex)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [FunctionName("GetRegistrationsByLockerId")]
+        public async Task<IActionResult> GetRegistrationsByLockerId(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/lockers/{lockerId}")] HttpRequest req,
+            Guid lockerId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                var registrations = await RegistrationService.GetRegistrationsAsync(lockerId);
+
+                return new OkObjectResult(registrations);
+            }
+            catch (Exception ex)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [FunctionName("GetCurrentRegistrationsByUserId")]
+        public async Task<IActionResult> GetCurrentRegistrationsByUserId(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/users/{userId}")] HttpRequest req,
+            string userId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin" && userId != "me")
+                    return new UnauthorizedResult();
+                else if (userId == "me")
+                    userId = Auth.Id;
+
+                List<Registration> registrations = new List<Registration>();
+                IDictionary<string, string> queryParams = req.GetQueryParameterDictionary();
+                if (Guid.TryParse(queryParams["lockerId"], out Guid lockerId))
+                    registrations.Add(await RegistrationService.GetCurrentRegistrationAsync(lockerId, userId));
+                else
+                    registrations.AddRange(await RegistrationService.GetCurrentRegistrationsAsync(userId));
 
                 return new OkObjectResult(registrations);
             }
