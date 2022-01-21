@@ -1,6 +1,4 @@
-let userToken;
-
-let htmlName, htmlEmail, htmlBirhtday, htmlPicture, htmlUserCreated
+let htmlName, htmlEmail, htmlBirhtday, htmlPicture, htmlUserCreated, htmlDelete, htmlAfmelden, htmlReservationsUser;
 
 
 const getData = function() {
@@ -38,19 +36,33 @@ const showData = function(jsonObject) {
     document.querySelector(".js-profile_created").innerHTML = convertDateTime(htmlUserCreated);
     document.querySelector(".js-email").innerHTML = htmlEmail;
     document.querySelector('.js-profile_picture').src = htmlPicture;
-    //listener js-delete
-    //listener js-reservations-user
-    //listerner js-blokkeren
+    htmlDelete = document.querySelector('.js-delete');
+    htmlAfmelden = document.querySelector('.js-afmelden');
+    htmlReservationsUser = document.querySelector('.js-reservations-user');
+    ListenToClickAfmeldenUser();
+    ListenToClickReservationsUser();
+    ListenToClickDeleteUser();
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-    console.info('DOM geladen');
+function ListenToClickAfmeldenUser() {
+    htmlAfmelden.addEventListener('click', function() {
+        console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
+    });
+}
 
-    // user authentication
-    userToken = sessionStorage.getItem("usertoken");
-    userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiVXNlciJ9.9PqxSKs19MPQCU_6Lt38Krq1aZeHBbZ1Y2Sf4orTyao";
-    if (userToken == null)
-        window.location.replace(location.origin);
+function ListenToClickReservationsUser() {
+    htmlReservationsUser.addEventListener('click', function() {
+        console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
+    });
+}
+
+function ListenToClickDeleteUser() {
+    htmlDelete.addEventListener('click', function() {
+        console.log(`popup om te bevestigen, Delete van zichzelf via usertoken en ga naar index.html`);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
 
     getData();
 })
