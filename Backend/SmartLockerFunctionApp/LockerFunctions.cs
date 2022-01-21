@@ -75,8 +75,15 @@ namespace SmartLockerFunctionApp
 
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Environment.GetEnvironmentVariable("IoTHubAdmin"));
 
-                CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("open");
-                await serviceClient.InvokeDeviceMethodAsync(lockerId.ToString(), cloudToDeviceMethod);
+                try
+                {
+                    CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("open");
+                    await serviceClient.InvokeDeviceMethodAsync(lockerId.ToString(), cloudToDeviceMethod);
+                }
+                catch (Exception)
+                {
+                    return new StatusCodeResult(503);
+                }
 
                 return new OkObjectResult("Locker opened");
             }
