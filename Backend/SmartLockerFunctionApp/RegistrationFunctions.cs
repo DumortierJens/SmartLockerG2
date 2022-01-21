@@ -19,7 +19,7 @@ namespace SmartLockerFunctionApp
     {
         [FunctionName("StartRegistration")]
         public async Task<IActionResult> StartRegistration(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registration/start")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrations/start")] HttpRequest req,
             ILogger log)
         {
             try
@@ -32,9 +32,10 @@ namespace SmartLockerFunctionApp
                 registration.Id = Guid.NewGuid();
                 registration.UserId = Auth.Id;
                 registration.StartTime = DateTime.Now;
+                registration.EndTime = DateTime.MinValue;
 
                 // Validate registration
-                if (!await LockerManagementService.ValidateRegistration(registration))
+                if (!await LockerManagementService.ValidateStartRegistrationAsync(registration))
                     return new ConflictResult();
 
                 // Get cosmos container
@@ -42,19 +43,20 @@ namespace SmartLockerFunctionApp
                 Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
 
                 // Save registration
-                await container.CreateItemAsync(registration, new PartitionKey(registration.LockerId.ToString()));
+                await container.CreateItemAsync(registration, new PartitionKey(registration.Id.ToString()));
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
         [FunctionName("StopRegistration")]
         public async Task<IActionResult> StopRegistration(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registration/stop")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrations/{registrationId}/stop")] HttpRequest req,
+            Guid registrationId,
             ILogger log)
         {
             try
@@ -71,7 +73,7 @@ namespace SmartLockerFunctionApp
                 Registration registration;
                 try
                 {
-                    registration = await container.ReadItemAsync<Registration>(registrationEnd.Id.ToString(), new PartitionKey(registrationEnd.LockerId.ToString()));
+                    registration = await container.ReadItemAsync<Registration>(registrationId.ToString(), new PartitionKey(registrationId.ToString()));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -80,10 +82,14 @@ namespace SmartLockerFunctionApp
 
                 // Set registration defaults
                 registration.EndTime = DateTime.Now;
-                registration.Note += "\nAfter:\n" + registrationEnd.Note;
+                registration.Note = registrationEnd.Note;
+
+                // Validate registration
+                if (!await LockerManagementService.ValidateStopRegistrationAsync(registration))
+                    return new ConflictResult();
 
                 // Update registration
-                await container.ReplaceItemAsync<Registration>(registration, registration.Id.ToString(), new PartitionKey(registration.LockerId.ToString()));
+                await container.ReplaceItemAsync<Registration>(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
 
                 return new OkObjectResult(registration);
             }
