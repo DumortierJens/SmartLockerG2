@@ -1,11 +1,12 @@
 let currentLockerID;
 let userToken;
 let OpmerkingClicked = false;
+let registrationStarted = false;
 
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
     htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
-    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText;
+    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 
@@ -99,10 +100,24 @@ const showLocker = function(jsonObject) {
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_available');
         ListenToClickOpmerkingBtn(OpmerkingClicked);
         ListenToClickReserverenBtn();
-        ListenToClickToggleLocker(jsonObject.id);
+        //checken of registratie al gestart is van deze gebruiker 
+        // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen 
+        //        en je kan nog steeds de locker openen zolang de registratie bezig is
+        // ==>nee: je kan de registratie starten door de locker te openen
+        //reserveren van de locker kan je altijd
+        if (registrationStarted == false) {
+            ListenToClickToggleLocker(jsonObject.id);
+            htmlPopUpMessage.innerHTML = "Je staat op het punt de registratie te starten. Breng de bal terug voor 00:00. Daarna kan je de registratie afsluiten.";
+        }
+        if (registrationStarted == true) {
+            ListenToClickToggleLocker(jsonObject.id);
+            htmlPopUpMessage.innerHTML = "Wil je de locker opnieuw openen?";
+            //listener van de registratie afsluit knop
+            //andere htmlpopup met keuzemenu of alles in orde is
+        }
     } else if (jsonObject.status == 'Bezet') {
         htmlBeschikbaar.innerHTML = 'Bezet';
-        htmlInstructions.innerHTML = 'Alle voorwerpen zijn voor het moment in gebruik';
+        htmlInstructions.innerHTML = 'De locker is momenteel in gebruik';
         htmlLockerSvg.style = 'display:none';
         htmlBeschikbaar.classList.add('locker_detail_content_status_color_unavailable');
         htmlOpmerkingBtn.style = 'display:none';
@@ -141,8 +156,8 @@ function ListenToClickToggleLocker(id) {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
-        ListenToCancel();
         ListenToOpen(id);
+        ListenToCancel();
     });
 }
 
@@ -156,13 +171,21 @@ function ListenToCancel() {
 
 function ListenToOpen(id) {
     htmlPopUpOpen.addEventListener('click', function() {
-        htmlBackground.style = '';
-        htmlLockerSvg.innerHTML = getSvg('locker open');
-        htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
-        htmlPopUp.style.animation = 'fadeout 0.3s';
         setTimeout(DisplayNone, 300);
-        handleData(`${APIURI}/lockers/${id}/open`, null, null, 'POST', userToken);
+        let lockerId = id
+        const body = { lockerId }
+        handleData(`${APIURI}/registration/start`, OpenLocker(id), null, 'POST', JSON.stringify(body), userToken);
+
     });
+}
+
+function OpenLocker(id) {
+    console.log("open")
+    htmlBackground.style = '';
+    htmlLockerSvg.innerHTML = getSvg('locker open');
+    htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
+    htmlPopUp.style.animation = 'fadeout 0.3s';
+    handleData(`${APIURI}/lockers/${id}/open`, null, null, 'POST'); //werkt nog niet
 }
 
 function DisplayNone() {
@@ -234,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
+    htmlPopUpMessage = document.querySelector('.js-popup-message')
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
