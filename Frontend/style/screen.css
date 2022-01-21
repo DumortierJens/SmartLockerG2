@@ -466,6 +466,7 @@ a:focus {
 .users_table {
     padding-bottom: 1.5rem;
     padding-top: 0.5rem;
+    min-height: calc(100vh - 4.5rem);
 }
 
 .user_management_content {
