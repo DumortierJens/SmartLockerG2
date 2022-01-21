@@ -11,6 +11,7 @@ using SmartLockerFunctionApp.Services.Authentication;
 using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
+using SmartLockerFunctionApp.Services.LockerManagement;
 
 namespace SmartLockerFunctionApp
 {
@@ -26,11 +27,15 @@ namespace SmartLockerFunctionApp
                 // Get registration info
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Registration registration = JsonConvert.DeserializeObject<Registration>(requestBody);
-                
+
                 // Set registration defaults
                 registration.Id = Guid.NewGuid();
                 registration.UserId = Auth.Id;
                 registration.StartTime = DateTime.Now;
+
+                // Validate registration
+                if (!await LockerManagementService.ValidateRegistration(registration))
+                    return new ConflictResult();
 
                 // Get cosmos container
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
