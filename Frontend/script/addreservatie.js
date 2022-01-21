@@ -10,25 +10,40 @@ const showLockerReservation = function(jsonObject) {
 
 function ListenToConfirmRegistration() {
     htmlConfirm.addEventListener('click', function() {
-        let start = htmlStart.value;
-        let end = htmlEnd.value;
-        var now = Date.now()
+        let startTime = htmlStart.value;
+        let endTime = htmlEnd.value;
+        var start = new Date(startTime)
+        var end = new Date(endTime)
+        var now = new Date()
+        let error = false
         if (start > end) {
+            error = true
             console.log("Het eindtijdstip moet later liggen dan het starttijdstip.")
         }
         if (start < now) {
+            error = true
             console.log("Het starttijsstip ligt in het verleden.")
         }
         if (end < now) {
+            error = true
             console.log("Het eindtijsstip ligt in het verleden.")
         }
-        console.log(now)
+        var hours = Math.abs(end - start) / 36e5;
+        console.log(hours)
+        if (hours > 1.5) {
+            error = true
+            console.log("Je hebt te lang geboekt")
+        }
         const body = {
-            start,
-            end
+            startTime,
+            endTime
         }
         console.log(body)
-        handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
+            //ook nog checken of er geen andere reservatie is
+        if (error = false) {
+            handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
+        }
+
     })
 }
 
