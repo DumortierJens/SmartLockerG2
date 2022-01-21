@@ -1,19 +1,18 @@
 let htmloading, globalhtmlelement, htmllogin, htmlusers, htmloverview, htmllocker, htmllockermanagement, htmlprofilepage;
 
-function ShowPage(){
+function ShowPage() {
     htmloading.style = "display: none"
     globalhtmlelement.style.opacity = "1"
     globalhtmlelement.style.animation = "fadein 0.5s"
 }
 
-function ShowLoadingScreen(timeout){
+function ShowLoadingScreen(timeout) {
     globalhtmlelement.style.opacity = "0"
     htmloading.style.animation = `fadeout ${timeout/1000}s`
-    setTimeout(ShowPage,timeout)
+    setTimeout(ShowPage, timeout)
 }
 
-function init(){
-    console.log('Dom geladen')
+function init() {
     htmloading = document.querySelector('.loading_container')
     htmllogin = document.querySelector('.js-loginpage')
     htmlusers = document.querySelector('.js-userspage')
@@ -21,30 +20,30 @@ function init(){
     htmllocker = document.querySelector('.js-lockerpage')
     htmllockermanagement = document.querySelector('.js-locker-managementpage')
     htmlprofilepage = document.querySelector('.js-profilepage')
-    if(htmllogin){
+    if (htmllogin) {
         globalhtmlelement = htmllogin
         ShowLoadingScreen(800);
     }
-    if(htmlusers){
+    if (htmlusers) {
         globalhtmlelement = htmlusers
         ShowLoadingScreen(800)
     }
-    if(htmloverview){
+    if (htmloverview) {
         globalhtmlelement = htmloverview
         ShowLoadingScreen(1600)
     }
-    if(htmllocker){
+    if (htmllocker) {
         globalhtmlelement = htmllocker
         ShowLoadingScreen(1600)
     }
-    if(htmllockermanagement){
+    if (htmllockermanagement) {
         globalhtmlelement = htmllockermanagement
         ShowLoadingScreen(1600)
     }
-    if(htmlprofilepage){
+    if (htmlprofilepage) {
         globalhtmlelement = htmlprofilepage
         ShowLoadingScreen(1600)
     }
 }
 
-document.addEventListener('DOMContentLoaded',init)
+document.addEventListener('DOMContentLoaded', init)
