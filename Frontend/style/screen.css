@@ -1058,7 +1058,7 @@ a:focus {
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 360px) {
     .header_add_reservation {
         font-size: 1.2rem;
     }

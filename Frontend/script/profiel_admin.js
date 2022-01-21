@@ -92,17 +92,17 @@ const showUser = function(jsonObject) {
     htmlBlock = document.querySelector('.js-block');
     htmlReservationsUser = document.querySelector('.js-reservations-admin-user');
     ListenToClickBlockUser(jsonObject.id);
-    ListenToClickreservationsUser(jsonObject.id);
+    ListenToClickReservationsUser(jsonObject.id);
     ListenToClickDeleteUser(jsonObject.id);
 };
 
 function ListenToClickBlockUser(id) {
     htmlBlock.addEventListener('click', function() {
-        console.log(`Block ${id}`);
+        console.log(`popup om te bevestigen, Block ${id}`);
     });
 }
 
-function ListenToClickreservationsUser(id) {
+function ListenToClickReservationsUser(id) {
     htmlReservationsUser.addEventListener('click', function() {
         console.log('Ga naar profielreservatie.html met id van user meegestuurd');
     });
@@ -110,7 +110,7 @@ function ListenToClickreservationsUser(id) {
 
 function ListenToClickDeleteUser(id) {
     htmlDelete.addEventListener('click', function() {
-        console.log(`Delete ${id}`);
+        console.log(`popup om te bevestigen, Delete ${id}`);
     });
 }
 const getUser = function(id) {
