@@ -157,6 +157,7 @@ namespace SmartLockerFunctionApp
                 //    return new UnauthorizedResult();
 
                 locker.Description = updatedLocker.Description;
+                locker.Status = updatedLocker.Status;
 
 
                 await container.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
