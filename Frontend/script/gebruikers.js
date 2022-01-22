@@ -6,7 +6,7 @@ const showUsers = function(jsonObject) {
     for (i = 0; i < jsonObject.length; i++) {
         console.log(jsonObject[i]);
         htmlUsersContent.innerHTML += `<div class="locker_container js-user" data-id="${jsonObject[i].id}">
-        <div class="locker users_container flex">
+        <div class="locker pointer users_container flex">
             <img class="user_picture" src="${jsonObject[i].picture}" alt="">
             <p class="locker_name">${jsonObject[i].name}</p>
         </div>
