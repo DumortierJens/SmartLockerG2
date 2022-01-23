@@ -23,28 +23,26 @@
 # 23 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 2
 # 24 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 2
 # 25 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 2
+# 26 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 2
 
 
 // Methods for tasks
-void checkMaterial();
-bool checkMaterialOfUltrasoonSensor(NewPing, double);
-void checkLock();
+void CheckMaterialSonar();
+void CheckLock();
 
 
 // Variables
 Scheduler taskRunner;
 
-NewPing usLeft(5, 18, 400);
-double usLeftThreshold = 22;
-bool usLeftLastState = false;
+int selectedSonar = 0;
+int sonarDiff = 4;
+Sonar sonars[] {
+  Sonar("6e557e60-84a8-45b0-a026-37ae6d0d06fb", 19, 21, 17, sonarDiff),
+  Sonar("ed1f152e-822d-4940-935c-70c40e1b8c3e", 5, 18, 17, sonarDiff)
+};
 
-NewPing usRight(19, 21, 400);
-double usRightThreshold = 22;
-bool usRightLastState = false;
-
-LockerLock lock(22, 23);
+LockerLock lock("fc5a0661-20fc-4eb1-95d7-e27e19f211df", 22, 23);
 bool lockLastState = 0x0;
-
 
 // IoT hub
 static void SendConfirmationCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result)
@@ -58,29 +56,29 @@ static void SendConfirmationCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result)
 static int DeviceMethodCallback(const char *methodName, const unsigned char *payload, int size, unsigned char **response, int *response_size)
 {
   do{{ LOGGER_LOG l = xlogging_get_log_function(); if (l != 
-# 59 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
+# 57 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
  __null
-# 59 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
- ) l(AZ_LOG_INFO, "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino", __func__, 59, 0x01, "Try to invoke method %s", methodName); }; }while((void)0,0);
+# 57 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
+ ) l(AZ_LOG_INFO, "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino", __func__, 57, 0x01, "Try to invoke method %s", methodName); }; }while((void)0,0);
   const char *responseMessage = "\"Successfully invoke device method\"";
   int result = 200;
 
   if (strcmp(methodName, "open") == 0)
   {
     do{{ LOGGER_LOG l = xlogging_get_log_function(); if (l != 
-# 65 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
+# 63 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
    __null
-# 65 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
-   ) l(AZ_LOG_INFO, "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino", __func__, 65, 0x01, "Open lock"); }; }while((void)0,0);
-    lock.openLock();
+# 63 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
+   ) l(AZ_LOG_INFO, "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino", __func__, 63, 0x01, "Open lock"); }; }while((void)0,0);
+    lock.OpenLock();
   }
   else
   {
     do{{ LOGGER_LOG l = xlogging_get_log_function(); if (l != 
-# 70 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
+# 68 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
    __null
-# 70 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
-   ) l(AZ_LOG_INFO, "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino", __func__, 70, 0x01, "No method %s found", methodName); }; }while((void)0,0);
+# 68 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
+   ) l(AZ_LOG_INFO, "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino", __func__, 68, 0x01, "No method %s found", methodName); }; }while((void)0,0);
     responseMessage = "\"No method found\"";
     result = 404;
   }
@@ -92,18 +90,18 @@ static int DeviceMethodCallback(const char *methodName, const unsigned char *pay
 }
 
 // Tasks
-Task checkMaterialTask(500, (-1), &checkMaterial, 
-# 82 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
-                                                         __null 
-# 82 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
-                                                              );
-Task checkLockTask(500, (-1), &checkLock, 
-# 83 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
+Task checkMaterialTask(1000, (-1), &CheckMaterialSonar, 
+# 80 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
+                                                               __null 
+# 80 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
+                                                                    );
+Task checkLockTask(500, (-1), &CheckLock, 
+# 81 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino" 3 4
                                                  __null 
-# 83 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
+# 81 "d:\\_SCHOOL\\2MCT_S3\\Project\\SmartLockerG2\\Device_ESP32\\App\\App.ino"
                                                       );
 
-void updateDeviceStatus(String deviceId, bool value){
+void UpdateDeviceStatus(String deviceId, bool value){
 
     // Create json payload
     String messagePayload = "{\"iotDeviceId\":\"" + String("11cf21d4-03ef-4e0a-8a17-27c26ae80abd") + "\", \"deviceId\":\"" + deviceId + "\", \"value\":" + value + "}";
@@ -115,46 +113,22 @@ void updateDeviceStatus(String deviceId, bool value){
 
 }
 
-void checkMaterial(){
-    bool usLeftState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
-    bool usRightState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
+void CheckMaterialSonar(){
+    bool sonarLastState = sonars[selectedSonar].LastState;
+    bool materialDetected = sonars[selectedSonar].MaterialDetected();
 
-    if (usLeftState != usLeftLastState)
-    {
-        if (usLeftState)
-            Serial.println("Ultrasoon left: material detected");
-        else
-            Serial.println("Ultrasoon left: no material detected");
-
-        updateDeviceStatus("ed1f152e-822d-4940-935c-70c40e1b8c3e", usLeftState);
+    if (sonarLastState != materialDetected) {
+        Serial.println("DeviceId: " + sonars[selectedSonar].Id + " Detected: " + String(materialDetected));
+        UpdateDeviceStatus(sonars[selectedSonar].Id, materialDetected);
     }
 
-    if (usRightState != usRightLastState)
-    {
-        if (usRightState)
-            Serial.println("Ultrasoon right: material detected");
-        else
-            Serial.println("Ultrasoon right: no material detected");
-
-        updateDeviceStatus("6e557e60-84a8-45b0-a026-37ae6d0d06fb", usRightState);
-    }
-
-    usLeftLastState = usLeftState;
-    usRightLastState = usRightState;
+    selectedSonar++;
+    if (selectedSonar >= sizeof(sonars) / sizeof(sonars[0]))
+        selectedSonar = 0;
 }
 
-bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){
-    double usValue = us.ping_cm();
-    Serial.println(usValue);
-
-    if (usValue > usThresholdValue - 5 && usValue < usThresholdValue + 5)
-        return true;
-
-    return false;
-}
-
-void checkLock() {
-    bool lockState = lock.getLockState();
+void CheckLock() {
+    bool lockState = lock.GetLockState();
     Serial.println(lockState);
 
     if (lockState != lockLastState)
@@ -164,7 +138,7 @@ void checkLock() {
         else
             Serial.println("Locker: opened");
 
-        updateDeviceStatus("fc5a0661-20fc-4eb1-95d7-e27e19f211df", lockState);
+        UpdateDeviceStatus(lock.Id, lockState);
     }
 
     lockLastState = lockState;
