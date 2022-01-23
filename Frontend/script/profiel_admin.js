@@ -28,7 +28,7 @@ const showUser = function(jsonObject) {
 </div>
 <p class="profile_name">${jsonObject.name}</p>
 <div class="profile_icons_container">
-<div class="js-block profile_icons_container_container">
+<div class="js-block profile_icons_container_container pointer">
     <div class="profile_icon_afmelden">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                 <defs>
@@ -46,7 +46,7 @@ const showUser = function(jsonObject) {
     </div>
     <p class="profile_icon_afmelden_text">Blokkeren</p>
     </div>
-    <div class="js-reservations-admin-user profile_icons_container_container">
+    <div class="js-reservations-admin-user profile_icons_container_container pointer">
     <div class="profile_icon_reservations">
         <svg class="profile_icon_reservations" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                 <defs>
@@ -84,7 +84,7 @@ const showUser = function(jsonObject) {
             <p class="profile_info_data">${jsonObject.email}</p>
         </div>
     </div>
-    <div class="profile_info_content js-delete">
+    <div class="profile_info_content js-delete pointer">
         <p class="delete_account">Account verwijderen</p>
     </div>
 </div>`;
