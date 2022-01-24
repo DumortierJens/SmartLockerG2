@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace SmartLockerFunctionApp.Services.LockerManagement
 {
-    public class RegistrationConnector
+    public class RegistrationService
     {
         private static readonly CosmosClient _cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-        private static readonly Container Container = _cosmosClient.GetContainer("SmartLocker", "Registrations");
+        public static readonly Container Container = _cosmosClient.GetContainer("SmartLocker", "Registrations");
 
         public static async Task<List<Registration>> GetRegistrationsAsync()
         {
