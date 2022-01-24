@@ -113,7 +113,7 @@ namespace SmartLockerFunctionApp
                     return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
 
                 // Check material
-                if (!await LockerService.CheckMaterialAsync(registration.LockerId))
+                if (!await LockerService.CheckMaterialStatusAsync(registration.LockerId))
                     return new BadRequestObjectResult(new { code = 800, message = "Not all material in locker" });
 
                 // Update registration

@@ -29,7 +29,21 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             return lockers;
         }
 
-        public static async Task<bool> CheckMaterialAsync(Guid lockerId)
+        public static async Task<bool> CheckLockStatusAsync(Guid lockerId)
+        {
+            var devices = await GetDevicesAsync(lockerId, "lock");
+            if (devices.Count <= 0) throw new Exception();
+
+            Log lastLockLog = await GetLastDeviceLogAsync(devices[0].Id);
+            if (lastLockLog == null) throw new Exception();
+
+            if (!lastLockLog.Value)
+                return false;
+
+            return true;
+        }
+
+        public static async Task<bool> CheckMaterialStatusAsync(Guid lockerId)
         {
             var materialStatuses = await GetLockerMaterialStatusAsync(lockerId);
 

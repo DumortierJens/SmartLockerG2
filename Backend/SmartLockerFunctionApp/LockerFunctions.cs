@@ -61,17 +61,18 @@ namespace SmartLockerFunctionApp
             }
         }
 
-        [FunctionName("GetLockerMaterialStatus")]
-        public async Task<IActionResult> GetLockerMaterialStatus(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}/material")] HttpRequest req,
+        [FunctionName("GetLockerStatus")]
+        public async Task<IActionResult> GetLockerLockStatus(
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}/status")] HttpRequest req,
           Guid lockerId,
           ILogger log)
         {
             try
             {
-                List<bool> materialStatuses = await LockerService.GetLockerMaterialStatusAsync(lockerId);
+                List<bool> materialStatus = await LockerService.GetLockerMaterialStatusAsync(lockerId);
+                bool lockStatus = await LockerService.CheckLockStatusAsync(lockerId);
 
-                return new OkObjectResult(materialStatuses);
+                return new OkObjectResult(new { lockStatus, materialStatus });
             }
             catch (Exception)
             {
