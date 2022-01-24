@@ -10,6 +10,9 @@ namespace SmartLockerFunctionApp.Models
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
+        [JsonProperty("registratieId")]
+        public Guid RegistrationId { get; set; }
+
         [JsonProperty("lockerId")]
         public Guid LockerId { get; set; }
 
@@ -23,6 +26,6 @@ namespace SmartLockerFunctionApp.Models
         public DateTime EndTime { get; set; }
 
         [JsonProperty("isUsed")]
-        public Boolean IsUsed { get; set; }
+        public bool IsUsed { get; set; }
     }
 }

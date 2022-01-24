@@ -24,7 +24,7 @@ namespace SmartLockerFunctionApp
         {
             try
             {
-                var lockers = await LockerConnector.GetLockersAsync();
+                var lockers = await LockerService.GetLockersAsync();
 
                 return new OkObjectResult(lockers);
             }
@@ -45,7 +45,7 @@ namespace SmartLockerFunctionApp
                 Locker locker;
                 try
                 {
-                    locker = await LockerConnector.Container.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
+                    locker = await LockerService.Container.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
