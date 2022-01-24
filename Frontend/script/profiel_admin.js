@@ -1,4 +1,4 @@
-let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser;
+let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser, htmlBackArrowGebruikers;
 
 const convertDateTime = function(datetime) {
     const d = new Date(datetime)
@@ -28,7 +28,7 @@ const showUser = function(jsonObject) {
 </div>
 <p class="profile_name">${jsonObject.name}</p>
 <div class="profile_icons_container">
-<div class="js-block profile_icons_container_container">
+<div class="js-block profile_icons_container_container pointer">
     <div class="profile_icon_afmelden">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                 <defs>
@@ -46,7 +46,7 @@ const showUser = function(jsonObject) {
     </div>
     <p class="profile_icon_afmelden_text">Blokkeren</p>
     </div>
-    <div class="js-reservations-admin-user profile_icons_container_container">
+    <div class="js-reservations-admin-user profile_icons_container_container pointer">
     <div class="profile_icon_reservations">
         <svg class="profile_icon_reservations" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                 <defs>
@@ -84,7 +84,7 @@ const showUser = function(jsonObject) {
             <p class="profile_info_data">${jsonObject.email}</p>
         </div>
     </div>
-    <div class="profile_info_content js-delete">
+    <div class="profile_info_content js-delete pointer">
         <p class="delete_account">Account verwijderen</p>
     </div>
 </div>`;
@@ -94,6 +94,7 @@ const showUser = function(jsonObject) {
     ListenToClickBlockUser(jsonObject.id);
     ListenToClickReservationsUser(jsonObject.id);
     ListenToClickDeleteUser(jsonObject.id);
+    ListenToClickBackArrow_GebruikersAdmin()
 };
 
 function ListenToClickBlockUser(id) {
@@ -104,6 +105,7 @@ function ListenToClickBlockUser(id) {
 
 function ListenToClickReservationsUser(id) {
     htmlReservationsUser.addEventListener('click', function() {
+        window.location.replace(`${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`);
         console.log('Ga naar profielreservatie.html met id van user meegestuurd');
     });
 }
@@ -113,12 +115,20 @@ function ListenToClickDeleteUser(id) {
         console.log(`popup om te bevestigen, Delete ${id}`);
     });
 }
+
+function ListenToClickBackArrow_GebruikersAdmin() {
+    htmlBackArrowGebruikers.addEventListener('click', function() {
+        window.location.replace(`${location.origin}/gebruikers${WEBEXTENTION}`);
+    });
+}
+
 const getUser = function(id) {
     handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlUserContent = document.querySelector('.js-profilepage');
+    htmlBackArrowGebruikers = document.querySelector('.js-backarrow-gebruikers');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     getUser(id);
