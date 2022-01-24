@@ -2,13 +2,13 @@ let currentLockerID;
 let OpmerkingClicked = false;
 let registrationStarted = false;
 
+let userToken;
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
     htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
     htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage, htmlProfiel;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
-
 ws.onmessage = (event) => {
     console.log(event.data);
     if (event.data.lockerId == currentLockerID && event.data.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && event.data.value == 1) {
@@ -240,6 +240,10 @@ const getLockerDetail = function (id) {
 document.addEventListener('DOMContentLoaded', function () {
     console.info('DOM geladen');
 
+    // Authentication
+    userToken = sessionStorage.getItem("usertoken");
+    if (userToken == null) window.location.href = location.origin;
+
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
     htmlBeschikbaar = document.querySelector('.js-beschikbaar');
@@ -260,10 +264,12 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     htmlPopUpMessage = document.querySelector('.js-popup-message');
     htmlProfiel = document.querySelector('.js-profiel');
+
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
     }
+
     if (htmlLockerTitle) {
         //deze code wordt gestart vanaf locker.html
         const urlParams = new URLSearchParams(window.location.search);
