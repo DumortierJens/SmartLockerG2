@@ -14,7 +14,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             if (reservation.StartTime > reservation.EndTime || reservation.StartTime < startThreshold)
                 return false;
 
-            var reservations = await ReservationConnector.GetReservationsAsync(reservation.LockerId);
+            var reservations = await ReservationService.GetReservationsNewAsync(reservation.LockerId);
             foreach (var validReservation in reservations)
             {
                 if (reservation.StartTime < validReservation.EndTime)
