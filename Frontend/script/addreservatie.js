@@ -6,123 +6,69 @@ let htmlEndMinute;
 let htmlEnd;
 let htmlConfirm;
 let htmlDate;
-let arrayStartHours = [];
-let arrayStartMinutes = [];
-let arrayEndHours = [];
-let arrayEndMinutes = [];
 
-function ListenToSelectHours() {
-    htmlStartHour.addEventListener('click', function () {
-        let chosenHour = parseInt(this.value)
-        console.log(chosenHour)
-        if (arrayStartHours.includes(chosenHour) || arrayEndHours.includes(chosenHour)) {
-            let indexStart = arrayStartHours.indexOf(chosenHour)
-            let indexEnd = arrayEndHours.indexOf(chosenHour)
-            console.log("index start", indexStart)
-            console.log("index einde", indexEnd)
-
-            if (indexEnd == indexStart) { // Gekozen uur mss in conflict met zowel start- als einduur
-                let arrayAvailableMinutesBefore = [];
-                let arrayAvailableMinutesAfter = [];
-                let reservationDuration = false
-                let startMinutes = arrayStartMinutes[indexEnd]
-                let endMinutes = arrayEndMinutes[indexEnd]
-                for (let option of htmlStartMinute) {
-                    let optionValue = parseInt(option.value)
-                    if (optionValue >= startMinutes && optionValue <= endMinutes) {
-                        option.disabled = true;
-                        reservationDuration = true
-                    } else if (! reservationDuration) {
-                        arrayAvailableMinutesBefore.push(optionValue)
-                    } else if (reservationDuration) {
-                        arrayAvailableMinutesAfter.push(optionValue)
-                    }
-                }
-                htmlEndHour.value = chosenHour
-                htmlStartMinute.addEventListener('click', function () {
-                    if (parseInt(htmlStartMinute.value) in arrayAvailableMinutesBefore) {
-                        htmlEndMinute.value = arrayAvailableMinutesBefore[arrayAvailableMinutesBefore.length - 1].toString()
-                    } else {
-                        if (arrayAvailableMinutesAfter[arrayAvailableMinutesAfter.length - 1] > 45) {
-                            htmlEndHour.value = (parseInt(htmlStartHour.value) + 1).toString()
-                            let startHourNext = arrayStartHours[indexEnd + 1]
-                            console.log(startHourNext)
-                            if (parseInt(htmlEndHour.value) == startHourNext) {
-                                console.log('ok')
-                                let startMinuteNext = arrayStartMinutes[indexEnd + 1]
-                                console.log(startMinuteNext)
-                                for (let option of htmlEndMinute) {
-                                    if (startMinuteNext == 0) {
-                                        htmlEndHour.value = chosenHour
-                                        htmlEndMinute.value = 59
-                                    } else {
-                                        let optionValue = parseInt(option.value)
-                                        if (optionValue >= startMinuteNext) {
-                                            option.disabled = true;
-                                        } else {
-                                            htmlEndMinute.value = optionValue
-                                        }
-                                    }
-
-                                }
-                            }
-
-                        } else {
-                            htmlEndMinute.value = arrayAvailableMinutesAfter[arrayAvailableMinutesAfter.length - 1]
-                        }
-                    }
-                })
-
-            } else if (indexStart > -1) { // Gekozen uur mss in conflict met startuur van een reservatie
-                console.log("Mss conflict met startuur reservatie")
-                let arrayAvailableMinutes = [];
-                let startMinuteNext = arrayStartMinutes[indexStart]
-                for (let option of htmlStartMinute) {
-                    let optionValue = parseInt(option.value)
-                    if (htmlStartMinute == 0) {
-                        option.disabled = true;
-                    } else {
-                        if (optionValue >= startMinuteNext) {
-                            option.disabled = true;
-                        } else {
-                            arrayAvailableMinutes.push(optionValue)
-                        }
-                    }
-                }
-                htmlEndHour.value = chosenHour
-                console.log(arrayAvailableMinutes)
-                if (arrayAvailableMinutes) {
-                    htmlEndMinute.value = arrayAvailableMinutes[arrayAvailableMinutes.length - 1].toString()
-                }
-            } else if (indexEnd > -1) { // Gekozen uur mss in conflict met einduur van een reservatie
+function getBusyTimestamps(todaysReservations) {
+    let dict_busy_timestamps = {}
+    for (let i = 0; i < todaysReservations.length; i++) {
+        let start = todaysReservations[i].slice(0, 8)
+        let end = todaysReservations[i].slice(9, 17)
+        let startHour = parseInt(start.slice(0, 2))
+        let endHour = parseInt(end.slice(0, 2))
+        let startMinute = parseInt(start.slice(3, 5))
+        let endMinute = parseInt(end.slice(3, 5))
+        // De uren zijn hetzelfde
+        if (startHour == endHour) {
+            if (!dict_busy_timestamps.hasOwnProperty(startHour)){
+                dict_busy_timestamps[startHour] = []
+            }
+            for (let busyMinutes = startMinute; busyMinutes <= endMinute; busyMinutes++) {
+                dict_busy_timestamps[startHour].push(busyMinutes)
+            }
+        } else {
+            if (!dict_busy_timestamps.hasOwnProperty(startHour)){
+                dict_busy_timestamps[startHour] = []
+            }
+            for (let busyMinutes = startMinute; busyMinutes <= 59; busyMinutes++) {
+                dict_busy_timestamps[startHour].push(busyMinutes)
+            }
+            if (!dict_busy_timestamps.hasOwnProperty(endHour)){
+                dict_busy_timestamps[endHour] = []
+            }
+            for (let busyMinutes = 0; busyMinutes <= endMinute; busyMinutes++) {
+                dict_busy_timestamps[endHour].push(busyMinutes)
             }
         }
-    })
+    }
+    // Nu heb ik een array van alle tijdstippen die bezet zijn
+    return dict_busy_timestamps
+}
+
+
+function getTodaysReservations(jsonObject) {
+    let arr_res_today = []
+    let todayDate = new Date()
+    for (let reservation of jsonObject) {
+        let reservationStartDate = new Date(reservation.startTime)
+        let reservationEndDate = new Date(reservation.endTime)
+        if (todayDate.toLocaleDateString() == reservationStartDate.toLocaleDateString()) {
+            arr_res_today.push(reservationStartDate.toLocaleTimeString() + "-" + reservationEndDate.toLocaleTimeString())
+        }
+    }
+    return arr_res_today
+}
+
+function ListenToSelectHours() {
+    htmlStartHour.addEventListener('click', function () {})
 }
 
 function ModifySelect(jsonObject) {
-    console.log(jsonObject)
-    for (let reservation in jsonObject) {
-        let date = new Date(jsonObject[reservation].startTime)
-        let dateHour = date.getHours();
-        date.setHours(dateHour + (date.getTimezoneOffset() / 60))
-        let dateString = date.toLocaleTimeString()
-        arrayStartHours.push(parseInt(dateString.slice(0, 2)))
-        arrayStartMinutes.push(parseInt(dateString.slice(3, 5)))
-
-        date = new Date(jsonObject[reservation].endTime)
-        dateHour = date.getHours();
-        date.setHours(dateHour + (date.getTimezoneOffset() / 60))
-        dateString = date.toLocaleTimeString()
-        arrayEndHours.push(parseInt(dateString.slice(0, 2)))
-        arrayEndMinutes.push(parseInt(dateString.slice(3, 5)))
-    }
-    console.log("starthours", arrayStartHours)
-    console.log("startminutes", arrayStartMinutes)
-    console.log("endhours", arrayEndHours)
-    console.log("endminutes", arrayEndMinutes)
-
-    ListenToSelectHours()
+    let todaysReservations = getTodaysReservations(jsonObject)
+    console.log(todaysReservations)
+    let busy_timestamps = getBusyTimestamps(todaysReservations)
+    console.log(busy_timestamps)
+    htmlStartHour.addEventListener('click', function () {
+        let chosenHour = htmlStartHour.value;
+    })
 }
 
 function FillOptionsSelect() {
