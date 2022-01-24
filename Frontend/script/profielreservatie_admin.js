@@ -239,8 +239,8 @@ const showReservaties = function(jsonObject) {
 </div>
 <div class="js-extrainfo-${jsonObject[i].id}"></div>
 </div>`;
-        getUser(jsonObject[i].userId);
     };
+    getUsers();
     ListenToClickMore();
     ListenToClickBackArrowProfielAdmin();
 };
@@ -251,25 +251,26 @@ function ListenToClickBackArrowProfielAdmin() {
     });
 }
 
-const showUser = function(jsonObject) {
-    usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
-    for (const user of usersnames) {
-        user.innerHTML = jsonObject.name
-    }
-    userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject.id}`)
-    for (const user of userspictures) {
-        user.src = jsonObject.picture
-    }
-};
-
-
-const getUser = function(id) {
-    handleData(`${APIURI}/users/me`, showUser, null, 'GET', null, userToken);
-};
+const showUsers = function(jsonObject) {
+    for (i = 0; i < jsonObject.length; i++) {
+        usersnames = document.querySelectorAll(`.js-username-${jsonObject[i].id}`)
+        for (const user of usersnames) {
+            user.innerHTML = jsonObject[i].name
+        }
+        userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject[i].id}`)
+        for (const user of userspictures) {
+            user.src = jsonObject[i].picture
+        }
+    };
+}
 
 
 const getReservations = function(id) {
     handleData(`${APIURI}/reservations/users/${id}`, showReservaties, null, 'GET', null, userToken);
+};
+
+const getUsers = function(id) {
+    handleData(`${APIURI}/users`, showUsers, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {

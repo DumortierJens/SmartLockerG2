@@ -243,7 +243,7 @@ const showReservations = function(jsonObject) {
     ListenToClickMore();
 };
 
-const Users = function(jsonObject) {
+const showUsers = function(jsonObject) {
     for (i = 0; i < jsonObject.length; i++) {
         usersnames = document.querySelectorAll(`.js-username-${jsonObject[i].id}`)
         for (const user of usersnames) {
@@ -261,7 +261,7 @@ const getReservations = function() {
 };
 
 const getUsers = function(id) {
-    handleData(`${APIURI}/users`, Users, null, 'GET', null, userToken);
+    handleData(`${APIURI}/users`, showUsers, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
