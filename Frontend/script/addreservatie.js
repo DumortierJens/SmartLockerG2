@@ -2,6 +2,7 @@ let htmlSport;
 let htmlStart;
 let htmlEnd;
 let htmlConfirm;
+let htmlDate;
 
 function ShowError(htmlelement, foutboodschap) {
     console.log('Fout weergeven')
@@ -15,18 +16,20 @@ function ShowError(htmlelement, foutboodschap) {
 
 const showLockerReservation = function (jsonObject) {
     htmlSport.innerHTML = jsonObject.sport;
-    let now = new Date(0)
-    let offset = new Date().getTimezoneOffset()
-    now.setFullYear(new Date().getFullYear())
-    now.setMonth(new Date().getMonth())
-    now.setDate(new Date().getDate())
-    now.setHours(new Date().getHours() - offset / 60)
-    now.setMinutes(new Date().getMinutes())
-    htmlStart.value = now.toISOString().split('.')[0];
-    end = now
-    end.setHours(new Date().getHours() - offset / 30)
-    end.setMinutes(new Date().getMinutes() + 30)
-    htmlEnd.value = end.toISOString().split('.')[0];
+    // let now = new Date(0)
+    // let offset = new Date().getTimezoneOffset()
+    // now.setFullYear(new Date().getFullYear())
+    // now.setMonth(new Date().getMonth())
+    // now.setDate(new Date().getDate())
+    // now.setHours(new Date().getHours() - offset / 60)
+    // now.setMinutes(new Date().getMinutes())
+    // htmlStart.min = now.toISOString().split('.')[0];
+    // htmlStart.value = now.toISOString().split('.')[0];
+    // end = now
+    // end.setHours(new Date().getHours() - offset / 30)
+    // end.setMinutes(new Date().getMinutes() + 30)
+    // htmlEnd.value = end.toISOString().split('.')[0];
+    // htmlEnd.min = end.toISOString().split('.')[0];
 
     ListenToConfirmRegistration()
 }
@@ -98,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlStart = document.querySelector('.js-addreg_start')
     htmlEnd = document.querySelector('.js-addreg_end')
     htmlConfirm = document.querySelector('.js-addreg_confirm')
+    htmlDate = document.querySelector('.js-addreg_date')
     // const urlParams = new URLSearchParams(window.location.search);
     // const id = urlParams.get('id');
     getLockerReservation() // later nog met id meesturen
