@@ -1,4 +1,4 @@
-let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser;
+let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser, htmlBackArrowGebruikers;
 
 const convertDateTime = function(datetime) {
     const d = new Date(datetime)
@@ -94,6 +94,7 @@ const showUser = function(jsonObject) {
     ListenToClickBlockUser(jsonObject.id);
     ListenToClickReservationsUser(jsonObject.id);
     ListenToClickDeleteUser(jsonObject.id);
+    ListenToClickBackArrow_GebruikersAdmin()
 };
 
 function ListenToClickBlockUser(id) {
@@ -113,12 +114,20 @@ function ListenToClickDeleteUser(id) {
         console.log(`popup om te bevestigen, Delete ${id}`);
     });
 }
+
+function ListenToClickBackArrow_GebruikersAdmin() {
+    htmlBackArrow.addEventListener('click', function() {
+        window.location.replace(`${location.origin}/gebruikers${WEBEXTENTION}`);
+    });
+}
+
 const getUser = function(id) {
     handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlUserContent = document.querySelector('.js-profilepage');
+    htmlBackArrowGebruikers = document.querySelector('.js-backarrow');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     getUser(id);
