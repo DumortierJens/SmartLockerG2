@@ -10,9 +10,6 @@ let arrayStartHours = [];
 let arrayStartMinutes = [];
 let arrayEndHours = [];
 let arrayEndMinutes = [];
-let arrayAvailableMinutesBefore = [];
-let arrayAvailableMinutesAfter = [];
-let reservationDuration = false
 
 function ListenToSelectHours() {
     htmlStartHour.addEventListener('click', function () {
@@ -25,6 +22,9 @@ function ListenToSelectHours() {
             console.log("index einde", indexEnd)
 
             if (indexEnd == indexStart) { // Gekozen uur mss in conflict met zowel start- als einduur
+                let arrayAvailableMinutesBefore = [];
+                let arrayAvailableMinutesAfter = [];
+                let reservationDuration = false
                 let startMinutes = arrayStartMinutes[indexEnd]
                 let endMinutes = arrayEndMinutes[indexEnd]
                 for (let option of htmlStartMinute) {
@@ -47,32 +47,54 @@ function ListenToSelectHours() {
                             htmlEndHour.value = (parseInt(htmlStartHour.value) + 1).toString()
                             let startHourNext = arrayStartHours[indexEnd + 1]
                             console.log(startHourNext)
-                            if (parseInt(htmlEndHour.value) == startHourNext){
+                            if (parseInt(htmlEndHour.value) == startHourNext) {
                                 console.log('ok')
-                                let startMinuteNext = arrayStartMinutes[indexEnd +1]
+                                let startMinuteNext = arrayStartMinutes[indexEnd + 1]
                                 console.log(startMinuteNext)
-                                for (let option of htmlEndMinute){
-                                    let optionValue = parseInt(option.value)
-                                    if (optionValue >= startMinuteNext){
-                                        option.disabled = true;
+                                for (let option of htmlEndMinute) {
+                                    if (startMinuteNext == 0) {
+                                        htmlEndHour.value = chosenHour
+                                        htmlEndMinute.value = 59
+                                    } else {
+                                        let optionValue = parseInt(option.value)
+                                        if (optionValue >= startMinuteNext) {
+                                            option.disabled = true;
+                                        } else {
+                                            htmlEndMinute.value = optionValue
+                                        }
                                     }
-                                    else{
-                                        htmlEndMinute.value = optionValue
-                                    }
+
                                 }
                             }
-                
+
                         } else {
                             htmlEndMinute.value = arrayAvailableMinutesAfter[arrayAvailableMinutesAfter.length - 1]
                         }
                     }
                 })
 
-            }
-
-            if (indexStart > -1) { // Gekozen uur mss in conflict met startuur van een reservatie
-            }
-            if (indexEnd > -1) { // Gekozen uur mss in conflict met einduur van een reservatie
+            } else if (indexStart > -1) { // Gekozen uur mss in conflict met startuur van een reservatie
+                console.log("Mss conflict met startuur reservatie")
+                let arrayAvailableMinutes = [];
+                let startMinuteNext = arrayStartMinutes[indexStart]
+                for (let option of htmlStartMinute) {
+                    let optionValue = parseInt(option.value)
+                    if (htmlStartMinute == 0) {
+                        option.disabled = true;
+                    } else {
+                        if (optionValue >= startMinuteNext) {
+                            option.disabled = true;
+                        } else {
+                            arrayAvailableMinutes.push(optionValue)
+                        }
+                    }
+                }
+                htmlEndHour.value = chosenHour
+                console.log(arrayAvailableMinutes)
+                if (arrayAvailableMinutes) {
+                    htmlEndMinute.value = arrayAvailableMinutes[arrayAvailableMinutes.length - 1].toString()
+                }
+            } else if (indexEnd > -1) { // Gekozen uur mss in conflict met einduur van een reservatie
             }
         }
     })
