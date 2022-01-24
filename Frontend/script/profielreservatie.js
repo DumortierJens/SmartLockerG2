@@ -1,4 +1,4 @@
-let htmlBackArrowProfiel, htmlReservationContent;
+let htmlReservationContent;
 
 function DisplayNone() {
     htmlPopup.style = "display: none;";
@@ -241,14 +241,9 @@ const showReservaties = function(jsonObject) {
         getUser(jsonObject[i].userId);
     };
     ListenToClickMore();
-    ListenToClickBackArrowProfiel();
+    ListenToClickBackArrow()
 };
 
-function ListenToClickBackArrowProfiel() {
-    htmlBackArrowProfiel.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/profiel${WEBEXTENTION}`);
-    });
-}
 const showUser = function(jsonObject) {
     usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
     for (const user of usersnames) {
@@ -270,7 +265,6 @@ const getReservations = function(id) {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    htmlBackArrowProfiel = document.querySelector('.js-backarrow-user')
     htmlReservationContent = document.querySelector('.js-reservations');
     getReservations();
 });

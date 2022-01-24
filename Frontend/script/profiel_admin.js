@@ -1,4 +1,4 @@
-let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser, htmlBackArrowGebruikers;
+let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser;
 
 const convertDateTime = function(datetime) {
     const d = new Date(datetime)
@@ -94,7 +94,7 @@ const showUser = function(jsonObject) {
     ListenToClickBlockUser(jsonObject.id);
     ListenToClickReservationsUser(jsonObject.id);
     ListenToClickDeleteUser(jsonObject.id);
-    ListenToClickBackArrow_GebruikersAdmin()
+    ListenToClickBackArrow()
 };
 
 function ListenToClickBlockUser(id) {
@@ -105,7 +105,7 @@ function ListenToClickBlockUser(id) {
 
 function ListenToClickReservationsUser(id) {
     htmlReservationsUser.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`);
+        window.location.href = `${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`;
         console.log('Ga naar profielreservatie.html met id van user meegestuurd');
     });
 }
@@ -116,19 +116,12 @@ function ListenToClickDeleteUser(id) {
     });
 }
 
-function ListenToClickBackArrow_GebruikersAdmin() {
-    htmlBackArrowGebruikers.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/gebruikers${WEBEXTENTION}`);
-    });
-}
-
 const getUser = function(id) {
     handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlUserContent = document.querySelector('.js-profilepage');
-    htmlBackArrowGebruikers = document.querySelector('.js-backarrow-gebruikers');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     getUser(id);
