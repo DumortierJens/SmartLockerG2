@@ -941,7 +941,7 @@ a:focus {
     width: auto;
     right: 1rem;
     left: 1rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .add_reservation_content {
@@ -960,7 +960,8 @@ a:focus {
     background-color: var(--grey-bg);
     height: 3rem;
     border-radius: 5px;
-    margin-top: 0.5rem;
+    margin: 0.5rem auto 0 auto;
+    max-width: 12.5rem;
 }
 
 .add_reservation_sport_content {
@@ -982,6 +983,8 @@ a:focus {
     outline: none;
     border: none;
     background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .confirm_reservationbtn {
@@ -995,6 +998,7 @@ a:focus {
     width: 50%;
     font-family: 'MyFont';
     cursor: pointer;
+    max-width: 12.5rem;
 }
 
 .confirm_reservationbtn_container {
