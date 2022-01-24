@@ -84,53 +84,31 @@ namespace SmartLockerFunctionApp
 
         }
 
-        [FunctionName("GetReserevationsByLockerId")]
-        public async Task<IActionResult> GetReserevationsByLockerId(
-          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "reservations/lockers/{lockerId}")] HttpRequest req,
-          Guid lockerId,
-          ILogger log)
-        {
-            try
-            {
-                List<Reservation> reservations = new List<Reservation>();
-                QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id");
-                query.WithParameter("@id", lockerId);
-
-                FeedIterator<Reservation> iterator = ReservationService.Container.GetItemQueryIterator<Reservation>(query);
-                while (iterator.HasMoreResults)
-                {
-                    FeedResponse<Reservation> response = await iterator.ReadNextAsync();
-                    reservations.AddRange(response);
-                }
-
-                return new OkObjectResult(reservations);
-            }
-            catch
-            {
-                return new StatusCodeResult(500);
-            }
-        }
-
         [FunctionName("AddReservation")]
         public async Task<IActionResult> AddReservation(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "reservations/lockers/{lockerId}")] HttpRequest req,
-            Guid lockerId,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "reservations/users/{userId}")] HttpRequest req,
+            string userId,
             ILogger log)
         {
             try
             {
+                if (Auth.Role != "Admin" && userId != "me")
+                    return new UnauthorizedResult();
+                else if (userId == "me")
+                    userId = Auth.Id;
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Reservation reservation = JsonConvert.DeserializeObject<Reservation>(requestBody);
 
                 reservation.Id = Guid.NewGuid();
-                reservation.LockerId = lockerId;
-                reservation.UserId = Auth.Id;
+                reservation.UserId = userId;
                 reservation.IsUsed = false;
 
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
+                // Validate reservation
+                if (!await LockerManagementService.ValidateReservationAsync(reservation, reservation.StartTime))
+                    return new ConflictResult();
 
-                await container.CreateItemAsync(reservation, new PartitionKey(reservation.Id.ToString()));
+                await ReservationService.Container.CreateItemAsync(reservation, new PartitionKey(reservation.Id.ToString()));
                 
                 return new OkObjectResult(reservation);
             }
@@ -152,13 +130,10 @@ namespace SmartLockerFunctionApp
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Reservation updatedReservation = JsonConvert.DeserializeObject<Reservation>(requestBody);
 
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
-
                 Reservation reservation;
                 try
                 {
-                    reservation = await container.ReadItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
+                    reservation = await ReservationService.Container.ReadItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -171,7 +146,11 @@ namespace SmartLockerFunctionApp
                 reservation.StartTime = updatedReservation.StartTime;
                 reservation.EndTime = updatedReservation.EndTime;
 
-                await container.ReplaceItemAsync(reservation, reservation.Id.ToString(), new PartitionKey(reservation.Id.ToString()));
+                // Validate reservation
+                if (!await LockerManagementService.ValidateReservationAsync(reservation, reservation.StartTime))
+                    return new ConflictResult();
+
+                await ReservationService.Container.ReplaceItemAsync(reservation, reservation.Id.ToString(), new PartitionKey(reservation.Id.ToString()));
 
                 return new StatusCodeResult(200);
             }
@@ -190,13 +169,10 @@ namespace SmartLockerFunctionApp
         {
             try
             {
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
-
                 Reservation reservation;
                 try
                 {
-                    reservation = await container.ReadItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
+                    reservation = await ReservationService.Container.ReadItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -206,7 +182,7 @@ namespace SmartLockerFunctionApp
                 if (!(Auth.Role == "Admin" || reservation.UserId == Auth.Id))
                     return new UnauthorizedResult();
 
-                await container.DeleteItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
+                await ReservationService.Container.DeleteItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
 
                 return new StatusCodeResult(200);
             }

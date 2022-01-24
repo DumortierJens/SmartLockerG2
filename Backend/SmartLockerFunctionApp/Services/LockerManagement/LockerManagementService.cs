@@ -32,7 +32,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<bool> ValidateEndRegistrationAsync(Registration registration)
         {
             // Check for open registration
-            var currentRegistration = await RegistrationConnector.GetCurrentRegistrationAsync(registration.LockerId);
+            var currentRegistration = await RegistrationService.GetCurrentRegistrationAsync(registration.LockerId);
             if (currentRegistration == null) return false;
             if (currentRegistration.Id != registration.Id) return false;
 
@@ -41,7 +41,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
         public static async Task<bool> CheckRegistrationAsync(Guid lockerId, string userId)
         {
-            var currentUserRegistration = await RegistrationConnector.GetCurrentRegistrationAsync(lockerId, userId);
+            var currentUserRegistration = await RegistrationService.GetCurrentRegistrationAsync(lockerId, userId);
 
             if (currentUserRegistration == null)
                 return false;
