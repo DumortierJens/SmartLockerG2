@@ -106,7 +106,7 @@ namespace SmartLockerFunctionApp
 
                 // Validate reservation
                 if (!await LockerManagementService.ValidateReservationAsync(reservation, reservation.StartTime))
-                    return new ConflictResult();
+                    return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
 
                 await ReservationService.Container.CreateItemAsync(reservation, new PartitionKey(reservation.Id.ToString()));
                 
@@ -148,7 +148,7 @@ namespace SmartLockerFunctionApp
 
                 // Validate reservation
                 if (!await LockerManagementService.ValidateReservationAsync(reservation, reservation.StartTime))
-                    return new ConflictResult();
+                    return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
 
                 await ReservationService.Container.ReplaceItemAsync(reservation, reservation.Id.ToString(), new PartitionKey(reservation.Id.ToString()));
 
@@ -186,7 +186,6 @@ namespace SmartLockerFunctionApp
 
                 return new StatusCodeResult(200);
             }
-
             catch
             {
                 return new StatusCodeResult(500);
