@@ -97,7 +97,7 @@ function ShowEdit(id) {
                                             </div>
             </form>
         </div>`;
-        ListenToClickCheckBoxes();
+    ListenToClickCheckBoxes();
 }
 
 function ShowMoreInfo(id, htmlArrow) {
@@ -174,17 +174,16 @@ function ShowMoreInfo(id, htmlArrow) {
     }
 }
 
-function ListenToClickCheckBoxes(){
+function ListenToClickCheckBoxes() {
     const checkboxes = document.querySelectorAll('.js-checkbox')
-    for (let checkbox of checkboxes){
-        checkbox.addEventListener('click',function(){
+    for (let checkbox of checkboxes) {
+        checkbox.addEventListener('click', function() {
             console.log(this)
-            if(!checkbox.classList.contains('box_checked')){
+            if (!checkbox.classList.contains('box_checked')) {
                 checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`
                 checkbox.style.animation = "fadein 0.5s"
                 checkbox.classList.add('box_checked');
-            }
-            else{
+            } else {
                 checkbox.style = ``
                 checkbox.classList.remove('box_checked');
             }
@@ -239,27 +238,30 @@ const showReservations = function(jsonObject) {
 </div>
 <div class="js-extrainfo-${jsonObject[i].id}"></div>
 </div>`;
-        getUser(jsonObject[i].userId);
     };
+    getUsers();
     ListenToClickMore();
 };
 
-const showUser = function(jsonObject) {
-    usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
-    for (const user of usersnames) {
-        user.innerHTML = jsonObject.name
-    }
-    userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject.id}`)
-    for (const user of userspictures) {
-        user.src = jsonObject.picture
-    }
-};
+const showUsers = function(jsonObject) {
+    for (i = 0; i < jsonObject.length; i++) {
+        usersnames = document.querySelectorAll(`.js-username-${jsonObject[i].id}`)
+        for (const user of usersnames) {
+            user.innerHTML = jsonObject[i].name
+        }
+        userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject[i].id}`)
+        for (const user of userspictures) {
+            user.src = jsonObject[i].picture
+        }
+    };
+}
 
 const getReservations = function() {
     handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, showReservations, null, 'GET', null, userToken);
 };
-const getUser = function(id) {
-    handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
+
+const getUsers = function(id) {
+    handleData(`${APIURI}/users`, showUsers, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {

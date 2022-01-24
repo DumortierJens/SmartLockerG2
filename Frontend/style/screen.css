@@ -991,7 +991,7 @@ a:focus {
     text-align: center;
 }
 
-.add_reservation_info{
+.add_reservation_info {
     text-align: center;
     margin: 1rem auto 0 auto;
     width: 80%;
@@ -999,7 +999,7 @@ a:focus {
     font-size: 0.75rem;
 }
 
-.error_message{
+.error_message {
     color: var(--red-verlopen);
 }
 
@@ -1070,7 +1070,7 @@ a:focus {
     }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 400px) {
     .header_add_reservation {
         font-size: 1.2rem;
     }
