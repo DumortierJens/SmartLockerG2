@@ -17,7 +17,7 @@ ws.onmessage = (event) => {
     }
 };
 
-const showOverview = function(jsonObject) {
+const showOverview = function (jsonObject) {
     console.log(jsonObject);
     let htmlstring = ``;
     let Sport,
@@ -88,10 +88,10 @@ const showOverview = function(jsonObject) {
     htmlSoccer = document.querySelector('.js-soccer');
     htmlBasketball = document.querySelector('.js-basketball');
     ListenToCLickSport();
-    ListenToClickProfiel()
+    ListenToClickProfiel();
 };
 
-const showLocker = function(jsonObject) {
+const showLocker = function (jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
     htmlInfo.innerHTML = jsonObject.description;
@@ -133,34 +133,34 @@ const showLocker = function(jsonObject) {
         htmlReserverenBtn.style = 'display:none';
     }
     ListenToClickBackArrow();
-    ListenToClickProfiel()
+    ListenToClickProfiel();
 };
 
-const ListenToCLickSport = function() {
-    htmlSoccer.addEventListener('click', function() {
+const ListenToCLickSport = function () {
+    htmlSoccer.addEventListener('click', function () {
         currentLockerID = htmlSoccer.getAttribute('data');
         window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
-    htmlBasketball.addEventListener('click', function() {
+    htmlBasketball.addEventListener('click', function () {
         currentLockerID = htmlBasketball.getAttribute('data');
         window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
 };
 
 function ListenToClickBackArrow() {
-    htmlBackArrow.addEventListener('click', function() {
+    htmlBackArrow.addEventListener('click', function () {
         window.history.back();
     });
 }
 
 function ListenToClickProfiel() {
-    htmlProfiel.addEventListener('click', function() {
+    htmlProfiel.addEventListener('click', function () {
         window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
     });
 }
 
 function ListenToClickToggleLocker(id) {
-    htmlLockerSvg.addEventListener('click', function() {
+    htmlLockerSvg.addEventListener('click', function () {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -170,7 +170,7 @@ function ListenToClickToggleLocker(id) {
 }
 
 function ListenToCancel() {
-    htmlPopUpCancel.addEventListener('click', function() {
+    htmlPopUpCancel.addEventListener('click', function () {
         htmlBackground.style = '';
         htmlPopUp.style.animation = 'fadeout 0.3s';
         setTimeout(DisplayNone, 300);
@@ -178,22 +178,22 @@ function ListenToCancel() {
 }
 
 function ListenToOpen(id) {
-    htmlPopUpOpen.addEventListener('click', function() {
+    htmlPopUpOpen.addEventListener('click', function () {
         setTimeout(DisplayNone, 300);
-        let lockerId = id
-        const body = { lockerId }
+        let lockerId = id;
+        const body = { lockerId };
         handleData(`${APIURI}/registration/start`, OpenLocker(id), null, 'POST', JSON.stringify(body), userToken);
 
     });
 }
 
-function OpenLocker(id) {
-    console.log("open")
+function OpenLocker(lockId) {
+    console.log("open");
     htmlBackground.style = '';
     htmlLockerSvg.innerHTML = getSvg('locker open');
     htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
     htmlPopUp.style.animation = 'fadeout 0.3s';
-    handleData(`${APIURI}/lockers/${id}/open`, null, null, 'POST'); //werkt nog niet
+    handleData(`${APIURI}/lockers/${lockId}/open`, null, null, 'POST', null, userToken);
 }
 
 function DisplayNone() {
@@ -201,13 +201,13 @@ function DisplayNone() {
 }
 
 function ListenToClickReserverenBtn(id) {
-    htmlReserverenBtn.addEventListener('click', function() {
+    htmlReserverenBtn.addEventListener('click', function () {
         console.log('Ga naar addreservatie.html met id van locker meesturen');
     });
 }
 
 function ListenToClickOpmerkingBtn() {
-    htmlOpmerkingBtn.addEventListener('click', function() {
+    htmlOpmerkingBtn.addEventListener('click', function () {
         if (OpmerkingClicked) {
             htmlOpmerkingBtn.style = 'background-color : var(--blue-accent-color);';
             htmlOpmerkingBtn.innerHTML = 'Opmerking toevoegen';
@@ -223,22 +223,22 @@ function ListenToClickOpmerkingBtn() {
             htmlSubmitBtn.style = 'display: block;';
             htmlExtraContent.style.animation = 'fadein 0.5s';
             OpmerkingClicked = true;
-            htmlSubmitBtn.addEventListener('click', function() {
-                console.log(`Verzend ${htmlOpmerkingText.value} naar database`)
+            htmlSubmitBtn.addEventListener('click', function () {
+                console.log(`Verzend ${htmlOpmerkingText.value} naar database`);
             });
         }
     });
 }
 
-const getOverzicht = function() {
+const getOverzicht = function () {
     handleData(`${APIURI}/lockers`, showOverview, null, 'GET', null, userToken);
 };
 
-const getLockerDetail = function(id) {
+const getLockerDetail = function (id) {
     handleData(`${APIURI}/lockers/${id}`, showLocker, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.info('DOM geladen');
 
     // user authentication
@@ -265,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
-    htmlPopUpMessage = document.querySelector('.js-popup-message')
-    htmlProfiel = document.querySelector('.js-profiel')
+    htmlPopUpMessage = document.querySelector('.js-popup-message');
+    htmlProfiel = document.querySelector('.js-profiel');
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
