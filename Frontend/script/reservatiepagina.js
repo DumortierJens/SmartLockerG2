@@ -209,6 +209,7 @@ function ListenToClickMore() {
 };
 
 const showReservations = function(jsonObject) {
+    console.log(jsonObject)
     htmlReservationContent.innerHTML = ``;
     for (i = 0; i < jsonObject.length; i++) {
         //console.log(jsonObject[i]);
