@@ -15,7 +15,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Reservation>> GetReservationsAsync()
         {
             List<Reservation> reservations = new List<Reservation>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.endTime > @minEndTime ORDER BY r.startTime");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r ORDER BY r.startTime");
             query.WithParameter("@minEndTime", DateTime.Now);
 
             FeedIterator<Reservation> iterator = Container.GetItemQueryIterator<Reservation>(query);
@@ -31,7 +31,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Reservation>> GetReservationsAsync(Guid lockerId)
         {
             List<Reservation> reservations = new List<Reservation>();
-            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Reservations r WHERE r.lockerId = @id ORDER BY r.startTime");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id ORDER BY r.startTime");
             query.WithParameter("@id", lockerId);
 
             FeedIterator<Reservation> iterator = Container.GetItemQueryIterator<Reservation>(query);

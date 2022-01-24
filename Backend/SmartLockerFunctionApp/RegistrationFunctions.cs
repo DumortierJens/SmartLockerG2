@@ -110,7 +110,11 @@ namespace SmartLockerFunctionApp
 
                 // Validate end registration
                 if (!await LockerManagementService.ValidateEndRegistrationAsync(registration))
-                    return new ConflictResult();
+                    return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
+
+                // Check material
+                if (!await LockerService.CheckMaterialAsync(registration.LockerId))
+                    return new BadRequestObjectResult(new { code = 800, message = "Not all material in locker" });
 
                 // Update registration
                 await container.ReplaceItemAsync<Registration>(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
