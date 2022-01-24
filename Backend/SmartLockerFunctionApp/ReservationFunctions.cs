@@ -61,9 +61,6 @@ namespace SmartLockerFunctionApp
         {
             try
             {
-                if (Auth.Role != "Admin")
-                    return new UnauthorizedResult();
-
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Reservations");
 

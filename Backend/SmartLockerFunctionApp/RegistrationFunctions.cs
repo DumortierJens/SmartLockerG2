@@ -12,6 +12,7 @@ using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using SmartLockerFunctionApp.Services.LockerManagement;
+using Newtonsoft.Json.Linq;
 
 namespace SmartLockerFunctionApp
 {
@@ -28,22 +29,45 @@ namespace SmartLockerFunctionApp
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Registration registration = JsonConvert.DeserializeObject<Registration>(requestBody);
 
+                // Get end time
+                DateTime endTimeReservation;
+                if (!JObject.Parse(requestBody).TryGetValue("endTimeReservation", out JToken endTimeReservationToken))
+                    return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "No endTimeReservated found" }));
+                else if (!DateTime.TryParse(endTimeReservationToken.ToString(), out endTimeReservation))
+                    return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "endTimeReservation is not in datetime format" }));
+
                 // Set registration defaults
                 registration.Id = Guid.NewGuid();
                 registration.UserId = Auth.Id;
                 registration.StartTime = DateTime.Now;
                 registration.EndTime = DateTime.MinValue;
 
-                // Validate start registration
-                if (!await LockerManagementService.ValidateStartRegistrationAsync(registration))
+                // Create reservation
+                Reservation reservation = new Reservation()
+                {
+                    Id = Guid.NewGuid(),
+                    LockerId = registration.LockerId,
+                    UserId = registration.UserId,
+                    RegistrationId = registration.Id,
+                    StartTime = DateTime.Now,
+                    EndTime = endTimeReservation,
+                    IsUsed = true
+                };
+
+                // Validate reservation
+                if (!await LockerManagementService.ValidateReservationAsync(reservation, reservation.StartTime))
                     return new ConflictResult();
 
-                // Get cosmos container
+                // Get cosmos client
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
+                
+                // Add reservation to cosmos
+                Container registrationContainer = cosmosClient.GetContainer("SmartLocker", "Registrations");
+                await registrationContainer.CreateItemAsync(registration, new PartitionKey(registration.Id.ToString()));
 
-                // Save registration
-                await container.CreateItemAsync(registration, new PartitionKey(registration.Id.ToString()));
+                // Add reservation to cosmos
+                Container reservationContainer = cosmosClient.GetContainer("SmartLocker", "Reservations");
+                await reservationContainer.CreateItemAsync(reservation, new PartitionKey(reservation.Id.ToString()));
 
                 return new OkObjectResult(registration);
             }
