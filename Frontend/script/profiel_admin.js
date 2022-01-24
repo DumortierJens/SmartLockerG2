@@ -105,6 +105,7 @@ function ListenToClickBlockUser(id) {
 
 function ListenToClickReservationsUser(id) {
     htmlReservationsUser.addEventListener('click', function() {
+        window.location.replace(`${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`);
         console.log('Ga naar profielreservatie.html met id van user meegestuurd');
     });
 }
@@ -116,7 +117,7 @@ function ListenToClickDeleteUser(id) {
 }
 
 function ListenToClickBackArrow_GebruikersAdmin() {
-    htmlBackArrow.addEventListener('click', function() {
+    htmlBackArrowGebruikers.addEventListener('click', function() {
         window.location.replace(`${location.origin}/gebruikers${WEBEXTENTION}`);
     });
 }
@@ -127,7 +128,7 @@ const getUser = function(id) {
 
 document.addEventListener('DOMContentLoaded', function() {
     htmlUserContent = document.querySelector('.js-profilepage');
-    htmlBackArrowGebruikers = document.querySelector('.js-backarrow');
+    htmlBackArrowGebruikers = document.querySelector('.js-backarrow-gebruikers');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     getUser(id);
