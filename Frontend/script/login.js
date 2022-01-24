@@ -1,4 +1,6 @@
-window.fbAsyncInit = function() {
+let userToken;
+
+window.fbAsyncInit = function () {
     FB.init({
         appId: '4670544903052300',
         cookie: true,
@@ -8,47 +10,46 @@ window.fbAsyncInit = function() {
 
     FB.AppEvents.logPageView();
 
-    FB.getLoginStatus(function(response) {
+    FB.getLoginStatus(function (response) {
         statusChangeCallback(response);
     });
 };
 
-const statusChangeCallback = function(response) {
+const statusChangeCallback = function (response) {
     if (response.status === 'connected') {
         console.log('Logged in with Facebook and authenticated');
         if (document.querySelector('.js-login-page')) loginUser(response.authResponse.accessToken);
     } else {
         console.log('Not authenticated with Facebook');
-        //if (document.querySelector('.js-login-page') === null) window.location.replace(location.origin);
     }
 };
 
-const checkLoginState = function() {
-    FB.getLoginStatus(function(response) {
+const checkLoginState = function () {
+    FB.getLoginStatus(function (response) {
         statusChangeCallback(response);
     });
 };
 
-const logout = function() {
+const logout = function () {
     sessionStorage.removeItem("usertoken");
 
-    FB.logout(function(response) {
+    FB.logout(function (response) {
         console.log('Logged out');
         statusChangeCallback(response);
     });
 };
 
-const callbackLoginSucceed = function(response) {
+const callbackLoginSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
     window.location.replace(`${location.origin}/overzicht${WEBEXTENTION}`);
 };
 
-const callbackLoginFailed = function(response) {
+const callbackLoginFailed = function (response) {
     console.log(response);
 };
 
-const loginUser = function(accessToken) {
+const loginUser = function (accessToken) {
     console.log(accessToken);
     const body = JSON.stringify({
         accessToken: accessToken
@@ -56,7 +57,7 @@ const loginUser = function(accessToken) {
     handleData(`${APIURI}/users/login`, callbackLoginSucceed, callbackLoginFailed, 'POST', body);
 };
 
-(function(d, s, id) {
+(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) { return; }
     js = d.createElement(s);
@@ -64,3 +65,13 @@ const loginUser = function(accessToken) {
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // user authentication
+    userToken = sessionStorage.getItem("usertoken");
+    if (userToken == null)
+        // window.location.href = location.origin;
+        userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiQWRtaW4ifQ.6KsO3PS69GlRQRof23MuPKm69U6CEAdN03vbeTU8ZTQ";
+
+});

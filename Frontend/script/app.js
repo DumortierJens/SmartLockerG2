@@ -1,5 +1,4 @@
 let currentLockerID;
-let userToken;
 let OpmerkingClicked = false;
 let registrationStarted = false;
 
@@ -240,12 +239,6 @@ const getLockerDetail = function (id) {
 
 document.addEventListener('DOMContentLoaded', function () {
     console.info('DOM geladen');
-
-    // user authentication
-    userToken = sessionStorage.getItem("usertoken");
-    userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiQWRtaW4ifQ.6KsO3PS69GlRQRof23MuPKm69U6CEAdN03vbeTU8ZTQ";
-    if (userToken == null)
-        window.location.href = location.origin;
 
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
