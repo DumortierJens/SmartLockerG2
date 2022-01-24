@@ -27,6 +27,8 @@ namespace SmartLockerFunctionApp
         public async Task ReceiveLockerMessages([IoTHubTrigger("messages/events", Connection = "IoTHub")] EventData message, ILogger log)
         {
             string json = Encoding.UTF8.GetString(message.Body.Array);
+            log.LogInformation(json);
+
             Log newLog = JsonConvert.DeserializeObject<Log>(json);
             newLog.Id = Guid.NewGuid();
             newLog.Timestamp = DateTime.UtcNow;
