@@ -52,6 +52,7 @@ function ListenToClickAfmeldenUser() {
 
 function ListenToClickReservationsUser() {
     htmlReservationsUser.addEventListener('click', function() {
+        window.location.replace(`${location.origin}/profielreservatie${WEBEXTENTION}`);
         console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }

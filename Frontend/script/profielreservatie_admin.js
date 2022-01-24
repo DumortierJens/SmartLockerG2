@@ -1,4 +1,4 @@
-let htmlBackArrowProfiel, htmlReservationContent;
+let htmlBackArrowProfiel, currentId, htmlReservationContent;
 
 function DisplayNone() {
     htmlPopup.style = "display: none;";
@@ -207,6 +207,7 @@ function ListenToClickMore() {
         });
     };
 };
+
 const showReservaties = function(jsonObject) {
     console.log(jsonObject);
     htmlReservationContent.innerHTML = ``;
@@ -241,14 +242,15 @@ const showReservaties = function(jsonObject) {
         getUser(jsonObject[i].userId);
     };
     ListenToClickMore();
-    ListenToClickBackArrowProfiel();
+    ListenToClickBackArrowProfielAdmin();
 };
 
-function ListenToClickBackArrowProfiel() {
+function ListenToClickBackArrowProfielAdmin() {
     htmlBackArrowProfiel.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/profiel${WEBEXTENTION}`);
+        window.location.replace(`${location.origin}/profiel_admin${WEBEXTENTION}?id=${currentId}`);
     });
 }
+
 const showUser = function(jsonObject) {
     usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
     for (const user of usersnames) {
@@ -265,12 +267,15 @@ const getUser = function(id) {
     handleData(`${APIURI}/users/me`, showUser, null, 'GET', null, userToken);
 };
 
+
 const getReservations = function(id) {
-    handleData(`${APIURI}/reservations/users/me`, showReservaties, null, 'GET', null, userToken);
+    handleData(`${APIURI}/reservations/users/${id}`, showReservaties, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    htmlBackArrowProfiel = document.querySelector('.js-backarrow-user')
+    htmlBackArrowProfiel = document.querySelector('.js-backarrow-user-admin')
     htmlReservationContent = document.querySelector('.js-reservations');
-    getReservations();
+    const urlParams = new URLSearchParams(window.location.search);
+    currentId = urlParams.get('id');
+    getReservations(currentId);
 });
