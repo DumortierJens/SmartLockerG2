@@ -6,7 +6,7 @@ let registrationStarted = false;
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
     htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
-    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage;
+    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage, htmlProfiel;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 
@@ -88,6 +88,7 @@ const showOverview = function(jsonObject) {
     htmlSoccer = document.querySelector('.js-soccer');
     htmlBasketball = document.querySelector('.js-basketball');
     ListenToCLickSport();
+    ListenToClickProfiel()
 };
 
 const showLocker = function(jsonObject) {
@@ -132,22 +133,29 @@ const showLocker = function(jsonObject) {
         htmlReserverenBtn.style = 'display:none';
     }
     ListenToClickBackArrow();
+    ListenToClickProfiel()
 };
 
 const ListenToCLickSport = function() {
     htmlSoccer.addEventListener('click', function() {
         currentLockerID = htmlSoccer.getAttribute('data');
-        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
+        window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
     htmlBasketball.addEventListener('click', function() {
         currentLockerID = htmlBasketball.getAttribute('data');
-        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
+        window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
 };
 
 function ListenToClickBackArrow() {
     htmlBackArrow.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/overzicht${WEBEXTENTION}`);
+        window.history.back();
+    });
+}
+
+function ListenToClickProfiel() {
+    htmlProfiel.addEventListener('click', function() {
+        window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
     });
 }
 
@@ -237,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
     userToken = sessionStorage.getItem("usertoken");
     userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiQWRtaW4ifQ.6KsO3PS69GlRQRof23MuPKm69U6CEAdN03vbeTU8ZTQ";
     if (userToken == null)
-        window.location.replace(location.origin);
+        window.location.href = location.origin;
 
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
@@ -258,6 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlInfo = document.querySelector('.js-info');
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     htmlPopUpMessage = document.querySelector('.js-popup-message')
+    htmlProfiel = document.querySelector('.js-profiel')
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
@@ -268,4 +277,5 @@ document.addEventListener('DOMContentLoaded', function() {
         const id = urlParams.get('id');
         getLockerDetail(id);
     }
+
 });

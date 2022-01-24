@@ -39,6 +39,7 @@ const showData = function(jsonObject) {
     htmlDelete = document.querySelector('.js-delete');
     htmlAfmelden = document.querySelector('.js-afmelden');
     htmlReservationsUser = document.querySelector('.js-reservations-user');
+    ListenToClickBackArrow()
     ListenToClickAfmeldenUser();
     ListenToClickReservationsUser();
     ListenToClickDeleteUser();
@@ -52,10 +53,11 @@ function ListenToClickAfmeldenUser() {
 
 function ListenToClickReservationsUser() {
     htmlReservationsUser.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/profielreservatie${WEBEXTENTION}`);
+        window.location.href = `${location.origin}/profielreservatie${WEBEXTENTION}`;
         console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }
+
 
 function ListenToClickDeleteUser() {
     htmlDelete.addEventListener('click', function() {
@@ -64,6 +66,5 @@ function ListenToClickDeleteUser() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-
     getData();
 })

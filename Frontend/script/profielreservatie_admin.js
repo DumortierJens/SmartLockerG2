@@ -1,4 +1,4 @@
-let htmlBackArrowProfiel, currentId, htmlReservationContent;
+let currentId, htmlReservationContent;
 
 function DisplayNone() {
     htmlPopup.style = "display: none;";
@@ -242,14 +242,8 @@ const showReservaties = function(jsonObject) {
     };
     getUsers();
     ListenToClickMore();
-    ListenToClickBackArrowProfielAdmin();
+    ListenToClickBackArrow()
 };
-
-function ListenToClickBackArrowProfielAdmin() {
-    htmlBackArrowProfiel.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/profiel_admin${WEBEXTENTION}?id=${currentId}`);
-    });
-}
 
 const showUsers = function(jsonObject) {
     for (i = 0; i < jsonObject.length; i++) {
@@ -274,7 +268,6 @@ const getUsers = function(id) {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
-    htmlBackArrowProfiel = document.querySelector('.js-backarrow-user-admin')
     htmlReservationContent = document.querySelector('.js-reservations');
     const urlParams = new URLSearchParams(window.location.search);
     currentId = urlParams.get('id');
