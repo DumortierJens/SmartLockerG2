@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // user authentication
     userToken = sessionStorage.getItem("usertoken");
     if (userToken == null)
-        // window.location.href = location.origin;
-        userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiQWRtaW4ifQ.6KsO3PS69GlRQRof23MuPKm69U6CEAdN03vbeTU8ZTQ";
+        window.location.href = location.origin;
+//         userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiQWRtaW4ifQ.6KsO3PS69GlRQRof23MuPKm69U6CEAdN03vbeTU8ZTQ";
 
 });
