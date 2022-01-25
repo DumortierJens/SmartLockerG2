@@ -48,6 +48,8 @@ const showData = function (jsonObject) {
 function ListenToClickAfmeldenUser() {
     htmlAfmelden.addEventListener('click', function () {
         console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
+        sessionStorage.removeItem('usertoken');
+        window.location.reload();
     });
 }
 
