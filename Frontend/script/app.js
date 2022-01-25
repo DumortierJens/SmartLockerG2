@@ -5,7 +5,7 @@ let registrationStarted = false;
 let userToken;
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackButton,
     htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage, htmlProfiel;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
@@ -131,7 +131,6 @@ const showLocker = function (jsonObject) {
         htmlUitlegLockerDetail.style = 'display:none';
         htmlReserverenBtn.style = 'display:none';
     }
-    ListenToClickBackArrow();
     ListenToClickProfiel();
 };
 
@@ -145,12 +144,6 @@ const ListenToCLickSport = function () {
         window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
 };
-
-function ListenToClickBackArrow() {
-    htmlBackArrow.addEventListener('click', function () {
-        window.history.back();
-    });
-}
 
 function ListenToClickProfiel() {
     htmlProfiel.addEventListener('click', function () {
@@ -229,6 +222,12 @@ function ListenToClickOpmerkingBtn() {
     });
 }
 
+function listenToBackArrow() {
+    htmlBackButton.addEventListener('click', function () {
+        window.history.back();
+    });
+}
+
 const getOverzicht = function () {
     handleData(`${APIURI}/lockers`, showOverview, null, 'GET', null, userToken);
 };
@@ -258,12 +257,14 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlBackground = document.querySelector('.js-background');
     htmlPopUpOpen = document.querySelector('.js-popup-open');
     htmlExtraContent = document.querySelector('.js-extra-content');
-    htmlBackArrow = document.querySelector('.js-backarrow');
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
     htmlPopUpMessage = document.querySelector('.js-popup-message');
     htmlProfiel = document.querySelector('.js-profiel');
+    htmlBackButton = document.querySelector('.js-back');
+
+    if (htmlBackButton) listenToBackArrow();
 
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html
