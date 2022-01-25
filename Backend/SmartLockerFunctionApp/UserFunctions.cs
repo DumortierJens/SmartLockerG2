@@ -80,7 +80,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("BlockUser")]
         public async Task<IActionResult> BlockUser(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/{userId}/block")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/block")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -106,6 +106,41 @@ namespace SmartLockerFunctionApp
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
                 return new OkObjectResult(user);
+            }
+            catch (Exception)
+            {
+                return new OkResult();
+            }
+        }
+
+        [FunctionName("UnBlockUser")]
+        public async Task<IActionResult> UnBlockUser(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/unblock")] HttpRequest req,
+            string userId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                Models.User user;
+                try
+                {
+                    user = await container.ReadItemAsync<Models.User>(userId, new PartitionKey(userId));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                user.IsBlocked = false;
+                await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
+
+                return new OkResult();
             }
             catch (Exception)
             {
