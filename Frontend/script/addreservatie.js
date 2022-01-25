@@ -7,8 +7,12 @@ let htmlEnd;
 let htmlConfirm;
 let htmlDate;
 
-function ListenToChangeDate(){
-    htmlDate.addEventListener('change',function(){
+function ListenToChangeDate() {
+    htmlDate.addEventListener('change', function () {
+        htmlStartHour.value = 5;
+        htmlEndHour.value = 5;
+        htmlStartMinute.value = 0;
+        htmlEndMinute.value = 0;
         getReservations()
     })
 }
@@ -53,6 +57,7 @@ function getBusyTimestamps(todaysReservations) {
 function getTodaysReservations(jsonObject) {
     let arr_res_today = []
     let chosenDateValue = htmlDate.value.toString()
+    console.log("Date value", chosenDateValue)
     let chosenDate = new Date(chosenDateValue)
     for (let reservation of jsonObject) {
         let reservationStartDate = new Date(reservation.startTime)
@@ -65,17 +70,87 @@ function getTodaysReservations(jsonObject) {
     return arr_res_today
 }
 
-function ListenToSelectHours() {
-    htmlStartHour.addEventListener('click', function () {})
+function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ingevuld staan ophalen
+    let startHour = parseInt(htmlStartHour.value)
+    let startMinute = parseInt(htmlStartMinute.value)
+    let endHour = parseInt(htmlEndHour.value)
+    let endMinute = parseInt(htmlEndMinute.value)
+
+    if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
+        console.log("Eindtijdstip moet later liggen dan starttijdstip")
+        return
+    }
+
+    if (startHour == endHour && startMinute == endMinute) {
+        console.log("Beide tijdstippen zijn hetzelfde")
+        return
+    }
+
+    // Kijken of het niet overlapt met een bestaande reservatie
+    let inputString = `${
+        addZero(htmlStartHour.value)
+    }:${
+        addZero(htmlStartMinute.value)
+    }:00-${
+        addZero(htmlEndHour.value)
+    }:${
+        addZero(htmlEndMinute.value)
+    }:00`
+    let inputArray = []
+    inputArray.push(inputString)
+    console.log(inputArray)
+    let new_busy_timestamps = getBusyTimestamps(inputArray)
+    console.log(busy_timestamps)
+    console.log(new_busy_timestamps)
+    for (let key1 in busy_timestamps) {
+        for (let key2 in new_busy_timestamps) {
+            if (key1 == key2) {
+                console.log("Zelfde keys")
+                for (let minutes1 of busy_timestamps[key1]) {
+                    for (let minutes2 of new_busy_timestamps[key2]) {
+                        if (minutes1 == minutes2) {
+                            console.log("Tijdstip overlapt met een bestaande reservatie")
+                            return
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
+    let startPoint = Object.keys(new_busy_timestamps)[0]
+    let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1]
+
+    for (let reservationsHour in busy_timestamps) {
+        if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
+            console.log("Tijdstip overlapt met een bestaande reservatie")
+            return
+        }
+    }
+
+    // Kijken of een slot niet langer dan 90 minuten duurt
+    let start = new Date("2022-01-01 " + inputString.slice(0, 8))
+    let end = new Date("2022-01-01 " + inputString.slice(9, 18))
+    console.log(start)
+    console.log(end)
+    var diff = Math.abs(end - start);
+    var minutes = Math.floor((diff / 1000) / 60);
+    if (minutes > 90) {
+        console.log("Je kan slechts maximum 90 minuten reserveren !")
+        return
+    }
+    console.log("Dit tijdstip is in orde")
 }
 
-function ModifySelect(jsonObject) {
+function SetReservationTime(jsonObject) {
     let todaysReservations = getTodaysReservations(jsonObject)
     console.log(todaysReservations)
     let busy_timestamps = getBusyTimestamps(todaysReservations)
-    console.log(busy_timestamps)
-    htmlStartHour.addEventListener('click', function () {
+    console.log("busy", busy_timestamps)
+    htmlStartHour.addEventListener('change', function () {
         let chosenHour = parseInt(htmlStartHour.value);
+        // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
         if (busy_timestamps[chosenHour]) {
             for (let option of htmlStartMinute) {
                 let optionValue = parseInt(option.value)
@@ -85,6 +160,62 @@ function ModifySelect(jsonObject) {
                     option.disabled = false
                 }
             }
+        }
+        CheckIfValidReservation(busy_timestamps)
+    })
+    htmlStartMinute.addEventListener('change', function () {
+        CheckIfValidReservation(busy_timestamps)
+    })
+    htmlEndHour.addEventListener('change', function () {
+        let chosenHour = parseInt(htmlEndHour.value);
+        // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
+        if (busy_timestamps[chosenHour]) {
+            for (let option of htmlEndMinute) {
+                let optionValue = parseInt(option.value)
+                if (busy_timestamps[chosenHour].includes(optionValue)) {
+                    option.disabled = true
+                } else {
+                    option.disabled = false
+                }
+            }
+        }
+        CheckIfValidReservation(busy_timestamps)
+    })
+    htmlEndMinute.addEventListener('change', function () {
+        CheckIfValidReservation(busy_timestamps)
+    })
+    ListenToChangeDate()
+    CheckIfValidReservation(busy_timestamps)
+}
+
+function ModifySelect(jsonObject) {
+    let todaysReservations = getTodaysReservations(jsonObject)
+    console.log(todaysReservations)
+    let busy_timestamps = getBusyTimestamps(todaysReservations)
+    console.log(busy_timestamps)
+    htmlStartHour.addEventListener('click', function () {
+        let chosenHour = parseInt(htmlStartHour.value);
+        let duringReservation = false
+        let beforeReservation = []
+        let afterReservation = []
+        if (busy_timestamps[chosenHour]) {
+            for (let option of htmlStartMinute) {
+                let optionValue = parseInt(option.value)
+                if (busy_timestamps[chosenHour].includes(optionValue)) {
+                    option.disabled = true
+                    duringReservation = true
+                } else {
+                    option.disabled = false
+                    if (! duringReservation) {
+                        beforeReservation.push(optionValue)
+
+                    } else {
+                        afterReservation.push(optionValue)
+                    }
+                }
+            }
+            console.log("beschikbaar voor reservatie", beforeReservation)
+            console.log("beschikbaar na reservatie", afterReservation)
             for (let option of htmlEndMinute) {
                 let optionValue = parseInt(option.value)
                 if (busy_timestamps[chosenHour].includes(optionValue)) {
@@ -103,18 +234,54 @@ function ModifySelect(jsonObject) {
                 option.disabled = true
             } else {
                 option.disabled = false
-            } htmlStartMinute.addEventListener('click', function () {
-                for (let minute = 0; minute < 60; minute++) {
-                    option = document.querySelector(`.js-end-minute`)[value = minute]
-                    if (minute <= parseInt(htmlStartMinute.value)) {
-                        option.disabled = true
-                    }
-                    option.selected = true
-                }
-            })
+            }
         }
     })
+    htmlStartMinute.addEventListener('click', function () {
+        for (let minute = 0; minute < 60; minute++) {
+            if (htmlEndHour.value != htmlStartHour.value) {
+                option = document.querySelector(`.js-end-minute`)[value = minute]
+                if (minute <= parseInt(htmlStartMinute.value)) {
+                    option.disabled = true
+                }
+                option.selected = true
+            }
+        }
+        if (htmlStartHour.value == htmlEndHour.value && parseInt(htmlStartMinute.value) > parseInt(htmlEndMinute.value)) {
+            if (parseInt(htmlEndHour.value) + 1 < 22) {
+                let newEndHour = parseInt(htmlEndHour.value) + 1
+                htmlEndHour.value = newEndHour;
+            }
+        }
+    })
+    htmlEndMinute.addEventListener('click', function () {
+        if (htmlStartHour.value == htmlEndHour.value && parseInt(htmlStartMinute.value) > parseInt(htmlEndMinute.value)) {
+            if (parseInt(htmlStartHour.value) - 1 > 5) {
+                let newStartHour = parseInt(htmlStartHour.value) - 1
+                htmlStartHour.value = newStartHour;
+            }
+        }
+    })
+    htmlEndHour.addEventListener('click', function () {
+        console.log("Ik ga in de juiste functie")
+        if (htmlStartHour.value != htmlEndHour.value) {
+            for (let option of htmlEndMinute) {
+                let optionValue = parseInt(option.value)
+                if (busy_timestamps[parseInt(htmlEndHour.value)]) {
+                    if (busy_timestamps[parseInt(htmlEndHour.value)].includes(optionValue)) {
+                        option.disabled = true
+                    } else {
+                        option.disabled = false
+                    }
+                } else {
+                    option.disabled = false
+                }
+            }
+        }
+
+    })
     ListenToChangeDate()
+    ListenToConfirmRegistration(busy_timestamps)
 }
 
 function FillOptionsSelect() {
@@ -149,32 +316,40 @@ const showLockerReservation = function (jsonObject) {
     htmlSport.innerHTML = jsonObject.sport;
     FillOptionsSelect();
     getReservations();
-    // let now = new Date(0)
-    // let offset = new Date().getTimezoneOffset()
-    // now.setFullYear(new Date().getFullYear())
-    // now.setMonth(new Date().getMonth())
-    // now.setDate(new Date().getDate())
-    // now.setHours(new Date().getHours() - offset / 60)
-    // now.setMinutes(new Date().getMinutes())
-    // htmlStart.min = now.toISOString().split('.')[0];
-    // htmlStart.value = now.toISOString().split('.')[0];
-    // end = now
-    // end.setHours(new Date().getHours() - offset / 30)
-    // end.setMinutes(new Date().getMinutes() + 30)
-    // htmlEnd.value = end.toISOString().split('.')[0];
-    // htmlEnd.min = end.toISOString().split('.')[0];
-
-    ListenToConfirmRegistration()
 }
 
 const getReservations = function () {
-    handleData(`${APIURI}/reservations`, ModifySelect, null, 'GET', null, userToken);
+    handleData(`${APIURI}/reservations`, SetReservationTime, null, 'GET', null, userToken);
 };
+
+function addZero(value) {
+    if (value < 10) {
+        return "0" + value;
+    } else {
+        return value;
+    }
+}
 
 function ListenToConfirmRegistration() {
     htmlConfirm.addEventListener('click', function () {
-        if (error == false) { // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
+        if (htmlStartHour.value == htmlEndHour.value && htmlStartMinute.value == htmlEndMinute.value) {
+            console.log("Kies een langere periode")
+            return
         }
+        let inputString = `${
+            addZero(htmlStartHour.value)
+        }:${
+            addZero(htmlStartMinute.value)
+        }:00-${
+            addZero(htmlEndHour.value)
+        }:${
+            addZero(htmlEndMinute.value)
+        }:00`
+        let inputArray = []
+        inputArray.push(inputString)
+        console.log(inputArray)
+        // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
+
 
     })
 }
@@ -192,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlConfirm = document.querySelector('.js-addreg_confirm')
     htmlDate = document.querySelector('.js-addreg_date')
     let todayDate = new Date()
-    htmlDate.value = todayDate.getFullYear() + "-" + todayDate.getMonth()+1 + "-" + todayDate.getDate()
+    htmlDate.value = todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate()
     // const urlParams = new URLSearchParams(window.location.search);
     // const id = urlParams.get('id');
     getLockerReservation() // later nog met id meesturen
