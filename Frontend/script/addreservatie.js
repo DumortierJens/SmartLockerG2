@@ -181,6 +181,11 @@ function SetReservationTime(jsonObject) {
                     option.disabled = false
                 }
             }
+        } else {
+            for (let option of htmlStartMinute) {
+                option.disabled = false
+
+            }
         }
     })
     htmlEndHour.addEventListener('change', function () {
@@ -196,102 +201,11 @@ function SetReservationTime(jsonObject) {
                 }
             }
         }
-    })
-    ListenToChangeDate()
-    ListenToConfirmRegistration(busy_timestamps)
-}
-
-function ModifySelect(jsonObject) {
-    let todaysReservations = getTodaysReservations(jsonObject)
-    console.log(todaysReservations)
-    let busy_timestamps = getBusyTimestamps(todaysReservations)
-    console.log(busy_timestamps)
-    htmlStartHour.addEventListener('click', function () {
-        let chosenHour = parseInt(htmlStartHour.value);
-        let duringReservation = false
-        let beforeReservation = []
-        let afterReservation = []
-        if (busy_timestamps[chosenHour]) {
-            for (let option of htmlStartMinute) {
-                let optionValue = parseInt(option.value)
-                if (busy_timestamps[chosenHour].includes(optionValue)) {
-                    option.disabled = true
-                    duringReservation = true
-                } else {
-                    option.disabled = false
-                    if (! duringReservation) {
-                        beforeReservation.push(optionValue)
-
-                    } else {
-                        afterReservation.push(optionValue)
-                    }
-                }
-            }
-            console.log("beschikbaar voor reservatie", beforeReservation)
-            console.log("beschikbaar na reservatie", afterReservation)
+        else {
             for (let option of htmlEndMinute) {
-                let optionValue = parseInt(option.value)
-                if (busy_timestamps[chosenHour].includes(optionValue)) {
-                    option.disabled = true
-                } else {
-                    option.disabled = false
-                    option.selected = true
-                }
-            }
-        }
-        htmlEndHour.value = chosenHour;
-        let option
-        for (let hour = 5; hour < 23; hour++) {
-            option = document.querySelector(`.js-end-holder option[value="${hour}"]`)
-            if (hour < chosenHour) {
-                option.disabled = true
-            } else {
                 option.disabled = false
             }
         }
-    })
-    htmlStartMinute.addEventListener('click', function () {
-        for (let minute = 0; minute < 60; minute++) {
-            if (htmlEndHour.value != htmlStartHour.value) {
-                option = document.querySelector(`.js-end-minute`)[value = minute]
-                if (minute <= parseInt(htmlStartMinute.value)) {
-                    option.disabled = true
-                }
-                option.selected = true
-            }
-        }
-        if (htmlStartHour.value == htmlEndHour.value && parseInt(htmlStartMinute.value) > parseInt(htmlEndMinute.value)) {
-            if (parseInt(htmlEndHour.value) + 1 < 22) {
-                let newEndHour = parseInt(htmlEndHour.value) + 1
-                htmlEndHour.value = newEndHour;
-            }
-        }
-    })
-    htmlEndMinute.addEventListener('click', function () {
-        if (htmlStartHour.value == htmlEndHour.value && parseInt(htmlStartMinute.value) > parseInt(htmlEndMinute.value)) {
-            if (parseInt(htmlStartHour.value) - 1 > 5) {
-                let newStartHour = parseInt(htmlStartHour.value) - 1
-                htmlStartHour.value = newStartHour;
-            }
-        }
-    })
-    htmlEndHour.addEventListener('click', function () {
-        console.log("Ik ga in de juiste functie")
-        if (htmlStartHour.value != htmlEndHour.value) {
-            for (let option of htmlEndMinute) {
-                let optionValue = parseInt(option.value)
-                if (busy_timestamps[parseInt(htmlEndHour.value)]) {
-                    if (busy_timestamps[parseInt(htmlEndHour.value)].includes(optionValue)) {
-                        option.disabled = true
-                    } else {
-                        option.disabled = false
-                    }
-                } else {
-                    option.disabled = false
-                }
-            }
-        }
-
     })
     ListenToChangeDate()
     ListenToConfirmRegistration(busy_timestamps)
@@ -314,16 +228,6 @@ function FillOptionsSelect() {
 
     }
 }
-
-function ShowError(htmlelement, foutboodschap) {
-    console.log('Fout weergeven')
-    let title = htmlelement.previousElementSibling
-    console.log(title)
-    title.classList.add('error_message')
-    htmlelement.classList.add('error_message')
-    window.alert(foutboodschap)
-}
-
 
 const showLockerReservation = function (jsonObject) {
     htmlSport.innerHTML = jsonObject.sport;
