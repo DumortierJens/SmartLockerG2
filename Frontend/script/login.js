@@ -25,18 +25,10 @@ const checkLoginState = function () {
     });
 };
 
-const logout = function () {
-    sessionStorage.removeItem("usertoken");
-
-    FB.logout(function (response) {
-        console.log('Logged out');
-        statusChangeCallback(response);
-    });
-};
-
 const callbackLoginSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
+    FB.logout();
     window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
 };
 
