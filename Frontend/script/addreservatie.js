@@ -7,6 +7,12 @@ let htmlEnd;
 let htmlConfirm;
 let htmlDate;
 
+function ListenToChangeDate(){
+    htmlDate.addEventListener('change',function(){
+        getReservations()
+    })
+}
+
 function getBusyTimestamps(todaysReservations) {
     let dict_busy_timestamps = {}
     for (let i = 0; i < todaysReservations.length; i++) {
@@ -18,20 +24,20 @@ function getBusyTimestamps(todaysReservations) {
         let endMinute = parseInt(end.slice(3, 5))
         // De uren zijn hetzelfde
         if (startHour == endHour) {
-            if (!dict_busy_timestamps.hasOwnProperty(startHour)){
+            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
                 dict_busy_timestamps[startHour] = []
             }
             for (let busyMinutes = startMinute; busyMinutes <= endMinute; busyMinutes++) {
                 dict_busy_timestamps[startHour].push(busyMinutes)
             }
         } else {
-            if (!dict_busy_timestamps.hasOwnProperty(startHour)){
+            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
                 dict_busy_timestamps[startHour] = []
             }
             for (let busyMinutes = startMinute; busyMinutes <= 59; busyMinutes++) {
                 dict_busy_timestamps[startHour].push(busyMinutes)
             }
-            if (!dict_busy_timestamps.hasOwnProperty(endHour)){
+            if (! dict_busy_timestamps.hasOwnProperty(endHour)) {
                 dict_busy_timestamps[endHour] = []
             }
             for (let busyMinutes = 0; busyMinutes <= endMinute; busyMinutes++) {
@@ -46,11 +52,13 @@ function getBusyTimestamps(todaysReservations) {
 
 function getTodaysReservations(jsonObject) {
     let arr_res_today = []
-    let todayDate = new Date()
+    let chosenDateValue = htmlDate.value.toString()
+    let chosenDate = new Date(chosenDateValue)
     for (let reservation of jsonObject) {
         let reservationStartDate = new Date(reservation.startTime)
+        console.log(reservationStartDate.toLocaleDateString())
         let reservationEndDate = new Date(reservation.endTime)
-        if (todayDate.toLocaleDateString() == reservationStartDate.toLocaleDateString()) {
+        if (chosenDate.toLocaleDateString() == reservationStartDate.toLocaleDateString()) {
             arr_res_today.push(reservationStartDate.toLocaleTimeString() + "-" + reservationEndDate.toLocaleTimeString())
         }
     }
@@ -67,19 +75,53 @@ function ModifySelect(jsonObject) {
     let busy_timestamps = getBusyTimestamps(todaysReservations)
     console.log(busy_timestamps)
     htmlStartHour.addEventListener('click', function () {
-        let chosenHour = htmlStartHour.value;
+        let chosenHour = parseInt(htmlStartHour.value);
+        if (busy_timestamps[chosenHour]) {
+            for (let option of htmlStartMinute) {
+                let optionValue = parseInt(option.value)
+                if (busy_timestamps[chosenHour].includes(optionValue)) {
+                    option.disabled = true
+                } else {
+                    option.disabled = false
+                }
+            }
+            for (let option of htmlEndMinute) {
+                let optionValue = parseInt(option.value)
+                if (busy_timestamps[chosenHour].includes(optionValue)) {
+                    option.disabled = true
+                } else {
+                    option.disabled = false
+                    option.selected = true
+                }
+            }
+        }
+        htmlEndHour.value = chosenHour;
+        let option
+        for (let hour = 5; hour < 23; hour++) {
+            option = document.querySelector(`.js-end-holder option[value="${hour}"]`)
+            if (hour < chosenHour) {
+                option.disabled = true
+            } else {
+                option.disabled = false
+            } htmlStartMinute.addEventListener('click', function () {
+                for (let minute = 0; minute < 60; minute++) {
+                    option = document.querySelector(`.js-end-minute`)[value = minute]
+                    if (minute <= parseInt(htmlStartMinute.value)) {
+                        option.disabled = true
+                    }
+                    option.selected = true
+                }
+            })
+        }
     })
+    ListenToChangeDate()
 }
 
 function FillOptionsSelect() {
     for (let hour = 5; hour < 23; hour++) {
-        if (hour < 10) {
-            htmlStartHour.innerHTML += `<option value="${hour}">0${hour}</option>`
-            htmlEndHour.innerHTML += `<option value="${hour}">0${hour}</option>`
-        } else {
-            htmlStartHour.innerHTML += `<option value="${hour}">${hour}</option>`
-            htmlEndHour.innerHTML += `<option value="${hour}">${hour}</option>`
-        }
+        htmlStartHour.innerHTML += `<option value="${hour}">${hour}</option>`
+        htmlEndHour.innerHTML += `<option value="${hour}">${hour}</option>`
+
     }
     for (let minute = 0; minute < 60; minute++) {
         if (minute < 10) {
@@ -89,6 +131,7 @@ function FillOptionsSelect() {
             htmlStartMinute.innerHTML += `<option value="${minute}">${minute}</option>`
             htmlEndMinute.innerHTML += `<option value="${minute}">${minute}</option>`
         }
+
     }
 }
 
@@ -130,54 +173,6 @@ const getReservations = function () {
 
 function ListenToConfirmRegistration() {
     htmlConfirm.addEventListener('click', function () {
-        var elements = document.getElementsByClassName('error_message');
-        console.log(elements)
-        for (let element of elements) {
-            element.classList.remove("error_message")
-            if (element.nextElementSibling) {
-                element.nextElementSibling.classList.remove("error_message")
-            } else {
-                element.previousElementSibling.classList.remove("error_message")
-            }
-        }
-        let startTime = htmlStart.value;
-        let endTime = htmlEnd.value;
-        var start = new Date(startTime)
-        var end = new Date(endTime)
-        var now = new Date()
-        let error = false
-        if (start > end) {
-            error = true
-            ShowError(htmlEnd, "Het eindtijdstip moet later liggen dan het starttijdstip.")
-            return
-        }
-        if (start < now) {
-            error = true
-            ShowError(htmlStart, "Het starttijdstip ligt in het verleden.")
-            return
-        }
-        if (end < now) {
-            error = true
-            ShowError(htmlEnd, "Het eindtijsstip ligt in het verleden")
-            return
-        }
-        var hours = Math.abs(end - start) / 36e5;
-        console.log(hours)
-        if (hours > 1.5) {
-            error = true
-            htmlStart.classList.add("error_message")
-            htmlStart.previousElementSibling.classList.add("error_message")
-            htmlEnd.classList.add("error_message")
-            htmlEnd.previousElementSibling.classList.add("error_message")
-            window.alert("Je hebt te lang geboekt!")
-            return
-        }
-        const body = {
-            startTime,
-            endTime
-        }
-        console.log(body)
-        // ook nog checken of er geen andere reservatie is
         if (error == false) { // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
         }
 
@@ -196,6 +191,8 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlEndMinute = document.querySelector('.js-end-minute')
     htmlConfirm = document.querySelector('.js-addreg_confirm')
     htmlDate = document.querySelector('.js-addreg_date')
+    let todayDate = new Date()
+    htmlDate.value = todayDate.getFullYear() + "-" + todayDate.getMonth()+1 + "-" + todayDate.getDate()
     // const urlParams = new URLSearchParams(window.location.search);
     // const id = urlParams.get('id');
     getLockerReservation() // later nog met id meesturen
