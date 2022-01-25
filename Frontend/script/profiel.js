@@ -1,12 +1,12 @@
 let htmlName, htmlEmail, htmlBirhtday, htmlPicture, htmlUserCreated, htmlDelete, htmlAfmelden, htmlReservationsUser;
 
 
-const getData = function() {
+const getData = function () {
     handleData(`${APIURI}/users/me`, showData, null, 'GET', null, userToken);
 };
 
-const convertDateTime = function(datetime) {
-    const d = new Date(datetime)
+const convertDateTime = function (datetime) {
+    const d = new Date(datetime);
     var month = new Array();
     month[0] = "01";
     month[1] = "02";
@@ -20,17 +20,17 @@ const convertDateTime = function(datetime) {
     month[9] = "10";
     month[10] = "11";
     month[11] = "12";
-    return d.getDate() + "/" + month[d.getMonth()] + "/" + d.getFullYear()
-}
+    return d.getDate() + "/" + month[d.getMonth()] + "/" + d.getFullYear();
+};
 
-const showData = function(jsonObject) {
+const showData = function (jsonObject) {
     console.log(jsonObject);
     htmlName = jsonObject.name;
     htmlEmail = jsonObject.email;
     htmlBirhtday = jsonObject.birthday;
     htmlPicture = jsonObject.picture;
     htmlUserCreated = jsonObject.userCreated;
-    console.log(htmlName, htmlEmail, htmlBirhtday, htmlPicture, htmlUserCreated)
+    console.log(htmlName, htmlEmail, htmlBirhtday, htmlPicture, htmlUserCreated);
     document.querySelector(".js-profile_name").innerHTML = htmlName;
     document.querySelector(".js-birthday").innerHTML = convertDateTime(htmlBirhtday);
     document.querySelector(".js-profile_created").innerHTML = convertDateTime(htmlUserCreated);
@@ -39,32 +39,25 @@ const showData = function(jsonObject) {
     htmlDelete = document.querySelector('.js-delete');
     htmlAfmelden = document.querySelector('.js-afmelden');
     htmlReservationsUser = document.querySelector('.js-reservations-user');
-    ListenToClickBackArrow()
+    ListenToClickBackArrow();
     ListenToClickAfmeldenUser();
     ListenToClickReservationsUser();
     ListenToClickDeleteUser();
 };
 
 function ListenToClickAfmeldenUser() {
-    htmlAfmelden.addEventListener('click', function() {
+    htmlAfmelden.addEventListener('click', function () {
         console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
     });
 }
 
 function ListenToClickReservationsUser() {
-    htmlReservationsUser.addEventListener('click', function() {
+    htmlReservationsUser.addEventListener('click', function () {
         window.location.href = `${location.origin}/profielreservatie${WEBEXTENTION}`;
         console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }
 
-
-function ListenToClickDeleteUser() {
-    htmlDelete.addEventListener('click', function() {
-        console.log(`popup om te bevestigen, Delete van zichzelf via usertoken en ga naar index.html`);
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     getData();
-})
+});
