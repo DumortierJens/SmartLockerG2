@@ -61,8 +61,22 @@ const loginUser = function (accessToken) {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+function parseJwt(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+};
+
 document.addEventListener('DOMContentLoaded', function () {
     const userToken = sessionStorage.getItem("usertoken");
-    if (userToken)
-        window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+
+    if (userToken) {
+        const userTokenPayload = parseJwt(userToken);
+        if (userTokenPayload.role === "Admin") window.location.href = `${location.origin}/lockerbeheer${WEBEXTENTION}`;
+        else if (userTokenPayload.role === "User") window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+    }
 });
