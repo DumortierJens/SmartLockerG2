@@ -48,17 +48,21 @@ namespace SmartLockerFunctionApp.Services.Authentication
 
                 // Get user by social access token & try to get user out of CosmosDB
                 Models.User user = await getUserFacebookDetails(accessToken.ToString());
-
+                
                 try
                 {
-                    user = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+                    Models.User foundUser = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+                    user.Role = foundUser.Role;
+                    user.UserCreated = foundUser.UserCreated;
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     user.Role = "User";
                     user.UserCreated = DateTime.UtcNow;
-                    await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
                 }
+
+                // Add/update user details
+                await container.UpsertItemAsync(user, new PartitionKey(user.Id.ToString()));
 
                 return new OkObjectResult(new { token = _tokenIssuer.IssueTokenForUser(user) });
             }
