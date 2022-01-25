@@ -13,7 +13,7 @@ const handleData = function (url, callbackFunctionName, callbackErrorFunctionNam
       if (!response.ok) {
         console.warn(`>> Probleem bij de fetch(). Statuscode: ${response.status}`);
         if (callbackErrorFunctionName) {
-          callbackErrorFunctionName(undefined);
+          callbackErrorFunctionName(response);
         }
       } else {
         console.info('>> Er is een response teruggekomen van de server');

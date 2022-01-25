@@ -7,13 +7,13 @@
         <link rel="apple-touch-icon" sizes="128x128" href="/img/safe-deposit128.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/img/safe-deposit32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/img/safe-deposit16.png" />
-        <link rel="stylesheet" href="style/normalize.css" />
-        <link rel="stylesheet" href="style/screen.css" />
-        <script src="script/datahandler.js"></script>
-        <script src="./script/constants.js"></script>
-        <script src="./script/app.js"></script>
-        <script src="./script/profiel.js"></script>
-        <script src="./script/loading.js"></script>
+        <link rel="stylesheet" href="/style/normalize.css" />
+        <link rel="stylesheet" href="/style/screen.css" />
+        <script src="/script/datahandler.js"></script>
+        <script src="/script/constants.js"></script>
+        <script src="/script/app.js"></script>
+        <script src="/script/profiel.js"></script>
+        <script src="/script/loading.js"></script>
         <title>Smart Locker | Profiel</title>
     </head>
 
@@ -44,7 +44,7 @@
                 </svg>
             </div>
         </div>
-        <div class="loading_container">
+        <div class="loading_container" style="display: none">
             <svg class="loading_svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: transparent; display: block; shape-rendering: auto" width="200px" height="200px" viewbox="0 0 100 100" preserveaspectratio="xMidYMid">
                 <circle cx="50" cy="50" fill="none" stroke="#2771de" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
                     <animateTransform attributename="transform" type="rotate" repeatcount="indefinite" dur="1s" values="0 50 50;360 50 50" keytimes="0;1"></animateTransform>
@@ -54,11 +54,11 @@
         </div>
         <div class="js-profilepage">
             <div class="profile_picture_content">
-                <img class="profile_picture js-profile_picture" src="/img/users/jarne.jpg" alt="" />
+                <img class="profile_picture js-profile_picture" src="" alt="" />
             </div>
-            <p class="profile_name js-profile_name">Jarne Demoen</p>
+            <p class="profile_name js-name"></p>
             <div class="profile_icons_container">
-                <div class="js-afmelden profile_icons_container_container pointer">
+                <div class="js-logout profile_icons_container_container pointer">
                     <div class="profile_icon_afmelden">
                         <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 471.2 471.2" style="enable-background: new 0 0 471.2 471.2" xml:space="preserve">
                             <g>
@@ -79,7 +79,7 @@
                     </div>
                     <p class="profile_icon_afmelden_text">Afmelden</p>
                 </div>
-                <div class="js-reservations-user profile_icons_container_container pointer">
+                <div class="js-reservations profile_icons_container_container pointer">
                     <div class="profile_icon_afmelden">
                         <svg class="profile_icon_reservations" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewbox="0 0 24 24">
                             <defs>
@@ -106,20 +106,14 @@
             <div class="centered_content">
                 <div class="profile_info_content">
                     <div class="profile_info">
-                        <p class="profile_info_title">Geboortedatum</p>
-                        <p class="profile_info_data js-birthday">21</p>
+                        <p class="profile_info_title">E-mailadres</p>
+                        <p class="profile_info_data js-email"></p>
                     </div>
                 </div>
                 <div class="profile_info_content">
                     <div class="profile_info">
                         <p class="profile_info_title">Eerst aangemeld</p>
-                        <p class="profile_info_data js-profile_created">11/01/2022</p>
-                    </div>
-                </div>
-                <div class="profile_info_content">
-                    <div class="profile_info">
-                        <p class="profile_info_title">E-mailadres</p>
-                        <p class="profile_info_data js-email">jarne.demoen@outlook.be</p>
+                        <p class="profile_info_data js-created"></p>
                     </div>
                 </div>
             </div>
