@@ -21,5 +21,8 @@ namespace SmartLockerFunctionApp.Models
 
         [JsonProperty("status")]
         public string Status { get; set; }
+        
+        [JsonProperty("iconLocation")]
+        public string IconLocation { get; set; }
     }
 }
