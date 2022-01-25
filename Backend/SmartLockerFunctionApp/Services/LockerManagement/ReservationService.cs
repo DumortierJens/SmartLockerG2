@@ -76,5 +76,23 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
             return reservations;
         }
+
+        public static async Task<Reservation> GetCurrentReservationAsync(Guid lockerId, string userId)
+        {
+            List<Reservation> reservations = new List<Reservation>();
+            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Reservations r WHERE (r.lockerId = @id and r.userId = @userId) and (@now BETWEEN r.startTime and r.endTime) ORDER BY r.startTime");
+            query.WithParameter("@id", lockerId);
+            query.WithParameter("@userId", userId);
+            query.WithParameter("@now", DateTime.Now);
+
+            FeedIterator<Reservation> iterator = Container.GetItemQueryIterator<Reservation>(query);
+            while (iterator.HasMoreResults)
+            {
+                FeedResponse<Reservation> response = await iterator.ReadNextAsync();
+                reservations.AddRange(response);
+            }
+
+            return reservations.Count > 0 ? reservations[0] : null;
+        }
     }
 }
