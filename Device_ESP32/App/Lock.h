@@ -1,53 +1,56 @@
 class LockerLock {
   
   private:
-    byte lockPin;
-    byte feedbackPin;
-    bool lockState;
-    bool lastLockState;
-    unsigned long lastDebounceTime = 0;
-    unsigned long debounceDelay = 50;
+    byte _lockPin;
+    byte _feedbackPin;
+    bool _lockState;
+    bool _lastLockState;
+    unsigned long _lastDebounceTime = 0;
+    unsigned long _debounceDelay = 50;
 
-    void updateLockState() {
-      bool newLockState = digitalRead(feedbackPin);
+    void _UpdateLockState() {
+      bool _newLockState = digitalRead(_feedbackPin);
       
-      if (newLockState != lastLockState) {
-        lastDebounceTime = millis();
+      if (_newLockState != _lastLockState) {
+        _lastDebounceTime = millis();
       }
       
-      if (millis() - lastDebounceTime > debounceDelay) {
-        lockState = newLockState;
+      if (millis() - _lastDebounceTime > _debounceDelay) {
+        _lockState = _newLockState;
       }
       
-      lastLockState = newLockState;
+      _lastLockState = _newLockState;
     }
   
   public:
-    LockerLock(byte lockPin, byte feedbackPin) {
-      this->lockPin = lockPin;
-      this->feedbackPin = feedbackPin;
+    String Id;
+
+    LockerLock(String id, byte lockPin, byte feedbackPin) {
+      Id = id;
+      _lockPin = lockPin;
+      _feedbackPin = feedbackPin;
       init();
     }
 
     void init() {
-      lastLockState = LOW;
+      _lastLockState = LOW;
 
-      pinMode(lockPin, OUTPUT);
-      pinMode(feedbackPin, INPUT_PULLUP);
+      pinMode(_lockPin, OUTPUT);
+      pinMode(_feedbackPin, INPUT_PULLUP);
 
-      updateLockState();
-      digitalWrite(lockPin, LOW);
+      _UpdateLockState();
+      digitalWrite(_lockPin, LOW);
     }
 
-    void openLock() {
-      digitalWrite(lockPin, HIGH);
+    void OpenLock() {
+      digitalWrite(_lockPin, HIGH);
       delay(15);
-      digitalWrite(lockPin, LOW);
+      digitalWrite(_lockPin, LOW);
     }
 
-    bool getLockState() {
-      updateLockState();
-      return !lockState;
+    bool GetLockState() {
+      _UpdateLockState();
+      return !_lockState;
     }
 
 };

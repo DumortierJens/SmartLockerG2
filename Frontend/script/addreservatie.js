@@ -272,6 +272,6 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlDate.setAttribute("min", todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate())
     // const urlParams = new URLSearchParams(window.location.search);
     // const id = urlParams.get('id');
-    getLockerReservation() // later nog met id meesturen
+    getLockerReservation(); // later nog met id meesturen
 
 });

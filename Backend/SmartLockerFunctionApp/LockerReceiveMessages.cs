@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using Microsoft.Azure.Cosmos;
 using Azure.Messaging.WebPubSub;
 using Newtonsoft.Json.Linq;
+using SmartLockerFunctionApp.Services.LockerManagement;
 
 namespace SmartLockerFunctionApp
 {
@@ -26,6 +27,8 @@ namespace SmartLockerFunctionApp
         public async Task ReceiveLockerMessages([IoTHubTrigger("messages/events", Connection = "IoTHub")] EventData message, ILogger log)
         {
             string json = Encoding.UTF8.GetString(message.Body.Array);
+            log.LogInformation(json);
+
             Log newLog = JsonConvert.DeserializeObject<Log>(json);
             newLog.Id = Guid.NewGuid();
             newLog.Timestamp = DateTime.UtcNow;
@@ -38,9 +41,10 @@ namespace SmartLockerFunctionApp
             Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
             await container.CreateItemAsync<Log>(newLog, new PartitionKey(newLog.DeviceId.ToString()));
 
-            // Send to all users with websockets
+            // Send device + newLog to all users with websockets
+            Models.Device device = await LockerService.DeviceContainer.ReadItemAsync<Models.Device>(newLog.DeviceId.ToString(), new PartitionKey(lockerId.ToString()));
             WebPubSubServiceClient serviceClient = new WebPubSubServiceClient(Environment.GetEnvironmentVariable("PubSub"), "SmartLockerHub");
-            await serviceClient.SendToAllAsync(JsonConvert.SerializeObject(new { lockerId = lockerId, lastLog = newLog }));
+            await serviceClient.SendToAllAsync(JsonConvert.SerializeObject(new { device, log = newLog }));
         }
     }
 }

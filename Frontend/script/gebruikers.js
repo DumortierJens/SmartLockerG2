@@ -21,7 +21,7 @@ function ListenToClickUser() {
         btn.addEventListener('click', function() {
             //console.log(this);
             const id = btn.dataset.id;
-            window.location.replace(`${location.origin}/profiel_admin${WEBEXTENTION}?id=${id}`);
+            window.location.href = `${location.origin}/profiel_admin${WEBEXTENTION}?id=${id}`;
         });
     };
 };

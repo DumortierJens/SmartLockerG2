@@ -1,15 +1,14 @@
 let currentLockerID;
-let userToken;
 let OpmerkingClicked = false;
 let registrationStarted = false;
 
+let userToken;
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackArrow,
-    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage;
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackButton, htmlUserProfileButton,
+    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage, htmlProfiel;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
-
 ws.onmessage = (event) => {
     console.log(event.data);
     if (event.data.lockerId == currentLockerID && event.data.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && event.data.value == 1) {
@@ -17,7 +16,7 @@ ws.onmessage = (event) => {
     }
 };
 
-const showOverview = function(jsonObject) {
+const showOverview = function (jsonObject) {
     console.log(jsonObject);
     let htmlstring = ``;
     let Sport,
@@ -88,9 +87,10 @@ const showOverview = function(jsonObject) {
     htmlSoccer = document.querySelector('.js-soccer');
     htmlBasketball = document.querySelector('.js-basketball');
     ListenToCLickSport();
+    ListenToClickProfiel();
 };
 
-const showLocker = function(jsonObject) {
+const showLocker = function (jsonObject) {
     console.log(jsonObject);
     htmlLockerTitle.innerHTML = jsonObject.name;
     htmlInfo.innerHTML = jsonObject.description;
@@ -131,28 +131,21 @@ const showLocker = function(jsonObject) {
         htmlUitlegLockerDetail.style = 'display:none';
         htmlReserverenBtn.style = 'display:none';
     }
-    ListenToClickBackArrow();
 };
 
-const ListenToCLickSport = function() {
-    htmlSoccer.addEventListener('click', function() {
+const ListenToCLickSport = function () {
+    htmlSoccer.addEventListener('click', function () {
         currentLockerID = htmlSoccer.getAttribute('data');
-        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
+        window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
-    htmlBasketball.addEventListener('click', function() {
+    htmlBasketball.addEventListener('click', function () {
         currentLockerID = htmlBasketball.getAttribute('data');
-        window.location.replace(`${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`);
+        window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
 };
-
-function ListenToClickBackArrow() {
-    htmlBackArrow.addEventListener('click', function() {
-        window.location.replace(`${location.origin}/overzicht${WEBEXTENTION}`);
-    });
-}
 
 function ListenToClickToggleLocker(id) {
-    htmlLockerSvg.addEventListener('click', function() {
+    htmlLockerSvg.addEventListener('click', function () {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -162,7 +155,7 @@ function ListenToClickToggleLocker(id) {
 }
 
 function ListenToCancel() {
-    htmlPopUpCancel.addEventListener('click', function() {
+    htmlPopUpCancel.addEventListener('click', function () {
         htmlBackground.style = '';
         htmlPopUp.style.animation = 'fadeout 0.3s';
         setTimeout(DisplayNone, 300);
@@ -170,22 +163,22 @@ function ListenToCancel() {
 }
 
 function ListenToOpen(id) {
-    htmlPopUpOpen.addEventListener('click', function() {
+    htmlPopUpOpen.addEventListener('click', function () {
         setTimeout(DisplayNone, 300);
-        let lockerId = id
-        const body = { lockerId }
+        let lockerId = id;
+        const body = { lockerId };
         handleData(`${APIURI}/registration/start`, OpenLocker(id), null, 'POST', JSON.stringify(body), userToken);
 
     });
 }
 
-function OpenLocker(id) {
-    console.log("open")
+function OpenLocker(lockId) {
+    console.log("open");
     htmlBackground.style = '';
     htmlLockerSvg.innerHTML = getSvg('locker open');
     htmlInstructions.innerHTML = 'Vergeet de locker niet manueel te sluiten';
     htmlPopUp.style.animation = 'fadeout 0.3s';
-    handleData(`${APIURI}/lockers/${id}/open`, null, null, 'POST'); //werkt nog niet
+    handleData(`${APIURI}/lockers/${lockId}/open`, null, null, 'POST', null, userToken);
 }
 
 function DisplayNone() {
@@ -193,13 +186,13 @@ function DisplayNone() {
 }
 
 function ListenToClickReserverenBtn(id) {
-    htmlReserverenBtn.addEventListener('click', function() {
+    htmlReserverenBtn.addEventListener('click', function () {
         console.log('Ga naar addreservatie.html met id van locker meesturen');
     });
 }
 
 function ListenToClickOpmerkingBtn() {
-    htmlOpmerkingBtn.addEventListener('click', function() {
+    htmlOpmerkingBtn.addEventListener('click', function () {
         if (OpmerkingClicked) {
             htmlOpmerkingBtn.style = 'background-color : var(--blue-accent-color);';
             htmlOpmerkingBtn.innerHTML = 'Opmerking toevoegen';
@@ -215,29 +208,39 @@ function ListenToClickOpmerkingBtn() {
             htmlSubmitBtn.style = 'display: block;';
             htmlExtraContent.style.animation = 'fadein 0.5s';
             OpmerkingClicked = true;
-            htmlSubmitBtn.addEventListener('click', function() {
-                console.log(`Verzend ${htmlOpmerkingText.value} naar database`)
+            htmlSubmitBtn.addEventListener('click', function () {
+                console.log(`Verzend ${htmlOpmerkingText.value} naar database`);
             });
         }
     });
 }
 
-const getOverzicht = function() {
+function listenToBackBtn() {
+    htmlBackButton.addEventListener('click', function () {
+        window.history.back();
+    });
+}
+
+function listenToProfileBtn() {
+    htmlUserProfileButton.addEventListener('click', function () {
+        window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
+    });
+}
+
+const getOverzicht = function () {
     handleData(`${APIURI}/lockers`, showOverview, null, 'GET', null, userToken);
 };
 
-const getLockerDetail = function(id) {
+const getLockerDetail = function (id) {
     handleData(`${APIURI}/lockers/${id}`, showLocker, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.info('DOM geladen');
 
-    // user authentication
+    // Authentication
     userToken = sessionStorage.getItem("usertoken");
-    userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiQWRtaW4ifQ.6KsO3PS69GlRQRof23MuPKm69U6CEAdN03vbeTU8ZTQ";
-    if (userToken == null)
-        window.location.replace(location.origin);
+    if (userToken == null) window.location.href = location.origin;
 
     htmlLockerTitle = document.querySelector('.js-lockertitle');
     htmlOverview = document.querySelector('.js-overview');
@@ -253,19 +256,27 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlBackground = document.querySelector('.js-background');
     htmlPopUpOpen = document.querySelector('.js-popup-open');
     htmlExtraContent = document.querySelector('.js-extra-content');
-    htmlBackArrow = document.querySelector('.js-backarrow');
     htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
     htmlInfo = document.querySelector('.js-info');
     htmlReserverenBtn = document.querySelector('.js-reservatiebtn');
-    htmlPopUpMessage = document.querySelector('.js-popup-message')
+    htmlPopUpMessage = document.querySelector('.js-popup-message');
+    htmlProfiel = document.querySelector('.js-profiel');
+    htmlBackButton = document.querySelector('.js-back');
+    htmlUserProfileButton = document.querySelector('.js-profile');
+
+    if (htmlBackButton) listenToBackBtn();
+    if (htmlUserProfileButton) listenToProfileBtn();
+
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html
         getOverzicht();
     }
+
     if (htmlLockerTitle) {
         //deze code wordt gestart vanaf locker.html
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         getLockerDetail(id);
     }
+
 });

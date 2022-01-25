@@ -12,6 +12,7 @@ using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using SmartLockerFunctionApp.Services.LockerManagement;
+using Newtonsoft.Json.Linq;
 
 namespace SmartLockerFunctionApp
 {
@@ -34,16 +35,48 @@ namespace SmartLockerFunctionApp
                 registration.StartTime = DateTime.Now;
                 registration.EndTime = DateTime.MinValue;
 
-                // Validate start registration
-                if (!await LockerManagementService.ValidateStartRegistrationAsync(registration))
-                    return new ConflictResult();
+                // Check for user reservation
+                Reservation reservation = await ReservationService.GetCurrentReservationAsync(registration.LockerId, registration.UserId);
+                if (reservation != null)
+                {
+                    reservation.RegistrationId = registration.Id;
+                    reservation.IsUsed = true;
+                }
+                else {
+                    // Get end time
+                    DateTime endTimeReservation;
+                    if (!JObject.Parse(requestBody).TryGetValue("endTimeReservation", out JToken endTimeReservationToken))
+                        return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "No endTimeReservated found" }));
+                    else if (!DateTime.TryParse(endTimeReservationToken.ToString(), out endTimeReservation))
+                        return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "endTimeReservation is not in datetime format" }));
 
-                // Get cosmos container
+                    // Create reservation
+                    reservation = new Reservation()
+                    {
+                        Id = Guid.NewGuid(),
+                        LockerId = registration.LockerId,
+                        UserId = registration.UserId,
+                        RegistrationId = registration.Id,
+                        StartTime = DateTime.Now,
+                        EndTime = endTimeReservation,
+                        IsUsed = true
+                    };
+
+                    // Validate reservation
+                    if (!await LockerManagementService.ValidateReservationAsync(reservation, reservation.StartTime))
+                        return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
+                }
+
+                // Get cosmos client
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
+                
+                // Add registration to cosmos
+                Container registrationContainer = cosmosClient.GetContainer("SmartLocker", "Registrations");
+                await registrationContainer.CreateItemAsync(registration, new PartitionKey(registration.Id.ToString()));
 
-                // Save registration
-                await container.CreateItemAsync(registration, new PartitionKey(registration.Id.ToString()));
+                // Add/replace reservation in cosmos
+                Container reservationContainer = cosmosClient.GetContainer("SmartLocker", "Reservations");
+                await reservationContainer.UpsertItemAsync(reservation, new PartitionKey(reservation.Id.ToString()));
 
                 return new OkObjectResult(registration);
             }
@@ -86,7 +119,15 @@ namespace SmartLockerFunctionApp
 
                 // Validate end registration
                 if (!await LockerManagementService.ValidateEndRegistrationAsync(registration))
-                    return new ConflictResult();
+                    return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
+
+                // Check material
+                if (!await LockerService.CheckMaterialStatusAsync(registration.LockerId))
+                    return new BadRequestObjectResult(new { code = 800, message = "Not all material in locker" });
+                
+                // Check lock
+                if (!await LockerService.CheckLockStatusAsync(registration.LockerId))
+                    return new BadRequestObjectResult(new { code = 801, message = "The locker is not closed" });
 
                 // Update registration
                 await container.ReplaceItemAsync<Registration>(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
@@ -110,7 +151,7 @@ namespace SmartLockerFunctionApp
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
-                var registrations = await RegistrationConnector.GetRegistrationsAsync();
+                var registrations = await RegistrationService.GetRegistrationsAsync();
 
                 return new OkObjectResult(registrations);
             }
@@ -131,7 +172,7 @@ namespace SmartLockerFunctionApp
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
-                var registrations = await RegistrationConnector.GetRegistrationsAsync(lockerId);
+                var registrations = await RegistrationService.GetRegistrationsAsync(lockerId);
 
                 return new OkObjectResult(registrations);
             }
@@ -157,9 +198,9 @@ namespace SmartLockerFunctionApp
                 List<Registration> registrations = new List<Registration>();
                 IDictionary<string, string> queryParams = req.GetQueryParameterDictionary();
                 if (Guid.TryParse(queryParams["lockerId"], out Guid lockerId))
-                    registrations.Add(await RegistrationConnector.GetCurrentRegistrationAsync(lockerId, userId));
+                    registrations.Add(await RegistrationService.GetCurrentRegistrationAsync(lockerId, userId));
                 else
-                    registrations.AddRange(await RegistrationConnector.GetCurrentRegistrationsAsync(userId));
+                    registrations.AddRange(await RegistrationService.GetCurrentRegistrationsAsync(userId));
 
                 return new OkObjectResult(registrations);
             }

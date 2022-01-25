@@ -249,4 +249,5 @@ d:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Device_ESP32\App\build\sketch\App.ino.c
  C:\Users\jensd\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\AzureIoT\src/az_iot/iothub_client/inc/iothubtransportmqtt.h \
  C:\Users\jensd\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\AzureIoT\src/az_iot/azureiotcerts.h \
  C:\Users\jensd\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\AzureIoT\src/Esp32MQTTClient.h \
- C:\Users\jensd\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\AzureIoT\src/AzureIotHub.h
+ C:\Users\jensd\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.6\libraries\AzureIoT\src/AzureIotHub.h \
+ d:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Device_ESP32\App\build\sketch\Sonar.h

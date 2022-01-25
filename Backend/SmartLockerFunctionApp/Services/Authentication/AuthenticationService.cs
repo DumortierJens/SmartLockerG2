@@ -40,7 +40,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                 JObject jObject = JObject.Parse(requestBody);
                 JToken accessToken;
                 if (!jObject.TryGetValue("accessToken", out accessToken))
-                    return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "No accesstoken" }));
+                    return new BadRequestObjectResult(new { code = 850, message = "No accesstoken" });
 
                 // Create cosmosDB client
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
@@ -48,17 +48,25 @@ namespace SmartLockerFunctionApp.Services.Authentication
 
                 // Get user by social access token & try to get user out of CosmosDB
                 Models.User user = await getUserFacebookDetails(accessToken.ToString());
-
+                
                 try
                 {
-                    user = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+                    Models.User foundUser = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+                    user.Role = foundUser.Role;
+                    user.UserCreated = foundUser.UserCreated;
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     user.Role = "User";
                     user.UserCreated = DateTime.UtcNow;
-                    await container.CreateItemAsync(user, new PartitionKey(user.Id.ToString()));
                 }
+
+                // Check if user is blocked
+                if (user.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
+                // Add/update user details
+                await container.UpsertItemAsync(user, new PartitionKey(user.Id.ToString()));
 
                 return new OkObjectResult(new { token = _tokenIssuer.IssueTokenForUser(user) });
             }
@@ -77,7 +85,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
             {
                 try
                 {
-                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture&access_token={accessToken}";
+                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,picture.width(512).height(512)&access_token={accessToken}";
 
                     string json = await client.GetStringAsync(url);
                     if (json != null)
@@ -89,7 +97,6 @@ namespace SmartLockerFunctionApp.Services.Authentication
                             Id = jObject["id"].ToString(),
                             Name = jObject["name"].ToString(),
                             Email = jObject["email"].ToString(),
-                            Birthday = DateTime.ParseExact(jObject["birthday"].ToString(), "d", CultureInfo.InvariantCulture),
                             Picture = jObject["picture"]["data"]["url"].ToString()
                         };
 

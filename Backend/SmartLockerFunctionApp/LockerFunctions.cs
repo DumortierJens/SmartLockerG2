@@ -12,6 +12,7 @@ using Microsoft.Azure.Devices;
 using SmartLockerFunctionApp.Services.LockerManagement;
 using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
+using System.Collections.Generic;
 
 namespace SmartLockerFunctionApp
 {
@@ -24,7 +25,7 @@ namespace SmartLockerFunctionApp
         {
             try
             {
-                var lockers = await LockerConnector.GetLockersAsync();
+                var lockers = await LockerService.GetLockersAsync();
 
                 return new OkObjectResult(lockers);
             }
@@ -45,7 +46,7 @@ namespace SmartLockerFunctionApp
                 Locker locker;
                 try
                 {
-                    locker = await LockerConnector.Container.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
+                    locker = await LockerService.LockerContainer.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -53,6 +54,25 @@ namespace SmartLockerFunctionApp
                 }
 
                 return new OkObjectResult(locker);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        [FunctionName("GetLockerStatus")]
+        public async Task<IActionResult> GetLockerLockStatus(
+          [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "lockers/{lockerId}/status")] HttpRequest req,
+          Guid lockerId,
+          ILogger log)
+        {
+            try
+            {
+                List<bool> materialStatus = await LockerService.GetLockerMaterialStatusAsync(lockerId);
+                bool lockStatus = await LockerService.CheckLockStatusAsync(lockerId);
+
+                return new OkObjectResult(new { lockStatus, materialStatus });
             }
             catch (Exception)
             {
