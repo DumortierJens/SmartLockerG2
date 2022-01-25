@@ -6,6 +6,8 @@ let htmlEndMinute;
 let htmlEnd;
 let htmlConfirm;
 let htmlDate;
+let htmlStartTitle;
+let htmlEndTitle;
 
 function ListenToChangeDate() {
     htmlDate.addEventListener('change', function () {
@@ -57,11 +59,9 @@ function getBusyTimestamps(todaysReservations) {
 function getTodaysReservations(jsonObject) {
     let arr_res_today = []
     let chosenDateValue = htmlDate.value.toString()
-    console.log("Date value", chosenDateValue)
     let chosenDate = new Date(chosenDateValue)
     for (let reservation of jsonObject) {
         let reservationStartDate = new Date(reservation.startTime)
-        console.log(reservationStartDate.toLocaleDateString())
         let reservationEndDate = new Date(reservation.endTime)
         if (chosenDate.toLocaleDateString() == reservationStartDate.toLocaleDateString()) {
             arr_res_today.push(reservationStartDate.toLocaleTimeString() + "-" + reservationEndDate.toLocaleTimeString())
@@ -75,14 +75,35 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     let startMinute = parseInt(htmlStartMinute.value)
     let endHour = parseInt(htmlEndHour.value)
     let endMinute = parseInt(htmlEndMinute.value)
+    htmlEndTitle.style.color = 'var(--blue-accent-color)'
+    htmlStartTitle.style.color = 'var(--blue-accent-color)'
+    let hourNow = new Date().getHours()
+    let minuteNow = new Date().getMinutes()
+    if (startHour < hourNow) {
+        console.log("starttijdstip ligt in het verleden")
+        window.alert("Starttijdstip ligt in het verleden")
+        htmlStartTitle.style.color = 'var(--red-verlopen)'
+        return
+    }
 
+    if (startHour == hourNow && startMinute < minuteNow) {
+        console.log("starttijdstip ligt in het verleden")
+        window.alert("Starttijdstip ligt in het verleden")
+        htmlStartTitle.style.color = 'var(--red-verlopen)'
+        return
+    }
     if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
         console.log("Eindtijdstip moet later liggen dan starttijdstip")
+        window.alert("Eindtijdstip moet later liggen dan starttijdstip")
+        htmlEndTitle.style.color = 'var(--red-verlopen)'
         return
     }
 
     if (startHour == endHour && startMinute == endMinute) {
         console.log("Beide tijdstippen zijn hetzelfde")
+        window.alert("Beide tijdstippen zijn hetzelfde")
+        htmlEndTitle.style.color = 'var(--red-verlopen)'
+        htmlStartTitle.style.color = 'var(--red-verlopen)'
         return
     }
 
@@ -98,18 +119,17 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     }:00`
     let inputArray = []
     inputArray.push(inputString)
-    console.log(inputArray)
     let new_busy_timestamps = getBusyTimestamps(inputArray)
-    console.log(busy_timestamps)
-    console.log(new_busy_timestamps)
     for (let key1 in busy_timestamps) {
         for (let key2 in new_busy_timestamps) {
             if (key1 == key2) {
-                console.log("Zelfde keys")
                 for (let minutes1 of busy_timestamps[key1]) {
                     for (let minutes2 of new_busy_timestamps[key2]) {
                         if (minutes1 == minutes2) {
                             console.log("Tijdstip overlapt met een bestaande reservatie")
+                            window.alert("Tijdstip overlapt met een bestaande reservatie")
+                            htmlEndTitle.style.color = 'var(--red-verlopen)'
+                            htmlStartTitle.style.color = 'var(--red-verlopen)'
                             return
                         }
                     }
@@ -125,6 +145,7 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     for (let reservationsHour in busy_timestamps) {
         if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
             console.log("Tijdstip overlapt met een bestaande reservatie")
+            window.alert("Tijdstip overlapt met een bestaande reservatie")
             return
         }
     }
@@ -132,15 +153,15 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     // Kijken of een slot niet langer dan 90 minuten duurt
     let start = new Date("2022-01-01 " + inputString.slice(0, 8))
     let end = new Date("2022-01-01 " + inputString.slice(9, 18))
-    console.log(start)
-    console.log(end)
     var diff = Math.abs(end - start);
     var minutes = Math.floor((diff / 1000) / 60);
     if (minutes > 90) {
         console.log("Je kan slechts maximum 90 minuten reserveren !")
+        window.alert("Je kan slechts maximum 90 minuten reserveren !")
         return
     }
-    console.log("Dit tijdstip is in orde")
+    // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
+    console.log("Dit tijdstip is in orde, sla de reservatie op")
 }
 
 function SetReservationTime(jsonObject) {
@@ -161,10 +182,6 @@ function SetReservationTime(jsonObject) {
                 }
             }
         }
-        CheckIfValidReservation(busy_timestamps)
-    })
-    htmlStartMinute.addEventListener('change', function () {
-        CheckIfValidReservation(busy_timestamps)
     })
     htmlEndHour.addEventListener('change', function () {
         let chosenHour = parseInt(htmlEndHour.value);
@@ -179,13 +196,9 @@ function SetReservationTime(jsonObject) {
                 }
             }
         }
-        CheckIfValidReservation(busy_timestamps)
-    })
-    htmlEndMinute.addEventListener('change', function () {
-        CheckIfValidReservation(busy_timestamps)
     })
     ListenToChangeDate()
-    CheckIfValidReservation(busy_timestamps)
+    ListenToConfirmRegistration(busy_timestamps)
 }
 
 function ModifySelect(jsonObject) {
@@ -330,27 +343,9 @@ function addZero(value) {
     }
 }
 
-function ListenToConfirmRegistration() {
+function ListenToConfirmRegistration(busy_timestamps) {
     htmlConfirm.addEventListener('click', function () {
-        if (htmlStartHour.value == htmlEndHour.value && htmlStartMinute.value == htmlEndMinute.value) {
-            console.log("Kies een langere periode")
-            return
-        }
-        let inputString = `${
-            addZero(htmlStartHour.value)
-        }:${
-            addZero(htmlStartMinute.value)
-        }:00-${
-            addZero(htmlEndHour.value)
-        }:${
-            addZero(htmlEndMinute.value)
-        }:00`
-        let inputArray = []
-        inputArray.push(inputString)
-        console.log(inputArray)
-        // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
-
-
+        CheckIfValidReservation(busy_timestamps)
     })
 }
 
@@ -366,8 +361,11 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlEndMinute = document.querySelector('.js-end-minute')
     htmlConfirm = document.querySelector('.js-addreg_confirm')
     htmlDate = document.querySelector('.js-addreg_date')
+    htmlStartTitle = document.querySelector('.js-start-title')
+    htmlEndTitle = document.querySelector('.js-end-title')
     let todayDate = new Date()
     htmlDate.value = todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate()
+    htmlDate.setAttribute("min", todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate())
     // const urlParams = new URLSearchParams(window.location.search);
     // const id = urlParams.get('id');
     getLockerReservation() // later nog met id meesturen
