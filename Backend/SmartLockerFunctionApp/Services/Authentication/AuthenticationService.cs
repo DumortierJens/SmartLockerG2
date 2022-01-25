@@ -77,7 +77,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
             {
                 try
                 {
-                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture&access_token={accessToken}";
+                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture.width(512).height(512)&access_token={accessToken}";
 
                     string json = await client.GetStringAsync(url);
                     if (json != null)
