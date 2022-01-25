@@ -5,7 +5,7 @@ let registrationStarted = false;
 let userToken;
 let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
     htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackButton,
+    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackButton, htmlUserProfileButton,
     htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage, htmlProfiel;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
@@ -131,7 +131,6 @@ const showLocker = function (jsonObject) {
         htmlUitlegLockerDetail.style = 'display:none';
         htmlReserverenBtn.style = 'display:none';
     }
-    ListenToClickProfiel();
 };
 
 const ListenToCLickSport = function () {
@@ -144,12 +143,6 @@ const ListenToCLickSport = function () {
         window.location.href = `${location.origin}/locker${WEBEXTENTION}?id=${currentLockerID}`;
     });
 };
-
-function ListenToClickProfiel() {
-    htmlProfiel.addEventListener('click', function () {
-        window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
-    });
-}
 
 function ListenToClickToggleLocker(id) {
     htmlLockerSvg.addEventListener('click', function () {
@@ -222,9 +215,15 @@ function ListenToClickOpmerkingBtn() {
     });
 }
 
-function listenToBackArrow() {
+function listenToBackBtn() {
     htmlBackButton.addEventListener('click', function () {
         window.history.back();
+    });
+}
+
+function listenToProfileBtn() {
+    htmlUserProfileButton.addEventListener('click', function () {
+        window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
     });
 }
 
@@ -263,8 +262,10 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlPopUpMessage = document.querySelector('.js-popup-message');
     htmlProfiel = document.querySelector('.js-profiel');
     htmlBackButton = document.querySelector('.js-back');
+    htmlUserProfileButton = document.querySelector('.js-profile');
 
-    if (htmlBackButton) listenToBackArrow();
+    if (htmlBackButton) listenToBackBtn();
+    if (htmlUserProfileButton) listenToProfileBtn();
 
     if (htmlOverview) {
         //deze code wordt gestart vanaf overzicht.html

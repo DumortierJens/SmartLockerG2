@@ -13,7 +13,7 @@ function ShowDeletePopUp(id) {
 }
 
 function ListenToDelete(id) {
-    htmlPopupDelete.addEventListener('click', function() {
+    htmlPopupDelete.addEventListener('click', function () {
         htmlBackground.style = "";
         htmlPopup.style.animation = "fadeout 0.3s";
         console.log(`Reservatie met id ${id} wordt verwijderd`);
@@ -22,7 +22,7 @@ function ListenToDelete(id) {
 }
 
 function ListenToCancel() {
-    htmlPopupCancel.addEventListener('click', function() {
+    htmlPopupCancel.addEventListener('click', function () {
         htmlBackground.style = "";
         htmlPopup.style.animation = "fadeout 0.3s";
         setTimeout(DisplayNone, 300);
@@ -30,7 +30,7 @@ function ListenToCancel() {
 }
 
 function ListenToClickDeleteReservation(id) {
-    document.querySelector(`.js-deleteicon-${id}`).addEventListener('click', function() {
+    document.querySelector(`.js-deleteicon-${id}`).addEventListener('click', function () {
         ShowDeletePopUp(id);
     });
 }
@@ -175,24 +175,24 @@ function ShowMoreInfo(id, htmlArrow) {
 }
 
 function ListenToClickCheckBoxes() {
-    const checkboxes = document.querySelectorAll('.js-checkbox')
+    const checkboxes = document.querySelectorAll('.js-checkbox');
     for (let checkbox of checkboxes) {
-        checkbox.addEventListener('click', function() {
-            console.log(this)
+        checkbox.addEventListener('click', function () {
+            console.log(this);
             if (!checkbox.classList.contains('box_checked')) {
-                checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`
-                checkbox.style.animation = "fadein 0.5s"
+                checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`;
+                checkbox.style.animation = "fadein 0.5s";
                 checkbox.classList.add('box_checked');
             } else {
-                checkbox.style = ``
+                checkbox.style = ``;
                 checkbox.classList.remove('box_checked');
             }
-        })
+        });
     }
 }
 
 function ListenToCLickEditReservation(id) {
-    document.querySelector(`.js-editicon-${id}`).addEventListener('click', function() {
+    document.querySelector(`.js-editicon-${id}`).addEventListener('click', function () {
         ShowEdit(id);
     });
 }
@@ -200,14 +200,14 @@ function ListenToCLickEditReservation(id) {
 function ListenToClickMore() {
     const buttons = document.querySelectorAll('.js-arrow');
     for (const btn of buttons) {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             //console.log(this);
             const id = btn.dataset.id;
             ShowMoreInfo(id, this);
         });
     };
 };
-const showReservaties = function(jsonObject) {
+const showReservaties = function (jsonObject) {
     console.log(jsonObject);
     htmlReservationContent.innerHTML = ``;
     for (i = 0; i < jsonObject.length; i++) {
@@ -241,30 +241,29 @@ const showReservaties = function(jsonObject) {
         getUser(jsonObject[i].userId);
     };
     ListenToClickMore();
-    ListenToClickBackArrow()
 };
 
-const showUser = function(jsonObject) {
-    usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`)
+const showUser = function (jsonObject) {
+    usersnames = document.querySelectorAll(`.js-username-${jsonObject.id}`);
     for (const user of usersnames) {
-        user.innerHTML = jsonObject.name
+        user.innerHTML = jsonObject.name;
     }
-    userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject.id}`)
+    userspictures = document.querySelectorAll(`.js-userpicture-${jsonObject.id}`);
     for (const user of userspictures) {
-        user.src = jsonObject.picture
+        user.src = jsonObject.picture;
     }
 };
 
 
-const getUser = function(id) {
+const getUser = function (id) {
     handleData(`${APIURI}/users/me`, showUser, null, 'GET', null, userToken);
 };
 
-const getReservations = function(id) {
+const getReservations = function (id) {
     handleData(`${APIURI}/reservations/users/me`, showReservaties, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     htmlReservationContent = document.querySelector('.js-reservations');
     getReservations();
 });

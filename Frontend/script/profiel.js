@@ -39,7 +39,6 @@ const showData = function (jsonObject) {
     htmlDelete = document.querySelector('.js-delete');
     htmlAfmelden = document.querySelector('.js-afmelden');
     htmlReservationsUser = document.querySelector('.js-reservations-user');
-    ListenToClickBackArrow();
     ListenToClickAfmeldenUser();
     ListenToClickReservationsUser();
     ListenToClickDeleteUser();

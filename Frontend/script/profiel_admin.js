@@ -1,7 +1,7 @@
 let htmlUserContent, htmlDelete, htmlBlock, htmlReservationsUser;
 
-const convertDateTime = function(datetime) {
-    const d = new Date(datetime)
+const convertDateTime = function (datetime) {
+    const d = new Date(datetime);
     var month = new Array();
     month[0] = "01";
     month[1] = "02";
@@ -15,14 +15,14 @@ const convertDateTime = function(datetime) {
     month[9] = "10";
     month[10] = "11";
     month[11] = "12";
-    return d.getDate() + "/" + month[d.getMonth()] + "/" + d.getFullYear()
-}
+    return d.getDate() + "/" + month[d.getMonth()] + "/" + d.getFullYear();
+};
 
-const showUser = function(jsonObject) {
+const showUser = function (jsonObject) {
     htmlUserContent.innerHTML = ``;
-    console.log(jsonObject)
-    let birthday = convertDateTime(jsonObject.birthday)
-    let userCreated = convertDateTime(jsonObject.userCreated)
+    console.log(jsonObject);
+    let birthday = convertDateTime(jsonObject.birthday);
+    let userCreated = convertDateTime(jsonObject.userCreated);
     htmlUserContent.innerHTML = `        <div class="profile_picture_content">
     <img class="profile_picture" src="${jsonObject.picture}" alt="">
 </div>
@@ -94,33 +94,32 @@ const showUser = function(jsonObject) {
     ListenToClickBlockUser(jsonObject.id);
     ListenToClickReservationsUser(jsonObject.id);
     ListenToClickDeleteUser(jsonObject.id);
-    ListenToClickBackArrow()
 };
 
 function ListenToClickBlockUser(id) {
-    htmlBlock.addEventListener('click', function() {
+    htmlBlock.addEventListener('click', function () {
         console.log(`popup om te bevestigen, Block ${id}`);
     });
 }
 
 function ListenToClickReservationsUser(id) {
-    htmlReservationsUser.addEventListener('click', function() {
+    htmlReservationsUser.addEventListener('click', function () {
         window.location.href = `${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`;
         console.log('Ga naar profielreservatie.html met id van user meegestuurd');
     });
 }
 
 function ListenToClickDeleteUser(id) {
-    htmlDelete.addEventListener('click', function() {
+    htmlDelete.addEventListener('click', function () {
         console.log(`popup om te bevestigen, Delete ${id}`);
     });
 }
 
-const getUser = function(id) {
+const getUser = function (id) {
     handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     htmlUserContent = document.querySelector('.js-profilepage');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
