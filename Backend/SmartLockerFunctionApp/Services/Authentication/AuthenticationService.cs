@@ -40,7 +40,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                 JObject jObject = JObject.Parse(requestBody);
                 JToken accessToken;
                 if (!jObject.TryGetValue("accessToken", out accessToken))
-                    return new BadRequestObjectResult(JsonConvert.SerializeObject(new { errorMessage = "No accesstoken" }));
+                    return new BadRequestObjectResult(new { code = 850, message = "No accesstoken" });
 
                 // Create cosmosDB client
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
@@ -77,7 +77,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
             {
                 try
                 {
-                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,birthday,picture.width(512).height(512)&access_token={accessToken}";
+                    string url = $"https://graph.facebook.com/v12.0/me?fields=name,email,picture.width(512).height(512)&access_token={accessToken}";
 
                     string json = await client.GetStringAsync(url);
                     if (json != null)
@@ -89,7 +89,6 @@ namespace SmartLockerFunctionApp.Services.Authentication
                             Id = jObject["id"].ToString(),
                             Name = jObject["name"].ToString(),
                             Email = jObject["email"].ToString(),
-                            Birthday = DateTime.ParseExact(jObject["birthday"].ToString(), "d", CultureInfo.InvariantCulture),
                             Picture = jObject["picture"]["data"]["url"].ToString()
                         };
 
