@@ -43,18 +43,35 @@
     <div class="add_reservation_container">
         <div class="add_reservation_content">
             <p class="add_reservation_title">Sport</p>
-            <p class="add_reservation_sport js-sport">...</p>
-        </div>
-
-        <div class="add_reservation_content">
-            <p class="add_reservation_title">Start</p>
-
-            <input type="datetime-local" value="" class="add_reservation_time js-addreg_start" name="sport" id="sport">
-
+            <div class="add_reservation_sport flex centerflex">
+                <div class="add_reservation_sport_content js-sport flex">...</div>
+            </div>
         </div>
         <div class="add_reservation_content">
-            <p class="add_reservation_title">Einde</p>
-            <input type="datetime-local" value="" class="add_reservation_time js-addreg_end" name="sport" id="sport">
+            <p class="add_reservation_title">Datum</p>
+            <div class="add_reservation_date flex centerflex">
+                <input type="date" class="add_reservation_sport_content js-addreg_date flex"></input>
+            </div>
+        </div>
+        <div class="add_reservation_content">
+            <p class="add_reservation_title js-start-title">Start</p>
+            <div class="add_reservation_time flex centerflex js-start-holder">
+                <select class="time_selection js-start-hour" name="hours" id="hours">
+                </select>
+                &nbsp:&nbsp
+                <select class="time_selection js-start-minute" name="minute" id="minute">
+                </select>
+            </div>
+        </div>
+        <div class="add_reservation_content">
+            <p class="add_reservation_title js-end-title">Einde</p>
+            <div class="add_reservation_time flex centerflex js-end-holder">
+                <select class="time_selection js-end-hour" name="hours" id="hours">
+                </select>
+                &nbsp:&nbsp
+                <select class="time_selection js-end-minute" name="minute" id="minute">
+                </select>
+            </div>
         </div>
         <div class="confirm_reservationbtn_container">
             <button class="confirm_reservationbtn js-addreg_confirm">Reservatie bevestigen</button>

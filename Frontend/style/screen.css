@@ -941,13 +941,12 @@ a:focus {
     width: auto;
     right: 1rem;
     left: 1rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .add_reservation_content {
     margin: 2rem auto 0 auto;
     text-align: center;
-    border-bottom: 2px solid var(--grey-bg);
     width: 50%;
 }
 
@@ -957,21 +956,35 @@ a:focus {
     color: var(--blue-accent-color);
 }
 
-.add_reservation_time {
-    border: none;
-    font-family: 'MyFont';
-    margin-top: 0.5rem;
-    background-color: white;
-    outline: none;
-    align-items: center;
+.add_reservation_sport, .add_reservation_date, .add_reservation_time {
+    background-color: var(--grey-bg);
+    height: 3rem;
+    border-radius: 5px;
+    margin: 0.5rem auto 0 auto;
+    max-width: 12.5rem;
 }
 
-.add_reservation_sport {
-    border: none;
-    font-family: 'MyFont';
-    margin-top: 0.5rem;
+.add_reservation_sport_content {
     background-color: white;
+    width: 80%;
+    border-radius: 5px;
+    justify-content: center;
+    align-content: center;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    font-family: 'MyFont';
     outline: none;
+    border: none;
+    padding: 0.1rem;
+}
+
+.time_selection{
+    font-family: 'MyFont';
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .confirm_reservationbtn {
@@ -985,6 +998,7 @@ a:focus {
     width: 50%;
     font-family: 'MyFont';
     cursor: pointer;
+    max-width: 12.5rem;
 }
 
 .confirm_reservationbtn_container {
