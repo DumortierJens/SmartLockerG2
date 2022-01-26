@@ -160,8 +160,20 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
         window.alert("Je kan slechts maximum 90 minuten reserveren !")
         return
     }
-    // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
     console.log("Dit tijdstip is in orde, sla de reservatie op")
+    let startTime = htmlDate.value + "T" + addZero(parseInt(htmlStartHour.value))+":"+addZero(parseInt(htmlStartMinute.value))+":00+00:00"
+    let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value))+":"+addZero(parseInt(htmlEndMinute.value))+":00+00:00"
+    const body = {
+
+        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
+
+        "startTime": startTime,
+
+        "endTime": endTime
+    }
+    console.log(body)
+
+    handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
 }
 
 function SetReservationTime(jsonObject) {
@@ -200,8 +212,7 @@ function SetReservationTime(jsonObject) {
                     option.disabled = false
                 }
             }
-        }
-        else {
+        } else {
             for (let option of htmlEndMinute) {
                 option.disabled = false
             }
@@ -217,7 +228,7 @@ function FillOptionsSelect() {
         htmlEndHour.innerHTML += `<option value="${hour}">${hour}</option>`
 
     }
-    for (let minute = 0; minute < 60; minute++) {
+    for (let minute = 0; minute < 60; minute+=10) {
         if (minute < 10) {
             htmlStartMinute.innerHTML += `<option value="${minute}">0${minute}</option>`
             htmlEndMinute.innerHTML += `<option value="${minute}">0${minute}</option>`
@@ -231,12 +242,13 @@ function FillOptionsSelect() {
 
 const showLockerReservation = function (jsonObject) {
     htmlSport.innerHTML = jsonObject.sport;
+    console.log(jsonObject)
     FillOptionsSelect();
     getReservations();
 }
 
 const getReservations = function () {
-    handleData(`${APIURI}/reservations`, SetReservationTime, null, 'GET', null, userToken);
+    handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, SetReservationTime, null, 'GET', null, userToken);
 };
 
 function addZero(value) {
