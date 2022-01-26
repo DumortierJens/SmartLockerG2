@@ -17,7 +17,7 @@
         <title>Smart Locker | Detail</title>
     </head>
 
-    <body>
+    <body class="js-locker-page">
         <div class="loading_container">
             <svg class="loading_svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: transparent; display: block; shape-rendering: auto" width="200px" height="200px" viewbox="0 0 100 100" preserveaspectratio="xMidYMid">
                 <circle cx="50" cy="50" fill="none" stroke="#2771de" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
@@ -55,16 +55,16 @@
             </div>
             <div class="js-lockerpage" style="margin-top: 96px">
                 <div class="locker_detail_content">
-                    <p class="locker_detail_content_title js-lockertitle">...</p>
-                    <p class="locker_detail_content_info js-info">...</p>
+                    <p class="locker_detail_content_title js-locker-name">...</p>
+                    <p class="locker_detail_content_info js-locker-description">...</p>
                     <div class="locker_detail_content_status">
                         Status:
-                        <span class="js-beschikbaar">...</span>
+                        <span class="js-locker-status">...</span>
                     </div>
                 </div>
-                <div class="locker_detail_content_toggleInstructions center js-instructions"></div>
+                <div class="locker_detail_content_toggleInstructions center js-locker-instructions"></div>
                 <div class="center">
-                    <svg class="locker_detail_content_toggleSvg js-toggleLocker" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewbox="0 0 512 512">
+                    <svg class="locker_detail_content_toggleSvg js-locker-btn" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewbox="0 0 512 512">
                         <image
                             id="padlock_close"
                             data-name="padlock close"
@@ -83,7 +83,7 @@
                     <p class="locker_detail_content_instructions">5. Sluit de locker</p>
                 </div>
                 <div class="centerflex flex">
-                    <button class="locker_detail_opmerkingbtn js-reservatiebtn flex">
+                    <button class="locker_detail_opmerkingbtn js-locker-reservate flex">
                         <svg class="booking_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewbox="0 0 512 512">
                             <image
                                 id="booking_White"
@@ -95,7 +95,7 @@
                         <p class="reservatiebtntext">Reserveren</p>
                     </button>
                 </div>
-                <div class="centerflex flex">
+                <!-- <div class="centerflex flex">
                     <button class="locker_detail_opmerkingbtn js-opmerkingbtn flex">Opmerking toevoegen</button>
                 </div>
                 <div class="div_locker_detail_opmerking locker_detail_extra_content js-opmerkingdiv">
@@ -105,7 +105,7 @@
                 </div>
                 <p class="centerflex flex locker_detail_extra_content js-extra-content">
                     <button class="locker_detail_sendbtn submitbtn js-submit flex" type="submit">Verzenden</button>
-                </p>
+                </p> -->
             </div>
         </div>
         <div class="locker_detail_popup js-popup">

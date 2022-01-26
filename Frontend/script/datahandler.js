@@ -26,11 +26,11 @@ const handleData = function (url, callbackFunctionName, callbackErrorFunctionNam
         console.info(`>> Callbackfunctie ${callbackFunctionName.name}(response) wordt opgeroepen`);
         callbackFunctionName(jsonObject);
       }
-    })
-    .catch(function (error) {
-      console.warn(`>>fout bij verwerken json: ${error}`);
-      if (callbackErrorFunctionName) {
-        callbackErrorFunctionName(error);
-      }
     });
+  // .catch(function (error) {
+  //   console.warn(`>>fout bij verwerken json: ${error}`);
+  //   if (callbackErrorFunctionName) {
+  //     callbackErrorFunctionName(error);
+  //   }
+  // });
 };

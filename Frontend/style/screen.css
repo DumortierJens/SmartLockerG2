@@ -33,7 +33,7 @@
     --red-faded: #ffcccc;
     --red-verlopen: #b10303;
     --red-dark: #8f3d3d;
-    --grey-bg: #f2f2f2;
+    --grey-bg: #f7f7f7;
     --grey-bg-dark: #6b6969;
     -webkit-tap-highlight-color: transparent;
 }
@@ -78,7 +78,6 @@ a:hover,
 a:focus {
     color: var(--blue-accent-color-light);
 }
-
 
 /*Lockerdetailpage*/
 
@@ -285,7 +284,6 @@ a:focus {
     cursor: pointer;
 }
 
-
 /* overview pagina */
 
 .overview_page {
@@ -411,7 +409,6 @@ a:focus {
     align-self: center;
 }
 
-
 /* Login Page */
 
 .login_page_bg {
@@ -462,7 +459,6 @@ a:focus {
     margin: 4rem auto 0 auto;
     width: 80%;
 }
-
 
 /* Reservatiepagina */
 
@@ -776,7 +772,7 @@ a:focus {
     cursor: pointer;
 }
 
-.checkbox_input:checked+.checkbox_box {
+.checkbox_input:checked + .checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -794,7 +790,6 @@ a:focus {
     width: 1.5rem;
     cursor: pointer;
 }
-
 
 /* Profielpagina */
 
@@ -884,7 +879,6 @@ a:focus {
     margin-bottom: 1rem;
 }
 
-
 /* Lockerbeheer */
 
 .status_selector {
@@ -929,7 +923,6 @@ a:focus {
 .locker_status_available {
     color: var(--status-available);
 }
-
 
 /* Add reservation */
 
@@ -1017,7 +1010,6 @@ a:focus {
     color: var(--red-verlopen);
 }
 
-
 /* Loading screen */
 
 .loading_container {
@@ -1035,7 +1027,6 @@ a:focus {
     top: 0;
     width: 100%;
 }
-
 
 /* Animations*/
 
