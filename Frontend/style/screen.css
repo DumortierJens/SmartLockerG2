@@ -451,6 +451,31 @@ p {
     padding: 1rem;
 }
 
+.login_content_gsm {
+    font-size: 1.5rem;
+    color: var(--blue-accent-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+.phonenumber_input {
+    max-width: 10em;
+    font-family: 'MyFont';
+}
+
+.gsm-btn-doorgaan {
+    margin: 3rem 0 0 0;
+    background-color: white;
+    border-style: none;
+    color: var(--blue-accent-color);
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 2.5rem;
+    align-items: center;
+}
+
 .facebook_login {
     text-align: center;
     cursor: pointer;
