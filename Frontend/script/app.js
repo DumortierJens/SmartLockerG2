@@ -170,7 +170,7 @@ const getLockerDetail = function (lockerId) {
 const showUserProfile = function (user) {
     console.log(user);
 
-    document.querySelector('.js-profile_picture').src = user.picture;
+    document.querySelector(".js-profile-picture").src = user.picture;
     document.querySelector(".js-name").innerHTML = user.name;
     document.querySelector(".js-email").innerHTML = user.email;
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const htmlPageOverview = document.querySelector('.js-overview-page');
     const htmlPageLocker = document.querySelector('.js-locker-page');
     const htmlPageProfile = document.querySelector('.js-profile-page');
+    const htmlPageGebruiker = document.querySelector('.js-gebruiker-page');
 
     if (htmlPageOverview) {
         getLockersOverview();

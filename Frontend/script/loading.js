@@ -24,10 +24,6 @@ function init() {
         globalhtmlelement = htmllogin;
         ShowLoadingScreen(800);
     }
-    if (htmlusers) {
-        globalhtmlelement = htmlusers;
-        ShowLoadingScreen(800);
-    }
     if (htmloverview) {
         globalhtmlelement = htmloverview;
         ShowLoadingScreen(1600);
@@ -38,10 +34,6 @@ function init() {
     }
     if (htmllockermanagement) {
         globalhtmlelement = htmllockermanagement;
-        ShowLoadingScreen(1600);
-    }
-    if (htmlprofilepage) {
-        globalhtmlelement = htmlprofilepage;
         ShowLoadingScreen(1600);
     }
 }
