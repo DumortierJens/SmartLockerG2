@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "9VyfyItTmYxXZzqyc/xulrXZewt+nyTAwJyPfdatSv7isrYgrW5D/N/J2EQppPu+Qanvfgk0pJ/GExxbcYuw2w==",
+  "dgSpecHash": "HFKD0FYfcxWimPtQs+RVVbyspwHds4BUXAQAal9QRpEWyp2ya+5jsTQl5xVSD6D+hjWbAxP9ApNHsx6SMo9kqQ==",
   "success": true,
   "projectFilePath": "C:\\Howest\\Semester3\\Team Project\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\SmartLockerFunctionApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\azure.core\\1.21.0\\azure.core.1.21.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\azure.messaging.webpubsub\\1.0.0\\azure.messaging.webpubsub.1.0.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\azure.storage.common\\12.9.0\\azure.storage.common.12.9.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\azure.storage.queues\\12.8.0\\azure.storage.queues.12.8.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\jwt\\8.8.1\\jwt.8.8.1.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.aspnet.webapi.client\\5.2.4\\microsoft.aspnet.webapi.client.5.2.4.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.1.0\\microsoft.aspnetcore.authentication.abstractions.2.1.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.1.0\\microsoft.aspnetcore.authentication.core.2.1.0.nupkg.sha512",
@@ -33,6 +36,7 @@
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.eventhubs\\3.0.0\\microsoft.azure.eventhubs.3.0.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.eventhubs.processor\\3.0.0\\microsoft.azure.eventhubs.processor.3.0.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.functions.analyzers\\1.0.0\\microsoft.azure.functions.analyzers.1.0.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.functions.extensions\\1.1.0\\microsoft.azure.functions.extensions.1.1.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.services.appauthentication\\1.0.3\\microsoft.azure.services.appauthentication.1.0.3.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.webjobs\\3.0.23\\microsoft.azure.webjobs.3.0.23.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.azure.webjobs.core\\3.0.23\\microsoft.azure.webjobs.core.3.0.23.nupkg.sha512",
@@ -77,7 +81,6 @@
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.rest.clientruntime\\2.3.21\\microsoft.rest.clientruntime.2.3.21.nupkg.sha512",
-    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.web.services3\\3.0.0\\microsoft.web.services3.3.0.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.win32.registry\\4.3.0\\microsoft.win32.registry.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
@@ -108,7 +111,9 @@
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.collections.immutable\\1.7.0\\system.collections.immutable.1.7.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.collections.nongeneric\\4.3.0\\system.collections.nongeneric.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.collections.specialized\\4.3.0\\system.collections.specialized.4.3.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.componentmodel\\4.3.0\\system.componentmodel.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.componentmodel.annotations\\4.4.0\\system.componentmodel.annotations.4.4.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.componentmodel.primitives\\4.3.0\\system.componentmodel.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.configuration.configurationmanager\\4.7.0\\system.configuration.configurationmanager.4.7.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.console\\4.3.0\\system.console.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.diagnostics.contracts\\4.3.0\\system.diagnostics.contracts.4.3.0.nupkg.sha512",
@@ -148,7 +153,7 @@
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.reflection.emit.lightweight\\4.3.0\\system.reflection.emit.lightweight.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.reflection.extensions\\4.3.0\\system.reflection.extensions.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.reflection.primitives\\4.3.0\\system.reflection.primitives.4.3.0.nupkg.sha512",
-    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.reflection.typeextensions\\4.3.0\\system.reflection.typeextensions.4.3.0.nupkg.sha512",
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.reflection.typeextensions\\4.7.0\\system.reflection.typeextensions.4.7.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.resources.resourcemanager\\4.3.0\\system.resources.resourcemanager.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",
     "C:\\Users\\Mattice Struyve\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.3\\system.runtime.compilerservices.unsafe.4.5.3.nupkg.sha512",
@@ -203,16 +208,6 @@
       "warningLevel": 1,
       "message": "Microsoft.Azure.WebJobs.Extensions.Twilio 3.0.2 depends on Microsoft.Azure.WebJobs (>= 3.0.17) but Microsoft.Azure.WebJobs 3.0.17 was not found. An approximate best match of Microsoft.Azure.WebJobs 3.0.18 was resolved.",
       "libraryId": "Microsoft.Azure.WebJobs",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Web.Services3 3.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.Web.Services3",
       "targetGraphs": [
         ".NETCoreApp,Version=v3.1"
       ]

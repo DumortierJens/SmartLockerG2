@@ -187,13 +187,6 @@ D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debu
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Memory.Data.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Azure.Messaging.WebPubSub.dll
 D:\_SCHOOL\2MCT_S3\Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.AssemblyReference.cache
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.AssemblyInfoInputs.cache
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.AssemblyInfo.cs
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.CoreCompileInputs.cache
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.dll
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Cosmos.ServiceInterop.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Cosmos.CRTCompat.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\host.json
@@ -203,6 +196,9 @@ C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bi
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Azure.Core.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Azure.Messaging.WebPubSub.dll
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Azure.Storage.Common.dll
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Azure.Storage.Queues.dll
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\JWT.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.Abstractions.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.Core.dll
@@ -232,6 +228,7 @@ C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bi
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Devices.Shared.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.EventHubs.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.EventHubs.Processor.dll
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Functions.Extensions.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.Services.AppAuthentication.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.WebJobs.Host.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Azure.WebJobs.dll
@@ -271,7 +268,6 @@ C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bi
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Net.Http.Headers.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Rest.ClientRuntime.dll
-C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Web.Services3.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\NCrontab.Signed.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
@@ -293,4 +289,11 @@ C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bi
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.AssemblyInfoInputs.cache
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.AssemblyInfo.cs
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.CoreCompileInputs.cache
 C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.CopyComplete
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.dll
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.pdb
+C:\Howest\Semester3\Team Project\SmartLockerG2\Backend\SmartLockerFunctionApp\obj\Debug\netcoreapp3.1\SmartLockerFunctionApp.csproj.AssemblyReference.cache

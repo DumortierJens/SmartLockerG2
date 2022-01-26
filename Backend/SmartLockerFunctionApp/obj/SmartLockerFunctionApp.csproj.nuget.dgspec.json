@@ -48,6 +48,14 @@
               "target": "Package",
               "version": "[1.0.0, )"
             },
+            "Azure.Storage.Queues": {
+              "target": "Package",
+              "version": "[12.8.0, )"
+            },
+            "JWT": {
+              "target": "Package",
+              "version": "[8.8.1, )"
+            },
             "Microsoft.Azure.Cosmos": {
               "target": "Package",
               "version": "[3.23.0, )"
@@ -55,6 +63,10 @@
             "Microsoft.Azure.Devices": {
               "target": "Package",
               "version": "[1.36.0, )"
+            },
+            "Microsoft.Azure.Functions.Extensions": {
+              "target": "Package",
+              "version": "[1.1.0, )"
             },
             "Microsoft.Azure.WebJobs.Extensions.EventHubs": {
               "target": "Package",
@@ -71,10 +83,6 @@
             "Microsoft.NET.Sdk.Functions": {
               "target": "Package",
               "version": "[3.0.13, )"
-            },
-            "Microsoft.Web.Services3": {
-              "target": "Package",
-              "version": "[3.0.0, )"
             }
           },
           "imports": [
