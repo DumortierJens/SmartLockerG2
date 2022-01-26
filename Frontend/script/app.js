@@ -167,16 +167,51 @@ const getLockerDetail = function (lockerId) {
 
 // #endregion
 
+// #region Profile Page
+
+const showUserProfile = function (user) {
+    console.log(user);
+
+    document.querySelector('.js-profile_picture').src = user.picture;
+    document.querySelector(".js-name").innerHTML = user.name;
+    document.querySelector(".js-email").innerHTML = user.email;
+    document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
+
+    ListenToUserLogout();
+    ListenToUserReservations();
+};
+
+function ListenToUserLogout() {
+    document.querySelector('.js-logout').addEventListener('click', function () {
+        console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
+        sessionStorage.removeItem('usertoken');
+        window.location.reload();
+    });
+}
+
+function ListenToUserReservations() {
+    document.querySelector('.js-reservations').addEventListener('click', function () {
+        window.location.href = `${location.origin}/profielreservatie${WEBEXTENTION}`;
+        console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
+    });
+}
+
+const getUserProfile = function () {
+    handleData(`${APIURI}/users/me`, showUserProfile, null, 'GET', null, userToken);
+};
+
+// #endregion
+
 // #region Nav
 
 function listenToBackBtn() {
-    htmlBackButton.addEventListener('click', function () {
+    document.querySelector('.js-back').querySelector('.js-back').addEventListener('click', function () {
         window.history.back();
     });
 }
 
 function listenToProfileBtn() {
-    htmlUserProfileButton.addEventListener('click', function () {
+    document.querySelector('.js-profile').addEventListener('click', function () {
         window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
     });
 }
@@ -209,18 +244,17 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlReserverenBtn = document.querySelector('.js-locker-reservate');
     htmlPopUpMessage = document.querySelector('.js-popup-message');
     htmlProfiel = document.querySelector('.js-profiel');
-    htmlBackButton = document.querySelector('.js-back');
-    htmlUserProfileButton = document.querySelector('.js-profile');
 
     // Pages
     const htmlPageOverview = document.querySelector('.js-overview-page');
     const htmlPageLocker = document.querySelector('.js-locker-page');
     const htmlPageProfile = document.querySelector('.js-profile-page');
 
-    // Buttons
+    // Buttons nav
     if (htmlBackButton) listenToBackBtn();
     if (htmlUserProfileButton) listenToProfileBtn();
 
+    // Pages data
     if (htmlPageOverview) {
         getLockersOverview();
     }
@@ -230,6 +264,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
         getLockerDetail(lockerId);
+    }
+
+    if (htmlPageProfile) {
+        getUserProfile();
     }
 
 });
