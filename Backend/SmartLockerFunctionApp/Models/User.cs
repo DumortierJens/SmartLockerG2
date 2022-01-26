@@ -27,5 +27,7 @@ namespace SmartLockerFunctionApp.Models
 
         [JsonProperty("isBlocked")]
         public bool IsBlocked { get; set; }
+        [JsonProperty("tel")]
+        public string Tel { get; set; }
     }
 }
