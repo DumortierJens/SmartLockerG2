@@ -13,6 +13,7 @@ using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using SmartLockerFunctionApp.Services.LockerManagement;
 using Newtonsoft.Json.Linq;
+using SmartLockerFunctionApp.Services.Sms;
 
 namespace SmartLockerFunctionApp
 {
@@ -77,6 +78,12 @@ namespace SmartLockerFunctionApp
                 // Add/replace reservation in cosmos
                 Container reservationContainer = cosmosClient.GetContainer("SmartLocker", "Reservations");
                 await reservationContainer.UpsertItemAsync(reservation, new PartitionKey(reservation.Id.ToString()));
+
+                Container userContainer = cosmosClient.GetContainer("SmartLocker", "Users");
+                Models.User user = await userContainer.ReadItemAsync<Models.User>(registration.UserId, new PartitionKey(registration.UserId));
+
+
+                SmsService.AddMessageToQueue(user, reservation);
 
                 return new OkObjectResult(registration);
             }

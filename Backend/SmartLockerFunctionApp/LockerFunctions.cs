@@ -110,5 +110,44 @@ namespace SmartLockerFunctionApp
                 return new StatusCodeResult(500);
             }
         }
+
+        [FunctionName("UpdateLocker")]
+        public async Task<IActionResult> UpdateLockerDescription(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "lockers/{lockerId}")] HttpRequest req,
+            Guid lockerId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                Locker updatedLocker = JsonConvert.DeserializeObject<Locker>(requestBody);
+
+                Locker locker;
+                try
+                {
+                    locker = await LockerService.LockerContainer.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                locker.Name = updatedLocker.Name;
+                locker.Description = updatedLocker.Description;
+                locker.Sport = updatedLocker.Sport;
+                locker.Status = updatedLocker.Status;
+
+                await LockerService.LockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
+
+                return new OkObjectResult(locker);
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
     }
 }
