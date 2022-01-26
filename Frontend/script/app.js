@@ -64,11 +64,14 @@ const getLockersOverview = function () {
 let htmlPopup,
     htmlPopUpOpen,
     htmlPopUpTimePicker,
-    htmlEndHour,
-    htmlEndMinute,
+    htmlEndHourEndTimePicker,
+    htmlEndMinuteEndTimepicker,
     htmlPopUpCancel,
     htmlPopupMessage;
 let htmlBackground,
+    htmlStartRegistration,
+    eventListenerExists,
+    busy_timestamps_endTimePicker,
     htmlLockerSvg;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
@@ -83,7 +86,7 @@ ws.onmessage = (event) => {
 
 const showLockerDetail = function (locker) {
     console.log(locker);
-
+    eventListenerExists = false
     const htmlLockerTitle = document.querySelector('.js-locker-name');
     const htmlLockerDescription = document.querySelector('.js-locker-description');
     const htmlLockerStatus = document.querySelector('.js-locker-status');
@@ -92,8 +95,9 @@ const showLockerDetail = function (locker) {
     const htmlLockerReservate = document.querySelector('.js-locker-reservate');
     const htmlLockerPopupMessage = document.querySelector('.js-popup-message');
     htmlPopUpTimePicker = document.querySelector('.js-popup-endtimepicker')
-    htmlEndHour = document.querySelector('.js-end-hour-endtimepicker')
-    htmlStartHour = document.querySelector('.js-start-hour-endtimepicker')
+    htmlEndHourEndTimePicker = document.querySelector('.js-end-hour-endtimepicker')
+    htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker')
+    htmlStartRegistration = document.querySelector('.js-start-reg-btn')
 
     htmlLockerTitle.innerHTML = locker.name;
     htmlLockerDescription.innerHTML = locker.description;
@@ -114,7 +118,7 @@ const showLockerDetail = function (locker) {
             listenToClickToggleLocker(locker.id);
             htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
         } else {
-            listenToClickToggleLockerTimePicker(locker.id)
+            listenToClickToggleLockerEndTimePicker(locker.id)
             htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Kies een eindtijdstip";
             // listener van de registratie afsluit knop
             // andere htmlpopup met keuzemenu of alles in orde is
@@ -154,7 +158,7 @@ function getTodaysReservationsEndTimePicker(jsonObject) {
     return arr_res_today
 }
 
-function getBusyTimestampsEndTimePicker(todaysReservations) {
+function getBusyTimestamps(todaysReservations) {
     let dict_busy_timestamps = {}
     for (let i = 0; i < todaysReservations.length; i++) {
         let start = todaysReservations[i].slice(0, 8)
@@ -190,19 +194,232 @@ function getBusyTimestampsEndTimePicker(todaysReservations) {
     return dict_busy_timestamps
 }
 
-function setReservationTimePicker(jsonObject){
-    let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject)
-    console.log(todaysReservations)
-    let busy_timestamps = getBusyTimestampsEndTimePicker(todaysReservations)
-    console.log("busy", busy_timestamps)
+function disablePast() {
+    for (let option of htmlEndHourEndTimePicker) {
+        let optionValue = parseInt(option.value)
+        if (optionValue < new Date().getHours()) {
+            option.disabled = true
+        }
+        for (let option of htmlEndMinuteEndTimepicker) {
+            let optionValue = parseInt(option.value)
+            if (optionValue <= new Date().getMinutes()) {
+                option.disabled = true
+            }
+        }
+        let disabled = $('.js-end-minute-endtimepicker option:not(:enabled)');
+        $('.js-end-hour-endtimepicker').children('option:enabled').eq(0).prop('selected', true);
+        $('.js-end-minute-endtimepicker').children('option:enabled').eq(-0).prop('selected', true);
+        // Als alle minute options zijn gedisabled, toon volgend uur
+        if (disabled.length == 6 && parseInt(htmlEndHourEndTimePicker.value) < 21) {
+            $('.js-end-hour-endtimepicker').children('option:enabled').eq(1).prop('selected', true);
+            setNewMinutes();
+        }
+    }
 }
 
-const getReservationsTimePicker = function () {
-    handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationTimePicker, null, 'GET', null, userToken);
+function setNewMinutes() {
+    console.log("Change endhour")
+    let chosenHour = parseInt(htmlEndHourEndTimePicker.value);
+    // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
+    if (busy_timestamps_endTimePicker[chosenHour]) {
+        for (let option of htmlEndMinuteEndTimepicker) {
+            let optionValue = parseInt(option.value)
+            if (busy_timestamps_endTimePicker[chosenHour].includes(optionValue)) {
+                option.disabled = true
+            } else {
+                option.disabled = false
+            }
+        }
+    } else if (new Date().getHours() == htmlEndHourEndTimePicker.value) {
+        for (let option of htmlEndMinuteEndTimepicker) {
+            let optionValue = parseInt(option.value)
+            if (optionValue <= new Date().getMinutes()) {
+                option.disabled = true
+            }
+        }
+    } else {
+        for (let option of htmlEndMinuteEndTimepicker) {
+            option.disabled = false
+        }
+    }
+}
+
+function disableBusyHours(busy_timestamps_endTimePicker) {
+    for (const [key, value] of Object.entries(busy_timestamps_endTimePicker)) {
+        if (busy_timestamps_endTimePicker[key].length == 60) {
+            for (let option of htmlEndHourEndTimePicker) {
+                let optionValue = parseInt(option.value)
+                if (optionValue == key) {
+                    option.disabled = true;
+                }
+            }
+        }
+    }
+}
+
+function addZero(value) {
+    if (value < 10) {
+        return "0" + value;
+    } else {
+        return value;
+    }
+}
+
+function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingevuld staan ophalen
+    let startHour = new Date().getHours()
+    console.log("Startuur", startHour)
+    let startMinute = new Date().getMinutes()
+    console.log("Startminuut", startMinute)
+    let endHour = parseInt(htmlEndHourEndTimePicker.value)
+    let endMinute = parseInt(htmlEndMinuteEndTimepicker.value)
+    let hourNow = new Date().getHours()
+    let minuteNow = new Date().getMinutes()
+    let Day = new Date().getDate()
+    let chosenDay = new Date().getDate()
+
+    if (startHour < hourNow && Day == chosenDay) {
+        console.log("starttijdstip ligt in het verleden")
+        window.alert("Starttijdstip ligt in het verleden")
+        htmlStartTitle.style.color = 'var(--red-verlopen)'
+        return
+    }
+
+    if (startHour == hourNow && startMinute < minuteNow && Day == chosenDay) {
+        console.log("starttijdstip ligt in het verleden")
+        window.alert("Starttijdstip ligt in het verleden")
+        htmlStartTitle.style.color = 'var(--red-verlopen)'
+        return
+    }
+    if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
+        console.log("Eindtijdstip moet later liggen dan starttijdstip")
+        window.alert("Eindtijdstip moet later liggen dan starttijdstip")
+        htmlEndTitle.style.color = 'var(--red-verlopen)'
+        return
+    }
+
+    if (startHour == endHour && startMinute == endMinute) {
+        console.log("Beide tijdstippen zijn hetzelfde")
+        window.alert("Beide tijdstippen zijn hetzelfde")
+        htmlEndTitle.style.color = 'var(--red-verlopen)'
+        htmlStartTitle.style.color = 'var(--red-verlopen)'
+        return
+    }
+
+    // Kijken of het niet overlapt met een bestaande reservatie
+    let inputString = `${
+        addZero(new Date().getHours())
+    }:${
+        addZero(new Date().getMinutes())
+    }:00-${
+        addZero(htmlEndHourEndTimePicker.value)
+    }:${
+        addZero(htmlEndMinuteEndTimepicker.value)
+    }:00`
+    let inputArray = []
+    inputArray.push(inputString)
+    console.log("inputarray", inputArray)
+    let new_busy_timestamps = getBusyTimestamps(inputArray)
+    console.log("busy_timestamps", busy_timestamps_endTimePicker)
+    console.log("new_busy_timestamps", new_busy_timestamps)
+    for (let key1 in busy_timestamps_endTimePicker) {
+        for (let key2 in new_busy_timestamps) {
+            if (key1 == key2) {
+                for (let minutes1 of busy_timestamps_endTimePicker[key1]) {
+                    for (let minutes2 of new_busy_timestamps[key2]) {
+                        if (minutes1 == minutes2) {
+                            console.log("Tijdstip overlapt met een bestaande reservatie")
+                            window.alert("Tijdstip overlapt met een bestaande reservatie")
+                            return
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
+    let startPoint = Object.keys(new_busy_timestamps)[0]
+    let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1]
+    console.log("startpoint ", startPoint, " endpoint ", endPoint)
+
+    for (let reservationsHour in busy_timestamps_endTimePicker) {
+        if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
+            console.log("Tijdstip overlapt met een bestaande reservatie")
+            window.alert("Tijdstip overlapt met een bestaande reservatie")
+            return
+        }
+    }
+
+    // Kijken of een slot niet langer dan 90 minuten duurt
+    let start = new Date("2022-01-01 " + inputString.slice(0, 8))
+    let end = new Date("2022-01-01 " + inputString.slice(9, 18))
+    var diff = Math.abs(end - start);
+    var minutes = Math.floor((diff / 1000) / 60);
+    if (minutes > 90) {
+        console.log("Je kan slechts maximum 90 minuten reserveren !")
+        window.alert("Je kan slechts maximum 90 minuten reserveren !")
+        return
+    }
+    console.log("Dit tijdstip is in orde, sla de reservatie op")
+    let startTime = new Date().toLocaleDateString() + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00"
+    let endTime = new Date().toLocaleDateString() + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00"
+    console.log(startTime, "start")
+    console.log(endTime, "einde")
+    const body = {
+
+        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
+
+        "startTime": startTime,
+
+        "endTime": endTime
+    }
+    console.log(body)
+    console.log("Wordt opgeslagen")
+    handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
+}
+
+function ListenToConfirmRegistrationEndTimePicker() {
+    if (! eventListenerExists) {
+        htmlStartRegistration.addEventListener('click', function () {
+            eventListenerExists = true;
+            CheckIfValidReservationEndTimePicker()
+        })
+    }
+}
+
+function setReservationEndTimePicker(jsonObject) {
+    let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject)
+    console.log(todaysReservations)
+    busy_timestamps_endTimePicker = getBusyTimestamps(todaysReservations)
+    console.log("busy_timestamps", busy_timestamps_endTimePicker)
+    disableBusyHours(busy_timestamps_endTimePicker)
+    disablePast()
+    htmlEndHourEndTimePicker.addEventListener('change', setNewMinutes)
+    ListenToConfirmRegistrationEndTimePicker()
+}
+
+const getReservationsEndTimePicker = function () {
+    handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationEndTimePicker, null, 'GET', null, userToken);
 };
 
-function listenToClickToggleLockerTimePicker(lockerid) {
-    getReservationsTimePicker()
+function fillOptionsSelectEndTimePicker() {
+    for (let hour = 5; hour < 23; hour++) {
+        htmlEndHourEndTimePicker.innerHTML += `<option value="${hour}">${hour}</option>`
+
+    }
+    for (let minute = 0; minute < 60; minute += 10) {
+        if (minute < 10) {
+            htmlEndMinuteEndTimepicker.innerHTML += `<option value="${minute}">0${minute}</option>`
+        } else {
+            htmlEndMinuteEndTimepicker.innerHTML += `<option value="${minute}">${minute}</option>`
+        }
+
+    }
+}
+
+function listenToClickToggleLockerEndTimePicker(lockerid) {
+    fillOptionsSelectEndTimePicker()
+    getReservationsEndTimePicker()
     htmlLockerSvg.addEventListener('click', function () {
         console.log("Timepicker verschijnt")
     })
@@ -335,6 +552,7 @@ document.addEventListener('DOMContentLoaded', function () { // Authentication
     if (htmlBackButton) 
         listenToBackBtn();
     
+
 
     if (htmlProfileButton) 
         listenToProfileBtn();

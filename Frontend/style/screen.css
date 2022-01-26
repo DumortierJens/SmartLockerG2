@@ -309,6 +309,17 @@ a:focus {
     cursor: pointer;
 }
 
+.start_registration_btn{
+    color: white;
+    font-family: 'MyFont';
+    background-color: var(--blue-accent-color);
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem 0 0.5rem 0;
+}
+
 /* overview pagina */
 
 .overview_page {

@@ -12,13 +12,13 @@ let busy_timestamps;
 
 function ListenToChangeDate() {
     htmlDate.addEventListener('change', function () {
-        htmlStartHour.value = 5;
-        htmlEndHour.value = 5;
+        htmlStartHour.value = new Date().getHours()
+        htmlEndHour.value = new Date().getHours()
         htmlStartMinute.value = 0;
         htmlEndMinute.value = 0;
         htmlStartTitle.style.color = "var(--blue-accent-color)"
         htmlEndTitle.style.color = "var(--blue-accent-color)"
-        if (firstAction == ""){
+        if (firstAction == "") {
             firstAction = "changedDate"
         }
         getReservations()
@@ -194,6 +194,11 @@ function SetReservationTime(jsonObject) {
     console.log(todaysReservations)
     busy_timestamps = getBusyTimestamps(todaysReservations)
     console.log("busy_timestamps", busy_timestamps)
+
+    // Uren en minuten van in het verleden disabelen als je date == vandaag
+    let date = new Date(htmlDate.value).getDate()
+    htmlStartHour.value = new Date().getHours()
+    htmlEndHour.value = new Date().getHours()
     htmlStartHour.addEventListener('change', function () {
         let chosenHour = parseInt(htmlStartHour.value);
         // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
