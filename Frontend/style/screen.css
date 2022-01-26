@@ -252,6 +252,19 @@ p {
     text-align: center;
 }
 
+.locker_detail_popup_endtimepicker {
+    position: fixed;
+    width: 18.75rem;
+    top: 50%;
+    left: 50%;
+    margin-top: -6.25rem;
+    margin-left: -9.375rem;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    text-align: center;
+}
+
 .locker_detail_popup_terug {
     background-color: var(--status-outofuse);
     border-style: none;
@@ -287,6 +300,16 @@ p {
     cursor: pointer;
 }
 
+.start_registration_btn{
+    color: white;
+    font-family: 'MyFont';
+    background-color: var(--blue-accent-color);
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem 0 0.5rem 0;
+}
 
 /* overview pagina */
 
@@ -1008,6 +1031,13 @@ p {
     max-width: 12.5rem;
 }
 
+.add_reservation_time_endtimepicker{
+    height: 3rem;
+    border-radius: 5px;
+    margin: 0 auto 0 auto;
+    max-width: 12.5rem;
+}
+
 .add_reservation_sport_content {
     background-color: white;
     width: 80%;
@@ -1022,6 +1052,16 @@ p {
 }
 
 .time_selection {
+    font-family: 'MyFont';
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.time_selection_endtimepicker{
     font-family: 'MyFont';
     text-align: center;
     outline: none;
