@@ -2,34 +2,34 @@ let htmlLockerContent, htmlExtraInfo, htmlJson, htmlOpmerking, htmlConfirm, html
 
 const checkStatus = function (status) {
     if (status.toLowerCase() == "beschikbaar") {
-        return "locker_status_available"
+        return "locker_status_available";
     }
 
     else if (status.toLowerCase() == "buiten gebruik") {
-        return "locker_status_out_of_use"
+        return "locker_status_out_of_use";
     }
 
     else if (status.toLowerCase() == "bezet") {
-        return "locker_status_occupied"
+        return "locker_status_occupied";
     }
 
     else {
-        return "locker_status_unknown"
+        return "locker_status_unknown";
     }
-}
+};
 
 const showMoreInfo = function (id, htmlArrow, json) {
-    let sport, beschrijving
+    let sport, beschrijving;
     for (const i of json) {
         if (i.id == id) {
-            sport = i.sport
-            beschrijving = i.description
+            sport = i.sport;
+            beschrijving = i.description;
         }
     }
-    let htmlLocker = document.querySelector(`.js-locker-${id}`)
-    htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`)
+    let htmlLocker = document.querySelector(`.js-locker-${id}`);
+    htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`);
     if (htmlExtraInfo.innerHTML == '') {
-        htmlLocker.classList.add("reservation_more_border")
+        htmlLocker.classList.add("reservation_more_border");
         htmlArrow.style.transform = 'rotate(180deg)';
         htmlExtraInfo.innerHTML = `<div class="reservation_details">
                         <div class=" reservation_details_edit_and_delete flex">
@@ -59,19 +59,19 @@ const showMoreInfo = function (id, htmlArrow, json) {
                             <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Beschrijving</p>
                             <p style="font-size : 0.75rem;" class="reservation_opmerking_content">${beschrijving}</p>
                         </div>
-                    </div>`
-        htmlExtraInfo.style.animation = 'fadein 0.5s'
-        listenToCLickEditLocker(id)
-        listenToLockerOpen(id)
+                    </div>`;
+        htmlExtraInfo.style.animation = 'fadein 0.5s';
+        listenToCLickEditLocker(id);
+        listenToLockerOpen(id);
     }
 
     else {
-        htmlLocker.classList.remove("reservation_more_border")
+        htmlLocker.classList.remove("reservation_more_border");
         htmlArrow.style.transform = 'rotate(0deg)';
         htmlExtraInfo.innerHTML = ``;
-        htmlExtraInfo.style.animation = ''
+        htmlExtraInfo.style.animation = '';
     }
-}
+};
 
 const showEdit = function (id) {
 
@@ -124,7 +124,7 @@ const showEdit = function (id) {
                                 <span class="textarea js-textarea-${id}" role="textbox" contenteditable>${htmlJson[lockernr].description}</span>
                             </label>
                         </div>
-                    </div>`
+                    </div>`;
     var select = document.querySelector(`.js-status_selector-${id}`);
     for (var i = 0; i < select.length; i++) {
         var option = select.options[i];
@@ -132,38 +132,38 @@ const showEdit = function (id) {
             option.selected = true;
         }
     }
-    document.querySelector(`.js-textarea-${id}`).focus()
-    listenToConfirm(id)
-    listenToCancel(id)
-}
+    document.querySelector(`.js-textarea-${id}`).focus();
+    listenToConfirm(id);
+    listenToCancel(id);
+};
 
 const listenToLockerOpen = function (id) {
-    console.log('id', id)
-}
+    console.log('id', id);
+};
 
 const listenToConfirm = function (id) {
-    let updatedDescription, updatedStatus
+    let updatedDescription, updatedStatus;
     document.querySelector(`.js-doneedit-${id}`).addEventListener("click", function () {
-        updatedDescription = document.querySelector(`.js-textarea-${id}`).innerHTML
-        updatedStatus = document.querySelector(`.js-status_selector-${id}`).value
-        const body = { "Description": updatedDescription, "Status": updatedStatus }
+        updatedDescription = document.querySelector(`.js-textarea-${id}`).innerHTML;
+        updatedStatus = document.querySelector(`.js-status_selector-${id}`).value;
+        const body = { "Description": updatedDescription, "Status": updatedStatus };
         handleData(`${APIURI}/lockers/${id}`, showLockers, null, 'PUT', JSON.stringify(body), userToken);
-        setTimeout(ReloadScreen, 500)
-    })
-}
+        setTimeout(ReloadScreen, 500);
+    });
+};
 
 const ReloadScreen = function () {
     location.reload();
-}
+};
 
 const listenToCancel = function (id) {
     for (const i of htmlJson) {
         if (i.id == id) {
-            sport = i.sport
-            beschrijving = i.description
+            sport = i.sport;
+            beschrijving = i.description;
         }
     }
-    htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`)
+    htmlExtraInfo = document.querySelector(`.js-extrainfo-${id}`);
     document.querySelector(`.js-canceledit-${id}`).addEventListener("click", function () {
         htmlExtraInfo.innerHTML = `<div class="reservation_details">
                         <div class=" reservation_details_edit_and_delete flex">
@@ -193,20 +193,20 @@ const listenToCancel = function (id) {
                             <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Beschrijving</p>
                             <p style="font-size : 0.75rem;" class="reservation_opmerking_content">${beschrijving}</p>
                         </div>
-                    </div>`
-        htmlExtraInfo.style.animation = 'fadein 0.5s'
-        listenToCLickEditLocker(id)
-        listenToLockerOpen(id)
-    })
+                    </div>`;
+        htmlExtraInfo.style.animation = 'fadein 0.5s';
+        listenToCLickEditLocker(id);
+        listenToLockerOpen(id);
+    });
 
-}
+};
 
 const listenToCLickEditLocker = function (id) {
     document.querySelector(`.js-editicon-${id}`).addEventListener("click", function () {
         showEdit(id);
-    })
+    });
 
-}
+};
 
 const listenToClickMore = function (json) {
     const buttons = document.querySelectorAll('.js-arrow');
@@ -217,12 +217,12 @@ const listenToClickMore = function (json) {
         });
     };
 
-}
+};
 
-const showLockers = function (jsonObject) {
-    htmlJson = jsonObject
-    console.log(jsonObject)
-    htmlLockerContent.innerHTML = ``
+const showLockersBeheer = function (jsonObject) {
+    htmlJson = jsonObject;
+    console.log(jsonObject);
+    htmlLockerContent.innerHTML = ``;
     for (i = 0; i < jsonObject.length; i++) {
         htmlLockerContent.innerHTML += `
             <div class="locker_container">
@@ -248,23 +248,23 @@ const showLockers = function (jsonObject) {
                         </svg>
                     </div>
                 </div>
-                <div class="js-extrainfo-${jsonObject[i].id}" locker-nr="${i}"></div>`
+                <div class="js-extrainfo-${jsonObject[i].id}" locker-nr="${i}"></div>`;
     }
     listenToClickMore(htmlJson);
-}
+};
 
-const getLockers = function () {
-    handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
+const getLockersBeheer = function () {
+    handleData(`${APIURI}/lockers`, showLockersBeheer, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Dom geladen')
+    console.log('Dom geladen');
     userToken = sessionStorage.getItem("usertoken");
     userToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMxNDQ2NDQxNTU3OTUzMjIiLCJuYW1lIjoiSmVucyBEdW1vcnRpZXIiLCJyb2xlIjoiVXNlciJ9.9PqxSKs19MPQCU_6Lt38Krq1aZeHBbZ1Y2Sf4orTyao";
     if (userToken == null)
         window.location.replace(location.origin);
 
-    htmlLockerContent = document.querySelector(".js-lockers")
-    getLockers();
+    htmlLockerContent = document.querySelector(".js-lockers");
+    getLockersBeheer();
     // ListenToClickArrowMore()
-})
+});
