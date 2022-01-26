@@ -1,13 +1,6 @@
 let currentLockerID;
-let registrationStarted = true;
-
+let registrationStarted = false;
 let userToken;
-let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
-    htmlLockerSvg, htmlInstructions, htmlOpmerkingBtn, htmlOpmerkingDiv, htmlSubmitBtn,
-    htmlPopUp, htmlPopUpCancel, htmlBackground, htmlPopUpOpen, htmlExtraContent, htmlBackButton, htmlUserProfileButton,
-    htmlUitlegLockerDetail, htmlInfo, htmlReserverenBtn, htmlOpmerkingText, htmlPopUpMessage, htmlProfiel;
-
-let htmlPopup, htmlPopupMessage;
 
 // #region Overview
 
@@ -24,7 +17,7 @@ const showLockers = function (lockers) {
         else if (locker.status == 'Buiten gebruik')
             statusClass = 'svg-outofuse';
 
-        htmlString += `<g class="js-locker" data-id="${locker.id}" transform="translate(${locker.iconLocation})">
+        htmlString += `<g class="js-locker cursor_pointer" data-id="${locker.id}" transform="translate(${locker.iconLocation})">
             <g class="${statusClass}">
                 <circle cx="18" cy="18" r="18" />
             </g>
@@ -56,6 +49,9 @@ const getLockersOverview = function () {
 
 // #region Locker Detail
 
+let htmlPopup, htmlPopUpOpen, htmlPopUpCancel, htmlPopupMessage;
+let htmlBackground, htmlLockerSvg;
+
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 ws.onmessage = (event) => {
     console.log(event.data.json());
@@ -69,20 +65,22 @@ ws.onmessage = (event) => {
 const showLockerDetail = function (locker) {
     console.log(locker);
 
+    const htmlLockerTitle = document.querySelector('.js-locker-name');
+    const htmlLockerDescription = document.querySelector('.js-locker-description');
     const htmlLockerStatus = document.querySelector('.js-locker-status');
     const htmlLockerInstructions = document.querySelector('.js-locker-instructions');
-    const htmlLockerButton = document.querySelector('.js-locker-btn');
+    const htmlLockerSvg = document.querySelector('.js-locker-svg');
     const htmlLockerReservate = document.querySelector('.js-locker-reservate');
     const htmlLockerPopupMessage = document.querySelector('.js-popup-message');
 
-    document.querySelector('.js-locker-name').innerHTML = locker.name;
-    document.querySelector('.js-locker-description').innerHTML = locker.description;
+    htmlLockerTitle.innerHTML = locker.name;
+    htmlLockerDescription.innerHTML = locker.description;
     htmlLockerStatus.innerHTML = locker.status;
 
     if (locker.status == 'Beschikbaar' || registrationStarted) {
         htmlLockerInstructions.innerHTML = 'Tik op het slot om de locker te openen';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_available');
-        listenToReservateBtn(locker.id);
+        listenToLockerReservate(locker.id);
 
         //checken of registratie al gestart is van deze gebruiker 
         // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen 
@@ -90,13 +88,13 @@ const showLockerDetail = function (locker) {
         // ==>nee: je kan de registratie starten door de locker te openen
         //reserveren van de locker kan je altijd
         if (registrationStarted) {
-            htmlLockerStatus.innerHTML = 'Using';
+            htmlLockerStatus.innerHTML = 'Bezig';
             listenToClickToggleLocker(locker.id);
-            htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Breng de bal terug voor 00:00. Daarna kan je de registratie afsluiten.";
+            htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
         }
         else {
             listenToClickToggleLocker(locker.id);
-            htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
+            htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Breng de bal terug voor 00:00. Daarna kan je de registratie afsluiten.";
             //listener van de registratie afsluit knop
             //andere htmlpopup met keuzemenu of alles in orde is
         }
@@ -104,13 +102,13 @@ const showLockerDetail = function (locker) {
     else if (locker.status == 'Bezet') {
         htmlLockerInstructions.innerHTML = 'Deze locker is momenteel in gebruik';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_unavailable');
-        htmlLockerButton.classList.add('locker_detail_content_toggleSvg_outofuse');
-        listenToReservateBtn(locker.id);
+        htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
+        listenToLockerReservate(locker.id);
     }
     else if (locker.status == 'Buiten gebruik') {
         htmlLockerInstructions.innerHTML = 'Deze locker is momenteel buiten gebruik';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_outofuse');
-        htmlLockerButton.classList.add('locker_detail_content_toggleSvg_outofuse');
+        htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
         htmlLockerReservate.style = 'display:none';
     }
 };
@@ -155,9 +153,9 @@ function DisplayNone() {
     htmlPopUp.style = 'display: none;';
 }
 
-function listenToReservateBtn(lockerId) {
-    htmlReserverenBtn.addEventListener('click', function () {
-        console.log('Ga naar addreservatie.html met id van locker meesturen');
+function listenToLockerReservate(lockerId) {
+    document.querySelector('.js-locker-reservate').addEventListener('click', function () {
+        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
 }
 
@@ -202,16 +200,18 @@ const getUserProfile = function () {
 
 // #endregion
 
-// #region Nav
+// #region Navigation
+
+let htmlBackButton, htmlProfileButton;
 
 function listenToBackBtn() {
-    document.querySelector('.js-back').querySelector('.js-back').addEventListener('click', function () {
+    htmlBackButton.addEventListener('click', function () {
         window.history.back();
     });
 }
 
 function listenToProfileBtn() {
-    document.querySelector('.js-profile').addEventListener('click', function () {
+    htmlProfileButton.addEventListener('click', function () {
         window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
     });
 }
@@ -219,42 +219,32 @@ function listenToProfileBtn() {
 // #endregion
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.info('DOM geladen');
 
     // Authentication
     userToken = sessionStorage.getItem("usertoken");
     if (userToken == null) window.location.href = location.origin;
 
-    htmlLockerTitle = document.querySelector('.js-lockertitle');
-    htmlOverview = document.querySelector('.js-overview');
-    htmlBeschikbaar = document.querySelector('.js-beschikbaar');
-    htmlLockerSvg = document.querySelector('.js-locker-btn');
-    htmlInstructions = document.querySelector('.js-instructions');
-    htmlOpmerkingBtn = document.querySelector('.js-opmerkingbtn');
-    htmlOpmerkingDiv = document.querySelector('.js-opmerkingdiv');
-    htmlSubmitBtn = document.querySelector('.js-submit');
-    htmlOpmerkingText = document.querySelector('.js-opmerkingtext');
+    // Navigation
+    htmlBackButton = document.querySelector('.js-back');
+    htmlProfileButton = document.querySelector('.js-profile');
+
+    // Locker detail
+    htmlLockerSvg = document.querySelector('.js-locker-svg');
+    htmlBackground = document.querySelector('.js-background');
     htmlPopUp = document.querySelector('.js-popup');
     htmlPopUpCancel = document.querySelector('.js-popup-cancel');
-    htmlBackground = document.querySelector('.js-background');
     htmlPopUpOpen = document.querySelector('.js-popup-open');
-    htmlExtraContent = document.querySelector('.js-extra-content');
-    htmlUitlegLockerDetail = document.querySelector('.js-uitleg');
-    htmlInfo = document.querySelector('.js-info');
-    htmlReserverenBtn = document.querySelector('.js-locker-reservate');
     htmlPopUpMessage = document.querySelector('.js-popup-message');
-    htmlProfiel = document.querySelector('.js-profiel');
+
+    // Nav buttons
+    if (htmlBackButton) listenToBackBtn();
+    if (htmlProfileButton) listenToProfileBtn();
 
     // Pages
     const htmlPageOverview = document.querySelector('.js-overview-page');
     const htmlPageLocker = document.querySelector('.js-locker-page');
     const htmlPageProfile = document.querySelector('.js-profile-page');
 
-    // Buttons nav
-    if (htmlBackButton) listenToBackBtn();
-    if (htmlUserProfileButton) listenToProfileBtn();
-
-    // Pages data
     if (htmlPageOverview) {
         getLockersOverview();
     }
