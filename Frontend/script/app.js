@@ -9,15 +9,7 @@ let htmlLockerTitle, htmlOverview, htmlSoccer, htmlBasketball, htmlBeschikbaar,
 
 let htmlPopup, htmlPopupMessage;
 
-let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
-ws.onmessage = (event) => {
-    console.log(event.data.json());
-    const data = JSON.parse(event.data);
-    if (data.device.lockerId == currentLockerID && data.log.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && data.log.value == 1) {
-        console.log('test');
-        htmlLockerSvg.innerHTML = getSvg('locker close');
-    }
-};
+// #region Overview
 
 const showLockers = function (lockers) {
     console.log(lockers);
@@ -56,7 +48,25 @@ const listenToLockerIcon = function () {
     }
 };
 
-const showLocker = function (locker) {
+const getLockersOverview = function () {
+    handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
+};
+
+// #endregion
+
+// #region Locker Detail
+
+let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
+ws.onmessage = (event) => {
+    console.log(event.data.json());
+    const data = JSON.parse(event.data);
+    if (data.device.lockerId == currentLockerID && data.log.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && data.log.value == 1) {
+        console.log('test');
+        htmlLockerSvg.innerHTML = getSvg('locker close');
+    }
+};
+
+const showLockerDetail = function (locker) {
     console.log(locker);
 
     const htmlLockerStatus = document.querySelector('.js-locker-status');
@@ -151,29 +161,13 @@ function listenToReservateBtn(lockerId) {
     });
 }
 
-// function ListenToClickOpmerkingBtn() {
-//     htmlOpmerkingBtn.addEventListener('click', function () {
-//         if (OpmerkingClicked) {
-//             htmlOpmerkingBtn.style = 'background-color : var(--blue-accent-color);';
-//             htmlOpmerkingBtn.innerHTML = 'Opmerking toevoegen';
-//             console.log('Annuleer');
-//             htmlSubmitBtn.style = 'display: none;';
-//             htmlOpmerkingDiv.style = 'display: none;';
-//             OpmerkingClicked = false;
-//         } else {
-//             htmlOpmerkingDiv.style = 'display: block;';
-//             htmlOpmerkingBtn.innerHTML = 'Annuleren';
-//             htmlOpmerkingBtn.style = 'background-color : var(--status-outofuse);';
-//             console.log('Schrijf een opmerking');
-//             htmlSubmitBtn.style = 'display: block;';
-//             htmlExtraContent.style.animation = 'fadein 0.5s';
-//             OpmerkingClicked = true;
-//             htmlSubmitBtn.addEventListener('click', function () {
-//                 console.log(`Verzend ${htmlOpmerkingText.value} naar database`);
-//             });
-//         }
-//     });
-// }
+const getLockerDetail = function (lockerId) {
+    handleData(`${APIURI}/lockers/${lockerId}`, showLockerDetail, null, 'GET', null, userToken);
+};
+
+// #endregion
+
+// #region Nav
 
 function listenToBackBtn() {
     htmlBackButton.addEventListener('click', function () {
@@ -187,13 +181,7 @@ function listenToProfileBtn() {
     });
 }
 
-const getLockers = function () {
-    handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
-};
-
-const getLocker = function (lockerId) {
-    handleData(`${APIURI}/lockers/${lockerId}`, showLocker, null, 'GET', null, userToken);
-};
+// #endregion
 
 document.addEventListener('DOMContentLoaded', function () {
     console.info('DOM geladen');
@@ -234,14 +222,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (htmlUserProfileButton) listenToProfileBtn();
 
     if (htmlPageOverview) {
-        getLockers();
+        getLockersOverview();
     }
 
     if (htmlPageLocker) {
         const urlParams = new URLSearchParams(window.location.search);
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
-        getLocker(lockerId);
+        getLockerDetail(lockerId);
     }
 
 });
