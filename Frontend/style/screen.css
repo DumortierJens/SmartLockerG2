@@ -23,7 +23,7 @@
     --blue-accent-color-light: #4992ff;
     --blue-accent-color-dark: #1f48ff;
     --status-available: #008000;
-    --status-available-icon: #00ff00;
+    --status-available-icon: #00cc00;
     --status-unavailable: #ffa500;
     --status-outofuse: #b60000;
     --green-faded: #a9e8a9;
@@ -156,6 +156,10 @@ a:focus {
 
 .locker_detail_content_toggleInstructions {
     margin: 1.5rem 0 1.5rem 0;
+}
+
+.cursor_pointer{
+    cursor: pointer;
 }
 
 .locker_detail_content_toggleSvg {
