@@ -7,6 +7,8 @@ let htmlDate;
 let htmlStartTitle;
 let htmlEndTitle;
 let eventListenerExists = false;
+let firstAction = "";
+let busy_timestamps;
 
 function ListenToChangeDate() {
     htmlDate.addEventListener('change', function () {
@@ -16,6 +18,9 @@ function ListenToChangeDate() {
         htmlEndMinute.value = 0;
         htmlStartTitle.style.color = "var(--blue-accent-color)"
         htmlEndTitle.style.color = "var(--blue-accent-color)"
+        if (firstAction == ""){
+            firstAction = "changedDate"
+        }
         getReservations()
     })
 }
@@ -71,7 +76,7 @@ function getTodaysReservations(jsonObject) {
     return arr_res_today
 }
 
-function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ingevuld staan ophalen
+function CheckIfValidReservation() { // Waarden die voorlopig ingevuld staan ophalen
     let startHour = parseInt(htmlStartHour.value)
     let startMinute = parseInt(htmlStartMinute.value)
     let endHour = parseInt(htmlEndHour.value)
@@ -123,7 +128,10 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     }:00`
     let inputArray = []
     inputArray.push(inputString)
+    console.log("inputarray", inputArray)
     let new_busy_timestamps = getBusyTimestamps(inputArray)
+    console.log("busy_timestamps", busy_timestamps)
+    console.log("new_busy_timestamps", new_busy_timestamps)
     for (let key1 in busy_timestamps) {
         for (let key2 in new_busy_timestamps) {
             if (key1 == key2) {
@@ -145,6 +153,7 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
     let startPoint = Object.keys(new_busy_timestamps)[0]
     let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1]
+    console.log("startpoint ", startPoint, " endpoint ", endPoint)
 
     for (let reservationsHour in busy_timestamps) {
         if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
@@ -165,8 +174,8 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
         return
     }
     console.log("Dit tijdstip is in orde, sla de reservatie op")
-    let startTime = htmlDate.value + "T" + addZero(parseInt(htmlStartHour.value))+":"+addZero(parseInt(htmlStartMinute.value))+":00+01:00"
-    let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value))+":"+addZero(parseInt(htmlEndMinute.value))+":00+01:00"
+    let startTime = htmlDate.value + "T" + addZero(parseInt(htmlStartHour.value)) + ":" + addZero(parseInt(htmlStartMinute.value)) + ":00+01:00"
+    let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value)) + ":" + addZero(parseInt(htmlEndMinute.value)) + ":00+01:00"
     const body = {
 
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
@@ -183,8 +192,8 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
 function SetReservationTime(jsonObject) {
     let todaysReservations = getTodaysReservations(jsonObject)
     console.log(todaysReservations)
-    let busy_timestamps = getBusyTimestamps(todaysReservations)
-    console.log("busy", busy_timestamps)
+    busy_timestamps = getBusyTimestamps(todaysReservations)
+    console.log("busy_timestamps", busy_timestamps)
     htmlStartHour.addEventListener('change', function () {
         let chosenHour = parseInt(htmlStartHour.value);
         // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
@@ -223,7 +232,7 @@ function SetReservationTime(jsonObject) {
         }
     })
     ListenToChangeDate()
-    ListenToConfirmRegistration(busy_timestamps)
+    ListenToConfirmRegistration()
 }
 
 function FillOptionsSelect() {
@@ -232,7 +241,7 @@ function FillOptionsSelect() {
         htmlEndHour.innerHTML += `<option value="${hour}">${hour}</option>`
 
     }
-    for (let minute = 0; minute < 60; minute+=10) {
+    for (let minute = 0; minute < 60; minute += 10) {
         if (minute < 10) {
             htmlStartMinute.innerHTML += `<option value="${minute}">0${minute}</option>`
             htmlEndMinute.innerHTML += `<option value="${minute}">0${minute}</option>`
@@ -263,12 +272,13 @@ function addZero(value) {
     }
 }
 
-function ListenToConfirmRegistration(busy_timestamps) {
-    if(!eventListenerExists)
-    htmlConfirm.addEventListener('click', function () {
-        eventListenerExists = true;
-        CheckIfValidReservation(busy_timestamps)
-    })
+function ListenToConfirmRegistration() {
+    if (! eventListenerExists && firstAction != 'changedDate') {
+        htmlConfirm.addEventListener('click', function () {
+            eventListenerExists = true;
+            CheckIfValidReservation()
+        })
+    }
 }
 
 const getLockerReservation = function () {
