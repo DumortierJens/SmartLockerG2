@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="/style/screen.css" />
     <script src="/script/datahandler.js"></script>
     <script src="/script/constants.js"></script>
-    <script src="/script/login.js"></script>
     <script src="/script/loading.js"></script>
     <title>Loginpagina</title>
 </head>
@@ -31,23 +30,19 @@
         <div class="login_container js-loginpage">
             <div class="login_title">SmartLocker</div>
             <div class="login_content_bg">
-                <div class="login_content">
-                    Meld je aan met Facebook
+                <div class="login_content_gsm">
+                    Mogen wij om uw gsm-nummer vragen?
                     <div class="facebook_login">
-                        <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
+                        <input class="phonenumber_input" type="tel" value="">
                     </div>
                 </div>
             </div>
-            <p class="login_info">Opmerking: een account is nodig voor een optimale ervaring en draagt bij tot de beveiliging van de app</p>
-            <div class="login-links">
-                <p><a class="login-link" href="/privacypolicy.html">Privacy Policy</a></p>
-                <p><a class="login-link" href="/termsofservice.html">Terms Of Service</a></p>
+            <div class="centerflex flex">
+                <button class="gsm-btn-doorgaan flex">Doorgaan</button>
             </div>
-
+            <p class="login_info">Opmerking: Wij zullen uw gsm-nummer enkel gebruiken om herrineringen te sturen.</p>
         </div>
     </div>
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v12.0&appId=614695093159122&autoLogAppEvents=1" nonce="BBrH37e3"></script>
 </body>
 
 </html>

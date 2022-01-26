@@ -1,20 +1,26 @@
 let htmlSport;
 let htmlStartHour;
 let htmlStartMinute;
-let htmlEndHour;
-let htmlEndMinute;
 let htmlEnd;
 let htmlConfirm;
 let htmlDate;
 let htmlStartTitle;
 let htmlEndTitle;
+let eventListenerExists = false;
+let firstAction = "";
+let busy_timestamps;
 
 function ListenToChangeDate() {
     htmlDate.addEventListener('change', function () {
-        htmlStartHour.value = 5;
-        htmlEndHour.value = 5;
+        htmlStartHour.value = new Date().getHours()
+        htmlEndHour.value = new Date().getHours()
         htmlStartMinute.value = 0;
         htmlEndMinute.value = 0;
+        htmlStartTitle.style.color = "var(--blue-accent-color)"
+        htmlEndTitle.style.color = "var(--blue-accent-color)"
+        if (firstAction == "") {
+            firstAction = "changedDate"
+        }
         getReservations()
     })
 }
@@ -70,7 +76,7 @@ function getTodaysReservations(jsonObject) {
     return arr_res_today
 }
 
-function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ingevuld staan ophalen
+function CheckIfValidReservation() { // Waarden die voorlopig ingevuld staan ophalen
     let startHour = parseInt(htmlStartHour.value)
     let startMinute = parseInt(htmlStartMinute.value)
     let endHour = parseInt(htmlEndHour.value)
@@ -79,14 +85,17 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     htmlStartTitle.style.color = 'var(--blue-accent-color)'
     let hourNow = new Date().getHours()
     let minuteNow = new Date().getMinutes()
-    if (startHour < hourNow) {
+    let Day = new Date().getDate()
+    let chosenDay = new Date(htmlDate.value).getDate()
+
+    if (startHour < hourNow && Day == chosenDay) {
         console.log("starttijdstip ligt in het verleden")
         window.alert("Starttijdstip ligt in het verleden")
         htmlStartTitle.style.color = 'var(--red-verlopen)'
         return
     }
 
-    if (startHour == hourNow && startMinute < minuteNow) {
+    if (startHour == hourNow && startMinute < minuteNow && Day == chosenDay) {
         console.log("starttijdstip ligt in het verleden")
         window.alert("Starttijdstip ligt in het verleden")
         htmlStartTitle.style.color = 'var(--red-verlopen)'
@@ -119,7 +128,10 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     }:00`
     let inputArray = []
     inputArray.push(inputString)
+    console.log("inputarray", inputArray)
     let new_busy_timestamps = getBusyTimestamps(inputArray)
+    console.log("busy_timestamps", busy_timestamps)
+    console.log("new_busy_timestamps", new_busy_timestamps)
     for (let key1 in busy_timestamps) {
         for (let key2 in new_busy_timestamps) {
             if (key1 == key2) {
@@ -141,6 +153,7 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
     let startPoint = Object.keys(new_busy_timestamps)[0]
     let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1]
+    console.log("startpoint ", startPoint, " endpoint ", endPoint)
 
     for (let reservationsHour in busy_timestamps) {
         if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
@@ -160,15 +173,32 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
         window.alert("Je kan slechts maximum 90 minuten reserveren !")
         return
     }
-    // handleData(`${APIURI}/reservations/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, null, null, 'POST', JSON.stringify(body), userToken);
     console.log("Dit tijdstip is in orde, sla de reservatie op")
+    let startTime = htmlDate.value + "T" + addZero(parseInt(htmlStartHour.value)) + ":" + addZero(parseInt(htmlStartMinute.value)) + ":00+01:00"
+    let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value)) + ":" + addZero(parseInt(htmlEndMinute.value)) + ":00+01:00"
+    const body = {
+
+        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
+
+        "startTime": startTime,
+
+        "endTime": endTime
+    }
+    console.log(body)
+    console.log("Wordt opgeslagen")
+    handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
 }
 
 function SetReservationTime(jsonObject) {
     let todaysReservations = getTodaysReservations(jsonObject)
     console.log(todaysReservations)
-    let busy_timestamps = getBusyTimestamps(todaysReservations)
-    console.log("busy", busy_timestamps)
+    busy_timestamps = getBusyTimestamps(todaysReservations)
+    console.log("busy_timestamps", busy_timestamps)
+
+    // Uren en minuten van in het verleden disabelen als je date == vandaag
+    let date = new Date(htmlDate.value).getDate()
+    htmlStartHour.value = new Date().getHours()
+    htmlEndHour.value = new Date().getHours()
     htmlStartHour.addEventListener('change', function () {
         let chosenHour = parseInt(htmlStartHour.value);
         // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
@@ -200,15 +230,14 @@ function SetReservationTime(jsonObject) {
                     option.disabled = false
                 }
             }
-        }
-        else {
+        } else {
             for (let option of htmlEndMinute) {
                 option.disabled = false
             }
         }
     })
     ListenToChangeDate()
-    ListenToConfirmRegistration(busy_timestamps)
+    ListenToConfirmRegistration()
 }
 
 function FillOptionsSelect() {
@@ -217,7 +246,7 @@ function FillOptionsSelect() {
         htmlEndHour.innerHTML += `<option value="${hour}">${hour}</option>`
 
     }
-    for (let minute = 0; minute < 60; minute++) {
+    for (let minute = 0; minute < 60; minute += 10) {
         if (minute < 10) {
             htmlStartMinute.innerHTML += `<option value="${minute}">0${minute}</option>`
             htmlEndMinute.innerHTML += `<option value="${minute}">0${minute}</option>`
@@ -231,12 +260,13 @@ function FillOptionsSelect() {
 
 const showLockerReservation = function (jsonObject) {
     htmlSport.innerHTML = jsonObject.sport;
+    console.log(jsonObject)
     FillOptionsSelect();
     getReservations();
 }
 
 const getReservations = function () {
-    handleData(`${APIURI}/reservations`, SetReservationTime, null, 'GET', null, userToken);
+    handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, SetReservationTime, null, 'GET', null, userToken);
 };
 
 function addZero(value) {
@@ -247,10 +277,13 @@ function addZero(value) {
     }
 }
 
-function ListenToConfirmRegistration(busy_timestamps) {
-    htmlConfirm.addEventListener('click', function () {
-        CheckIfValidReservation(busy_timestamps)
-    })
+function ListenToConfirmRegistration() {
+    if (! eventListenerExists && firstAction != 'changedDate') {
+        htmlConfirm.addEventListener('click', function () {
+            eventListenerExists = true;
+            CheckIfValidReservation()
+        })
+    }
 }
 
 const getLockerReservation = function () {

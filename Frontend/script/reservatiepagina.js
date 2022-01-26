@@ -1,4 +1,4 @@
-let htmlReservationContent, htmlExtraInfo, htmlPopup, htmlPopupCancel, htmlPopupDelete;
+let htmlReservationContent, htmlExtraInfo,htmlPopupCancel, htmlPopupDelete;
 
 function DisplayNone() {
     htmlPopup.style = "display: none;";

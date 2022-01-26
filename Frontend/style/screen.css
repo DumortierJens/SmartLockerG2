@@ -23,7 +23,7 @@
     --blue-accent-color-light: #4992ff;
     --blue-accent-color-dark: #1f48ff;
     --status-available: #008000;
-    --status-available-icon: #00ff00;
+    --status-available-icon: #00cc00;
     --status-unavailable: #ffa500;
     --status-outofuse: #b60000;
     --green-faded: #a9e8a9;
@@ -69,15 +69,6 @@ p {
     margin: 0;
 }
 
-a:visited,
-a:active {
-    color: var(--blue-accent-color-dark);
-}
-
-a:hover,
-a:focus {
-    color: var(--blue-accent-color-light);
-}
 
 /*Lockerdetailpage*/
 
@@ -112,6 +103,14 @@ a:focus {
     width: 1.5rem;
     position: absolute;
     right: 1.5rem;
+    cursor: pointer;
+}
+
+.header_right_icon_profile {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    right: 4rem;
     cursor: pointer;
 }
 
@@ -156,6 +155,10 @@ a:focus {
 
 .locker_detail_content_toggleInstructions {
     margin: 1.5rem 0 1.5rem 0;
+}
+
+.cursor_pointer {
+    cursor: pointer;
 }
 
 .locker_detail_content_toggleSvg {
@@ -249,6 +252,19 @@ a:focus {
     text-align: center;
 }
 
+.locker_detail_popup_endtimepicker {
+    position: fixed;
+    width: 18.75rem;
+    top: 50%;
+    left: 50%;
+    margin-top: -6.25rem;
+    margin-left: -9.375rem;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    text-align: center;
+}
+
 .locker_detail_popup_terug {
     background-color: var(--status-outofuse);
     border-style: none;
@@ -282,6 +298,17 @@ a:focus {
 
 .pointer {
     cursor: pointer;
+}
+
+.start_registration_btn{
+    color: white;
+    font-family: 'MyFont';
+    background-color: var(--blue-accent-color);
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem 0 0.5rem 0;
 }
 
 /* overview pagina */
@@ -409,6 +436,7 @@ a:focus {
     align-self: center;
 }
 
+
 /* Login Page */
 
 .login_page_bg {
@@ -446,6 +474,31 @@ a:focus {
     padding: 1rem;
 }
 
+.login_content_gsm {
+    font-size: 1.5rem;
+    color: var(--blue-accent-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+.phonenumber_input {
+    max-width: 10em;
+    font-family: 'MyFont';
+}
+
+.gsm-btn-doorgaan {
+    margin: 3rem 0 0 0;
+    background-color: white;
+    border-style: none;
+    color: var(--blue-accent-color);
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 2.5rem;
+    align-items: center;
+}
+
 .facebook_login {
     text-align: center;
     cursor: pointer;
@@ -459,6 +512,18 @@ a:focus {
     margin: 4rem auto 0 auto;
     width: 80%;
 }
+
+.login-links {
+    position: absolute;
+    bottom: 3em;
+    width: 100%;
+    text-align: center;
+}
+
+.login-link {
+    color: white
+}
+
 
 /* Reservatiepagina */
 
@@ -775,7 +840,7 @@ a:focus {
     cursor: pointer;
 }
 
-.checkbox_input:checked + .checkbox_box {
+.checkbox_input:checked+.checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -793,6 +858,7 @@ a:focus {
     width: 1.5rem;
     cursor: pointer;
 }
+
 
 /* Profielpagina */
 
@@ -882,6 +948,7 @@ a:focus {
     margin-bottom: 1rem;
 }
 
+
 /* Lockerbeheer */
 
 .status_selector {
@@ -927,6 +994,7 @@ a:focus {
     color: var(--status-available);
 }
 
+
 /* Add reservation */
 
 .add_reservation_container {
@@ -944,6 +1012,7 @@ a:focus {
     margin: 2rem auto 0 auto;
     text-align: center;
     width: 50%;
+    border-bottom: 0.8px solid var(--grey-bg);
 }
 
 .add_reservation_title {
@@ -962,6 +1031,13 @@ a:focus {
     max-width: 12.5rem;
 }
 
+.add_reservation_time_endtimepicker{
+    height: 3rem;
+    border-radius: 5px;
+    margin: 0 auto 0 auto;
+    max-width: 12.5rem;
+}
+
 .add_reservation_sport_content {
     background-color: white;
     width: 80%;
@@ -976,6 +1052,16 @@ a:focus {
 }
 
 .time_selection {
+    font-family: 'MyFont';
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.time_selection_endtimepicker{
     font-family: 'MyFont';
     text-align: center;
     outline: none;
@@ -1015,6 +1101,7 @@ a:focus {
     color: var(--red-verlopen);
 }
 
+
 /* Loading screen */
 
 .loading_container {
@@ -1032,6 +1119,7 @@ a:focus {
     top: 0;
     width: 100%;
 }
+
 
 /* Animations*/
 
