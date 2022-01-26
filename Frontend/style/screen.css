@@ -115,6 +115,14 @@ a:focus {
     cursor: pointer;
 }
 
+.header_right_icon_profile{
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    right: 4rem;
+    cursor: pointer;
+}
+
 .booking_icon {
     height: 1.5rem;
     width: 1.5rem;
