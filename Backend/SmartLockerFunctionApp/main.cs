@@ -44,46 +44,6 @@ namespace SmartLockerFunctionApp
 
         }
 
-        [FunctionName("UpdateLockerDescription")]
-        public async Task<IActionResult> UpdateLockerDescription(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "lockers/{lockerId}")] HttpRequest req,
-            Guid lockerId,
-            ILogger log)
-        {
-            try
-            {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                Locker updatedLocker = JsonConvert.DeserializeObject<Locker>(requestBody);
-
-                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
-
-                Locker locker;
-                try
-                {
-                    locker = await container.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
-                }
-                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return new NotFoundResult();
-                }
-
-                //if (!(Auth.Role == "Admin" || reservation.UserId == Auth.Id))
-                //    return new UnauthorizedResult();
-
-                locker.Description = updatedLocker.Description;
-                locker.Status = updatedLocker.Status;
-
-
-                await container.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
-
-                return new StatusCodeResult(200);
-            }
-
-            catch
-            {
-                return new StatusCodeResult(500);
-            }
-        }
+        
     }
 }

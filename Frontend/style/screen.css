@@ -623,12 +623,12 @@ a:focus {
 
 .arrow_more {
     position: absolute;
-    height: 1rem;
-    width: 1rem;
-    right: 1rem;
+    height: 24px;
+    width: 24px;
+    right: 16px;
     align-self: center;
     cursor: pointer;
-    fill: black;
+    color: black;
 }
 
 .reservation_details_edit_and_delete {
@@ -720,6 +720,9 @@ a:focus {
 
 .editicon {
     cursor: pointer;
+    color: var(--blue-accent-color);
+    height: 24px;
+    width: 24px;
 }
 
 .deleteicon {
@@ -905,7 +908,7 @@ a:focus {
     margin: 6rem 1rem 1rem 1rem;
 }
 
-.locker_svg {
+.locker_img {
     align-self: center;
     width: 2rem;
     height: 2rem;
@@ -949,7 +952,9 @@ a:focus {
     color: var(--blue-accent-color);
 }
 
-.add_reservation_sport, .add_reservation_date, .add_reservation_time {
+.add_reservation_sport,
+.add_reservation_date,
+.add_reservation_time {
     background-color: var(--grey-bg);
     height: 3rem;
     border-radius: 5px;
@@ -970,7 +975,7 @@ a:focus {
     padding: 0.1rem;
 }
 
-.time_selection{
+.time_selection {
     font-family: 'MyFont';
     text-align: center;
     outline: none;
