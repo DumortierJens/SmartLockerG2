@@ -80,7 +80,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("BlockUser")]
         public async Task<IActionResult> BlockUser(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/block")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/block")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -115,7 +115,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("UnBlockUser")]
         public async Task<IActionResult> UnBlockUser(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/unblock")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/unblock")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -140,7 +140,7 @@ namespace SmartLockerFunctionApp
                 user.IsBlocked = false;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
-                return new OkResult();
+                return new OkObjectResult(user);
             }
             catch (Exception)
             {
