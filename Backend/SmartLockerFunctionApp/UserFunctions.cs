@@ -168,7 +168,7 @@ namespace SmartLockerFunctionApp
                     return new NotFoundResult();
                 }
 
-                user.phoneNumber = phoneNumber;
+                user.Tel = phoneNumber;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
                 return new OkResult();

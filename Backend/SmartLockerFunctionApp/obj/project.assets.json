@@ -9467,23 +9467,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Michiel\\.nuget\\packages\\": {},
+    "C:\\Users\\Mattice Struyve\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Michiel\\2MCT\\TeamProject\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\SmartLockerFunctionApp.csproj",
+      "projectUniqueName": "C:\\Howest\\Semester3\\Team Project\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\SmartLockerFunctionApp.csproj",
       "projectName": "SmartLockerFunctionApp",
-      "projectPath": "C:\\Users\\Michiel\\2MCT\\TeamProject\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\SmartLockerFunctionApp.csproj",
-      "packagesPath": "C:\\Users\\Michiel\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Michiel\\2MCT\\TeamProject\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\obj\\",
+      "projectPath": "C:\\Howest\\Semester3\\Team Project\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\SmartLockerFunctionApp.csproj",
+      "packagesPath": "C:\\Users\\Mattice Struyve\\.nuget\\packages\\",
+      "outputPath": "C:\\Howest\\Semester3\\Team Project\\SmartLockerG2\\Backend\\SmartLockerFunctionApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Michiel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Mattice Struyve\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -9561,26 +9561,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.10, 3.1.10]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[3.1.0, 3.1.0]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[3.1.0, 3.1.0]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   },
