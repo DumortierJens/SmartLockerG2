@@ -948,6 +948,7 @@ a:focus {
     margin: 2rem auto 0 auto;
     text-align: center;
     width: 50%;
+    border-bottom: 0.8px solid var(--grey-bg);
 }
 
 .add_reservation_title {
@@ -957,7 +958,6 @@ a:focus {
 }
 
 .add_reservation_sport, .add_reservation_date, .add_reservation_time {
-    background-color: var(--grey-bg);
     height: 3rem;
     border-radius: 5px;
     margin: 0.5rem auto 0 auto;
