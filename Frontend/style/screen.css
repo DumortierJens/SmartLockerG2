@@ -261,6 +261,19 @@ a:focus {
     text-align: center;
 }
 
+.locker_detail_popup_endtimepicker {
+    position: fixed;
+    width: 18.75rem;
+    top: 50%;
+    left: 50%;
+    margin-top: -6.25rem;
+    margin-left: -9.375rem;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    text-align: center;
+}
+
 .locker_detail_popup_terug {
     background-color: var(--status-outofuse);
     border-style: none;
@@ -969,6 +982,13 @@ a:focus {
     max-width: 12.5rem;
 }
 
+.add_reservation_time_endtimepicker{
+    height: 3rem;
+    border-radius: 5px;
+    margin: 0 auto 0 auto;
+    max-width: 12.5rem;
+}
+
 .add_reservation_sport_content {
     background-color: white;
     width: 80%;
@@ -983,6 +1003,16 @@ a:focus {
 }
 
 .time_selection{
+    font-family: 'MyFont';
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.time_selection_endtimepicker{
     font-family: 'MyFont';
     text-align: center;
     outline: none;

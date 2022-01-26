@@ -1,13 +1,12 @@
 let htmlSport;
 let htmlStartHour;
 let htmlStartMinute;
-let htmlEndHour;
-let htmlEndMinute;
 let htmlEnd;
 let htmlConfirm;
 let htmlDate;
 let htmlStartTitle;
 let htmlEndTitle;
+let eventListenerExists = false;
 
 function ListenToChangeDate() {
     htmlDate.addEventListener('change', function () {
@@ -15,6 +14,8 @@ function ListenToChangeDate() {
         htmlEndHour.value = 5;
         htmlStartMinute.value = 0;
         htmlEndMinute.value = 0;
+        htmlStartTitle.style.color = "var(--blue-accent-color)"
+        htmlEndTitle.style.color = "var(--blue-accent-color)"
         getReservations()
     })
 }
@@ -79,14 +80,17 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
     htmlStartTitle.style.color = 'var(--blue-accent-color)'
     let hourNow = new Date().getHours()
     let minuteNow = new Date().getMinutes()
-    if (startHour < hourNow) {
+    let Day = new Date().getDate()
+    let chosenDay = new Date(htmlDate.value).getDate()
+
+    if (startHour < hourNow && Day == chosenDay) {
         console.log("starttijdstip ligt in het verleden")
         window.alert("Starttijdstip ligt in het verleden")
         htmlStartTitle.style.color = 'var(--red-verlopen)'
         return
     }
 
-    if (startHour == hourNow && startMinute < minuteNow) {
+    if (startHour == hourNow && startMinute < minuteNow && Day == chosenDay) {
         console.log("starttijdstip ligt in het verleden")
         window.alert("Starttijdstip ligt in het verleden")
         htmlStartTitle.style.color = 'var(--red-verlopen)'
@@ -161,8 +165,8 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
         return
     }
     console.log("Dit tijdstip is in orde, sla de reservatie op")
-    let startTime = htmlDate.value + "T" + addZero(parseInt(htmlStartHour.value))+":"+addZero(parseInt(htmlStartMinute.value))+":00+00:00"
-    let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value))+":"+addZero(parseInt(htmlEndMinute.value))+":00+00:00"
+    let startTime = htmlDate.value + "T" + addZero(parseInt(htmlStartHour.value))+":"+addZero(parseInt(htmlStartMinute.value))+":00+01:00"
+    let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value))+":"+addZero(parseInt(htmlEndMinute.value))+":00+01:00"
     const body = {
 
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
@@ -172,7 +176,7 @@ function CheckIfValidReservation(busy_timestamps) { // Waarden die voorlopig ing
         "endTime": endTime
     }
     console.log(body)
-
+    console.log("Wordt opgeslagen")
     handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
 }
 
@@ -260,7 +264,9 @@ function addZero(value) {
 }
 
 function ListenToConfirmRegistration(busy_timestamps) {
+    if(!eventListenerExists)
     htmlConfirm.addEventListener('click', function () {
+        eventListenerExists = true;
         CheckIfValidReservation(busy_timestamps)
     })
 }

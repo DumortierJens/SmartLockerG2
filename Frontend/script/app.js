@@ -10,18 +10,26 @@ const showLockers = function (lockers) {
     let htmlString = ``;
     for (const locker of lockers) {
         let statusClass = '';
-        if (locker.status == 'Beschikbaar')
+        if (locker.status == 'Beschikbaar') 
             statusClass = 'svg-avaible';
-        else if (locker.status == 'Bezet')
+         else if (locker.status == 'Bezet') 
             statusClass = 'svg-unavaible';
-        else if (locker.status == 'Buiten gebruik')
+         else if (locker.status == 'Buiten gebruik') 
             statusClass = 'svg-outofuse';
+        
 
-        htmlString += `<g class="js-locker cursor_pointer" data-id="${locker.id}" transform="translate(${locker.iconLocation})">
+
+        htmlString += `<g class="js-locker cursor_pointer" data-id="${
+            locker.id
+        }" transform="translate(${
+            locker.iconLocation
+        })">
             <g class="${statusClass}">
                 <circle cx="18" cy="18" r="18" />
             </g>
-            <g style="fill: url(#${locker.sport.toLowerCase()})" transform="translate(6 6)">
+            <g style="fill: url(#${
+            locker.sport.toLowerCase()
+        })" transform="translate(6 6)">
                 <circle cx="12" cy="12" r="12" />
             </g>
         </g>`;
@@ -36,7 +44,11 @@ const listenToLockerIcon = function () {
 
     for (const locker of lockers) {
         locker.addEventListener('click', function () {
-            window.location.href = `${location.origin}/locker${WEBEXTENTION}?lockerId=${this.dataset.id}`;
+            window.location.href = `${
+                location.origin
+            }/locker${WEBEXTENTION}?lockerId=${
+                this.dataset.id
+            }`;
         });
     }
 };
@@ -49,8 +61,15 @@ const getLockersOverview = function () {
 
 // #region Locker Detail
 
-let htmlPopup, htmlPopUpOpen, htmlPopUpCancel, htmlPopupMessage;
-let htmlBackground, htmlLockerSvg;
+let htmlPopup,
+    htmlPopUpOpen,
+    htmlPopUpTimePicker,
+    htmlEndHour,
+    htmlEndMinute,
+    htmlPopUpCancel,
+    htmlPopupMessage;
+let htmlBackground,
+    htmlLockerSvg;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 ws.onmessage = (event) => {
@@ -72,6 +91,9 @@ const showLockerDetail = function (locker) {
     const htmlLockerSvg = document.querySelector('.js-locker-svg');
     const htmlLockerReservate = document.querySelector('.js-locker-reservate');
     const htmlLockerPopupMessage = document.querySelector('.js-popup-message');
+    htmlPopUpTimePicker = document.querySelector('.js-popup-endtimepicker')
+    htmlEndHour = document.querySelector('.js-end-hour-endtimepicker')
+    htmlStartHour = document.querySelector('.js-start-hour-endtimepicker')
 
     htmlLockerTitle.innerHTML = locker.name;
     htmlLockerDescription.innerHTML = locker.description;
@@ -82,30 +104,27 @@ const showLockerDetail = function (locker) {
         htmlLockerStatus.classList.add('locker_detail_content_status_color_available');
         listenToLockerReservate(locker.id);
 
-        //checken of registratie al gestart is van deze gebruiker 
-        // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen 
+        // checken of registratie al gestart is van deze gebruiker
+        // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen
         //        en je kan nog steeds de locker openen zolang de registratie bezig is
         // ==>nee: je kan de registratie starten door de locker te openen
-        //reserveren van de locker kan je altijd
+        // reserveren van de locker kan je altijd
         if (registrationStarted) {
             htmlLockerStatus.innerHTML = 'Bezig';
             listenToClickToggleLocker(locker.id);
             htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
+        } else {
+            listenToClickToggleLockerTimePicker(locker.id)
+            htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Kies een eindtijdstip";
+            // listener van de registratie afsluit knop
+            // andere htmlpopup met keuzemenu of alles in orde is
         }
-        else {
-            listenToClickToggleLocker(locker.id);
-            htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Breng de bal terug voor 00:00. Daarna kan je de registratie afsluiten.";
-            //listener van de registratie afsluit knop
-            //andere htmlpopup met keuzemenu of alles in orde is
-        }
-    }
-    else if (locker.status == 'Bezet') {
+    } else if (locker.status == 'Bezet') {
         htmlLockerInstructions.innerHTML = 'Deze locker is momenteel in gebruik';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_unavailable');
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
         listenToLockerReservate(locker.id);
-    }
-    else if (locker.status == 'Buiten gebruik') {
+    } else if (locker.status == 'Buiten gebruik') {
         htmlLockerInstructions.innerHTML = 'Deze locker is momenteel buiten gebruik';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_outofuse');
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
@@ -123,12 +142,78 @@ function listenToClickToggleLocker(lockerId) {
     });
 }
 
+function getTodaysReservationsEndTimePicker(jsonObject) {
+    let arr_res_today = []
+    for (let reservation of jsonObject) {
+        let reservationStartDate = new Date(reservation.startTime)
+        let reservationEndDate = new Date(reservation.endTime)
+        if (new Date().toLocaleDateString() == reservationStartDate.toLocaleDateString()) {
+            arr_res_today.push(reservationStartDate.toLocaleTimeString() + "-" + reservationEndDate.toLocaleTimeString())
+        }
+    }
+    return arr_res_today
+}
+
+function getBusyTimestampsEndTimePicker(todaysReservations) {
+    let dict_busy_timestamps = {}
+    for (let i = 0; i < todaysReservations.length; i++) {
+        let start = todaysReservations[i].slice(0, 8)
+        let end = todaysReservations[i].slice(9, 17)
+        let startHour = parseInt(start.slice(0, 2))
+        let endHour = parseInt(end.slice(0, 2))
+        let startMinute = parseInt(start.slice(3, 5))
+        let endMinute = parseInt(end.slice(3, 5))
+        // De uren zijn hetzelfde
+        if (startHour == endHour) {
+            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
+                dict_busy_timestamps[startHour] = []
+            }
+            for (let busyMinutes = startMinute; busyMinutes <= endMinute; busyMinutes++) {
+                dict_busy_timestamps[startHour].push(busyMinutes)
+            }
+        } else {
+            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
+                dict_busy_timestamps[startHour] = []
+            }
+            for (let busyMinutes = startMinute; busyMinutes <= 59; busyMinutes++) {
+                dict_busy_timestamps[startHour].push(busyMinutes)
+            }
+            if (! dict_busy_timestamps.hasOwnProperty(endHour)) {
+                dict_busy_timestamps[endHour] = []
+            }
+            for (let busyMinutes = 0; busyMinutes <= endMinute; busyMinutes++) {
+                dict_busy_timestamps[endHour].push(busyMinutes)
+            }
+        }
+    }
+    // Nu heb ik een array van alle tijdstippen die bezet zijn
+    return dict_busy_timestamps
+}
+
+function setReservationTimePicker(jsonObject){
+    let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject)
+    console.log(todaysReservations)
+    let busy_timestamps = getBusyTimestampsEndTimePicker(todaysReservations)
+    console.log("busy", busy_timestamps)
+}
+
+const getReservationsTimePicker = function () {
+    handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationTimePicker, null, 'GET', null, userToken);
+};
+
+function listenToClickToggleLockerTimePicker(lockerid) {
+    getReservationsTimePicker()
+    htmlLockerSvg.addEventListener('click', function () {
+        console.log("Timepicker verschijnt")
+    })
+}
+
 function listenToOpenLockerPopupContinue(lockerId) {
     htmlPopUpOpen.addEventListener('click', function () {
         setTimeout(DisplayNone, 300);
         const endTimeReservation = new Date();
         endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
-        handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({ lockerId, endTimeReservation }), userToken);
+        handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({lockerId, endTimeReservation}), userToken);
     });
 }
 
@@ -138,7 +223,9 @@ function callbackOpenLocker(registration) {
     htmlLockerSvg.innerHTML = getSvg('locker open');
     document.querySelector('.js-locker-instructions').innerHTML = 'Vergeet de locker niet manueel te sluiten';
     htmlPopUp.style.animation = 'fadeout 0.3s';
-    handleData(`${APIURI}/lockers/${registration.lockerId}/open`, null, null, 'POST', null, userToken);
+    handleData(`${APIURI}/lockers/${
+        registration.lockerId
+    }/open`, null, null, 'POST', null, userToken);
 }
 
 function listenToOpenLockerPopupCancel() {
@@ -155,7 +242,9 @@ function DisplayNone() {
 
 function listenToLockerReservate(lockerId) {
     document.querySelector('.js-locker-reservate').addEventListener('click', function () {
-        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
+        window.location.href = `${
+            location.origin
+        }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
 }
 
@@ -189,7 +278,9 @@ function ListenToUserLogout() {
 
 function ListenToUserReservations() {
     document.querySelector('.js-reservations').addEventListener('click', function () {
-        window.location.href = `${location.origin}/profielreservatie${WEBEXTENTION}`;
+        window.location.href = `${
+            location.origin
+        }/profielreservatie${WEBEXTENTION}`;
         console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }
@@ -202,7 +293,8 @@ const getUserProfile = function () {
 
 // #region Navigation
 
-let htmlBackButton, htmlProfileButton;
+let htmlBackButton,
+    htmlProfileButton;
 
 function listenToBackBtn() {
     htmlBackButton.addEventListener('click', function () {
@@ -212,17 +304,20 @@ function listenToBackBtn() {
 
 function listenToProfileBtn() {
     htmlProfileButton.addEventListener('click', function () {
-        window.location.href = `${location.origin}/profiel${WEBEXTENTION}`;
+        window.location.href = `${
+            location.origin
+        }/profiel${WEBEXTENTION}`;
     });
 }
 
 // #endregion
 
-document.addEventListener('DOMContentLoaded', function () {
-
-    // Authentication
+document.addEventListener('DOMContentLoaded', function () { // Authentication
     userToken = sessionStorage.getItem("usertoken");
-    if (userToken == null) window.location.href = location.origin;
+    if (userToken == null) 
+        window.location.href = location.origin;
+    
+
 
     // Navigation
     htmlBackButton = document.querySelector('.js-back');
@@ -237,8 +332,14 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlPopUpMessage = document.querySelector('.js-popup-message');
 
     // Nav buttons
-    if (htmlBackButton) listenToBackBtn();
-    if (htmlProfileButton) listenToProfileBtn();
+    if (htmlBackButton) 
+        listenToBackBtn();
+    
+
+    if (htmlProfileButton) 
+        listenToProfileBtn();
+    
+
 
     // Pages
     const htmlPageOverview = document.querySelector('.js-overview-page');
