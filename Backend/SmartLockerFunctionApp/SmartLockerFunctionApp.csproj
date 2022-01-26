@@ -5,8 +5,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.WebPubSub" Version="1.0.0" />
+    <PackageReference Include="JWT" Version="8.8.1" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.23.0" />
     <PackageReference Include="Microsoft.Azure.Devices" Version="1.36.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="4.1.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.10" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Twilio" Version="3.0.2" />
