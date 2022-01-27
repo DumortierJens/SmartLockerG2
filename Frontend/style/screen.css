@@ -252,7 +252,18 @@ p {
     text-align: center;
 }
 
+.cancel_registration_btn{
+    background-color: var(--status-outofuse);
+    border-style: none;
+    color: white;
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .locker_detail_popup_endtimepicker {
+    display: none;
     position: fixed;
     width: 18.75rem;
     top: 50%;
