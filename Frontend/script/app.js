@@ -553,6 +553,7 @@ function parseJwt(token) {
 document.addEventListener('DOMContentLoaded', function () {
 
     // Pages
+    const htmlPageLogin = document.querySelector('.js-login-page');
     const htmlPageBlocked = document.querySelector('.js-blocked-page');
     const htmlPageOverview = document.querySelector('.js-overview-page');
     const htmlPageLocker = document.querySelector('.js-locker-page');
@@ -565,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const payload = parseJwt(userToken);
         if (htmlPageBlocked == null && payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
     }
-    else {
+    else if (htmlPageLogin == null) {
         window.location.href = location.origin;
     }
 
