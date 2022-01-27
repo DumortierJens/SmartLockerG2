@@ -69,7 +69,6 @@ p {
     margin: 0;
 }
 
-
 /*Lockerdetailpage*/
 
 .header_smartlocker {
@@ -311,7 +310,7 @@ p {
     cursor: pointer;
 }
 
-.start_registration_btn{
+.start_registration_btn {
     color: white;
     font-family: 'MyFont';
     background-color: var(--blue-accent-color);
@@ -447,7 +446,6 @@ p {
     align-self: center;
 }
 
-
 /* Login Page */
 
 .login_page_bg {
@@ -485,6 +483,31 @@ p {
     padding: 1rem;
 }
 
+.login_content_gsm {
+    font-size: 1.5rem;
+    color: var(--blue-accent-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+.phonenumber_input {
+    max-width: 10em;
+    font-family: 'MyFont';
+}
+
+.gsm-btn-doorgaan {
+    margin: 3rem 0 0 0;
+    background-color: white;
+    border-style: none;
+    color: var(--blue-accent-color);
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 2.5rem;
+    align-items: center;
+}
+
 .facebook_login {
     text-align: center;
     cursor: pointer;
@@ -507,9 +530,8 @@ p {
 }
 
 .login-link {
-    color: white
+    color: white;
 }
-
 
 /* Reservatiepagina */
 
@@ -826,7 +848,7 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked+.checkbox_box {
+.checkbox_input:checked + .checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -844,7 +866,6 @@ p {
     width: 1.5rem;
     cursor: pointer;
 }
-
 
 /* Profielpagina */
 
@@ -934,7 +955,6 @@ p {
     margin-bottom: 1rem;
 }
 
-
 /* Lockerbeheer */
 
 .status_selector {
@@ -980,7 +1000,6 @@ p {
     color: var(--status-available);
 }
 
-
 /* Add reservation */
 
 .add_reservation_container {
@@ -1017,7 +1036,7 @@ p {
     max-width: 12.5rem;
 }
 
-.add_reservation_time_endtimepicker{
+.add_reservation_time_endtimepicker {
     height: 3rem;
     border-radius: 5px;
     margin: 0 auto 0 auto;
@@ -1047,7 +1066,7 @@ p {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-.time_selection_endtimepicker{
+.time_selection_endtimepicker {
     font-family: 'MyFont';
     text-align: center;
     outline: none;
@@ -1087,7 +1106,6 @@ p {
     color: var(--red-verlopen);
 }
 
-
 /* Loading screen */
 
 .loading_container {
@@ -1105,7 +1123,6 @@ p {
     top: 0;
     width: 100%;
 }
-
 
 /* Animations*/
 

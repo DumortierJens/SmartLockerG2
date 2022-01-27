@@ -121,10 +121,8 @@ const showLockersLockermanagement = function (lockers) {
                 <div class="reservation_details_edit flex centerflex">
                     <span class="editicon js-editIcon material-icons-outlined">edit</span>
                 </div>
-                <div class="reservation_details_delete flex centerflex">
                 <div class="reservation_details_edit flex centerflex">
                     <span class="editicon js-openLocker material-icons-outlined">lock_open</span>
-                </div>
                 </div>
             </div>
             <div class="reservation_detail flex">

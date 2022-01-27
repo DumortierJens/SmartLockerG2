@@ -44,6 +44,36 @@ namespace SmartLockerFunctionApp
             }
         }
 
+        [FunctionName("GetAdmins")]
+        public async Task<IActionResult> GetAdmins(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "admins")] HttpRequest req,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                List<Models.User> users = new List<Models.User>();
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Users u WHERE u.role = 'Admin'");
+                FeedIterator<Models.User> iterator = container.GetItemQueryIterator<Models.User>(query);
+                while (iterator.HasMoreResults)
+                {
+                    FeedResponse<Models.User> response = await iterator.ReadNextAsync();
+                    users.AddRange(response);
+                }
+
+                return new OkObjectResult(users);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [FunctionName("GetUser")]
         public async Task<IActionResult> GetUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/{userId}")] HttpRequest req,
@@ -80,7 +110,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("BlockUser")]
         public async Task<IActionResult> BlockUser(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/block")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/block")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -115,7 +145,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("UnBlockUser")]
         public async Task<IActionResult> UnBlockUser(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/unblock")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/unblock")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -140,7 +170,7 @@ namespace SmartLockerFunctionApp
                 user.IsBlocked = false;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
-                return new OkResult();
+                return new OkObjectResult(user);
             }
             catch (Exception)
             {
