@@ -18,7 +18,6 @@ const showLockers = function(lockers) {
             statusClass = 'svg-outofuse';
 
 
-
         htmlString += `<g class="js-locker cursor_pointer" data-id="${
             locker.id
         }" transform="translate(${
@@ -27,9 +26,8 @@ const showLockers = function(lockers) {
             <g class="${statusClass}">
                 <circle cx="18" cy="18" r="18" />
             </g>
-            <g style="fill: url(#${
-            locker.sport.toLowerCase()
-        })" transform="translate(6 6)">
+            <g style="fill: url(#${locker.sport.toLowerCase()
+            })" transform="translate(6 6)">
                 <circle cx="12" cy="12" r="12" />
             </g>
         </g>`;
@@ -43,7 +41,7 @@ const listenToLockerIcon = function() {
     const lockers = document.querySelectorAll('.js-locker');
 
     for (const locker of lockers) {
-        locker.addEventListener('click', function() {
+        locker.addEventListener('click', function () {
             window.location.href = `${
                 location.origin
             }/locker${WEBEXTENTION}?lockerId=${
@@ -86,7 +84,7 @@ ws.onmessage = (event) => {
 
 const showLockerDetail = function(locker) {
     console.log(locker);
-    eventListenerExistsEndTimePicker = false
+    eventListenerExistsEndTimePicker = false;
     const htmlLockerTitle = document.querySelector('.js-locker-name');
     const htmlLockerDescription = document.querySelector('.js-locker-description');
     const htmlLockerStatus = document.querySelector('.js-locker-status');
@@ -94,10 +92,10 @@ const showLockerDetail = function(locker) {
     const htmlLockerSvg = document.querySelector('.js-locker-svg');
     const htmlLockerReservate = document.querySelector('.js-locker-reservate');
     const htmlLockerPopupMessage = document.querySelector('.js-popup-message');
-    htmlPopUpEndTimePicker = document.querySelector('.js-popup-endtimepicker')
-    htmlEndHourEndTimePicker = document.querySelector('.js-end-hour-endtimepicker')
-    htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker')
-    htmlStartRegistration = document.querySelector('.js-start-reg-btn')
+    htmlPopUpEndTimePicker = document.querySelector('.js-popup-endtimepicker');
+    htmlEndHourEndTimePicker = document.querySelector('.js-end-hour-endtimepicker');
+    htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker');
+    htmlStartRegistration = document.querySelector('.js-start-reg-btn');
 
     htmlLockerTitle.innerHTML = locker.name;
     htmlLockerDescription.innerHTML = locker.description;
@@ -118,7 +116,7 @@ const showLockerDetail = function(locker) {
             listenToClickToggleLocker(locker.id);
             htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
         } else {
-            listenToClickToggleLockerEndTimePicker(locker.id)
+            listenToClickToggleLockerEndTimePicker(locker.id);
             htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Kies een eindtijdstip";
             // listener van de registratie afsluit knop
             // andere htmlpopup met keuzemenu of alles in orde is
@@ -147,19 +145,19 @@ function listenToClickToggleLocker(lockerId) {
 }
 
 function getTodaysReservationsEndTimePicker(jsonObject) {
-    let arr_res_today = []
+    let arr_res_today = [];
     for (let reservation of jsonObject) {
-        let reservationStartDate = new Date(reservation.startTime)
-        let reservationEndDate = new Date(reservation.endTime)
+        let reservationStartDate = new Date(reservation.startTime);
+        let reservationEndDate = new Date(reservation.endTime);
         if (new Date().toLocaleDateString() == reservationStartDate.toLocaleDateString()) {
-            arr_res_today.push(reservationStartDate.toLocaleTimeString() + "-" + reservationEndDate.toLocaleTimeString())
+            arr_res_today.push(reservationStartDate.toLocaleTimeString() + "-" + reservationEndDate.toLocaleTimeString());
         }
     }
-    return arr_res_today
+    return arr_res_today;
 }
 
 function getBusyTimestamps(todaysReservations) {
-    let dict_busy_timestamps = {}
+    let dict_busy_timestamps = {};
     for (let i = 0; i < todaysReservations.length; i++) {
         let start = todaysReservations[i].slice(0, 8)
         let end = todaysReservations[i].slice(9, 17)
@@ -167,43 +165,43 @@ function getBusyTimestamps(todaysReservations) {
         let endHour = parseInt(end.slice(0, 2))
         let startMinute = parseInt(start.slice(3, 5))
         let endMinute = parseInt(end.slice(3, 5))
-            // De uren zijn hetzelfde
+        // De uren zijn hetzelfde
         if (startHour == endHour) {
-            if (!dict_busy_timestamps.hasOwnProperty(startHour)) {
+            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
                 dict_busy_timestamps[startHour] = []
             }
             for (let busyMinutes = startMinute; busyMinutes <= endMinute; busyMinutes++) {
-                dict_busy_timestamps[startHour].push(busyMinutes)
+                dict_busy_timestamps[startHour].push(busyMinutes);
             }
         } else {
-            if (!dict_busy_timestamps.hasOwnProperty(startHour)) {
+            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
                 dict_busy_timestamps[startHour] = []
             }
             for (let busyMinutes = startMinute; busyMinutes <= 59; busyMinutes++) {
-                dict_busy_timestamps[startHour].push(busyMinutes)
+                dict_busy_timestamps[startHour].push(busyMinutes);
             }
-            if (!dict_busy_timestamps.hasOwnProperty(endHour)) {
+            if (! dict_busy_timestamps.hasOwnProperty(endHour)) {
                 dict_busy_timestamps[endHour] = []
             }
             for (let busyMinutes = 0; busyMinutes <= endMinute; busyMinutes++) {
-                dict_busy_timestamps[endHour].push(busyMinutes)
+                dict_busy_timestamps[endHour].push(busyMinutes);
             }
         }
     }
     // Nu heb ik een array van alle tijdstippen die bezet zijn
-    return dict_busy_timestamps
+    return dict_busy_timestamps;
 }
 
 function disablePast() {
     for (let option of htmlEndHourEndTimePicker) {
-        let optionValue = parseInt(option.value)
+        let optionValue = parseInt(option.value);
         if (optionValue < new Date().getHours()) {
-            option.disabled = true
+            option.disabled = true;
         }
         for (let option of htmlEndMinuteEndTimepicker) {
-            let optionValue = parseInt(option.value)
+            let optionValue = parseInt(option.value);
             if (optionValue <= new Date().getMinutes()) {
-                option.disabled = true
+                option.disabled = true;
             }
         }
         let disabled = $('.js-end-minute-endtimepicker option:not(:enabled)');
@@ -218,28 +216,28 @@ function disablePast() {
 }
 
 function setNewMinutes() {
-    console.log("Change endhour")
+    console.log("Change endhour");
     let chosenHour = parseInt(htmlEndHourEndTimePicker.value);
     // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
     if (busy_timestamps_endTimePicker[chosenHour]) {
         for (let option of htmlEndMinuteEndTimepicker) {
-            let optionValue = parseInt(option.value)
+            let optionValue = parseInt(option.value);
             if (busy_timestamps_endTimePicker[chosenHour].includes(optionValue)) {
-                option.disabled = true
+                option.disabled = true;
             } else {
-                option.disabled = false
+                option.disabled = false;
             }
         }
     } else if (new Date().getHours() == htmlEndHourEndTimePicker.value) {
         for (let option of htmlEndMinuteEndTimepicker) {
-            let optionValue = parseInt(option.value)
+            let optionValue = parseInt(option.value);
             if (optionValue <= new Date().getMinutes()) {
-                option.disabled = true
+                option.disabled = true;
             }
         }
     } else {
         for (let option of htmlEndMinuteEndTimepicker) {
-            option.disabled = false
+            option.disabled = false;
         }
     }
 
@@ -251,7 +249,7 @@ function disableBusyHours(busy_timestamps_endTimePicker) {
     for (const [key, value] of Object.entries(busy_timestamps_endTimePicker)) {
         if (busy_timestamps_endTimePicker[key].includes(0) && busy_timestamps_endTimePicker[key].includes(10) && busy_timestamps_endTimePicker[key].includes(20) && busy_timestamps_endTimePicker[key].includes(30) && busy_timestamps_endTimePicker[key].includes(40) && busy_timestamps_endTimePicker[key].includes(50)) {
             for (let option of htmlEndHourEndTimePicker) {
-                let optionValue = parseInt(option.value)
+                let optionValue = parseInt(option.value);
                 if (optionValue == key) {
                     option.disabled = true;
                 }
@@ -269,70 +267,66 @@ function addZero(value) {
 }
 
 function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingevuld staan ophalen
-    let startHour = new Date().getHours()
-    console.log("Startuur", startHour)
-    let startMinute = new Date().getMinutes()
-    console.log("Startminuut", startMinute)
-    let endHour = parseInt(htmlEndHourEndTimePicker.value)
-    let endMinute = parseInt(htmlEndMinuteEndTimepicker.value)
-    let hourNow = new Date().getHours()
-    let minuteNow = new Date().getMinutes()
-    let Day = new Date().getDate()
-    let chosenDay = new Date().getDate()
+    let startHour = new Date().getHours();
+    console.log("Startuur", startHour);
+    let startMinute = new Date().getMinutes();
+    console.log("Startminuut", startMinute);
+    let endHour = parseInt(htmlEndHourEndTimePicker.value);
+    let endMinute = parseInt(htmlEndMinuteEndTimepicker.value);
+    let hourNow = new Date().getHours();
+    let minuteNow = new Date().getMinutes();
+    let Day = new Date().getDate();
+    let chosenDay = new Date().getDate();
 
     if (startHour < hourNow && Day == chosenDay) {
-        console.log("starttijdstip ligt in het verleden")
-        window.alert("Starttijdstip ligt in het verleden")
-        htmlStartTitle.style.color = 'var(--red-verlopen)'
-        return
+        console.log("starttijdstip ligt in het verleden");
+        window.alert("Starttijdstip ligt in het verleden");
+        htmlStartTitle.style.color = 'var(--red-verlopen)';
+        return;
     }
 
     if (startHour == hourNow && startMinute < minuteNow && Day == chosenDay) {
-        console.log("starttijdstip ligt in het verleden")
-        window.alert("Starttijdstip ligt in het verleden")
-        htmlStartTitle.style.color = 'var(--red-verlopen)'
-        return
+        console.log("starttijdstip ligt in het verleden");
+        window.alert("Starttijdstip ligt in het verleden");
+        htmlStartTitle.style.color = 'var(--red-verlopen)';
+        return;
     }
     if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
-        console.log("Eindtijdstip moet later liggen dan starttijdstip")
-        window.alert("Eindtijdstip moet later liggen dan starttijdstip")
-        htmlEndTitle.style.color = 'var(--red-verlopen)'
-        return
+        console.log("Eindtijdstip moet later liggen dan starttijdstip");
+        window.alert("Eindtijdstip moet later liggen dan starttijdstip");
+        htmlEndTitle.style.color = 'var(--red-verlopen)';
+        return;
     }
 
     if (startHour == endHour && startMinute == endMinute) {
-        console.log("Beide tijdstippen zijn hetzelfde")
-        window.alert("Beide tijdstippen zijn hetzelfde")
-        htmlEndTitle.style.color = 'var(--red-verlopen)'
-        htmlStartTitle.style.color = 'var(--red-verlopen)'
-        return
+        console.log("Beide tijdstippen zijn hetzelfde");
+        window.alert("Beide tijdstippen zijn hetzelfde");
+        htmlEndTitle.style.color = 'var(--red-verlopen)';
+        htmlStartTitle.style.color = 'var(--red-verlopen)';
+        return;
     }
 
     // Kijken of het niet overlapt met een bestaande reservatie
-    let inputString = `${
-        addZero(new Date().getHours())
-    }:${
-        addZero(new Date().getMinutes())
-    }:00-${
-        addZero(htmlEndHourEndTimePicker.value)
-    }:${
-        addZero(htmlEndMinuteEndTimepicker.value)
-    }:00`
-    let inputArray = []
-    inputArray.push(inputString)
-    console.log("inputarray", inputArray)
-    let new_busy_timestamps = getBusyTimestamps(inputArray)
-    console.log("busy_timestamps", busy_timestamps_endTimePicker)
-    console.log("new_busy_timestamps", new_busy_timestamps)
+    let inputString = `${addZero(new Date().getHours())
+        }:${addZero(new Date().getMinutes())
+        }:00-${addZero(htmlEndHourEndTimePicker.value)
+        }:${addZero(htmlEndMinuteEndTimepicker.value)
+        }:00`;
+    let inputArray = [];
+    inputArray.push(inputString);
+    console.log("inputarray", inputArray);
+    let new_busy_timestamps = getBusyTimestamps(inputArray);
+    console.log("busy_timestamps", busy_timestamps_endTimePicker);
+    console.log("new_busy_timestamps", new_busy_timestamps);
     for (let key1 in busy_timestamps_endTimePicker) {
         for (let key2 in new_busy_timestamps) {
             if (key1 == key2) {
                 for (let minutes1 of busy_timestamps_endTimePicker[key1]) {
                     for (let minutes2 of new_busy_timestamps[key2]) {
                         if (minutes1 == minutes2) {
-                            console.log("Tijdstip overlapt met een bestaande reservatie")
-                            window.alert("Tijdstip overlapt met een bestaande reservatie")
-                            return
+                            console.log("Tijdstip overlapt met een bestaande reservatie");
+                            window.alert("Tijdstip overlapt met een bestaande reservatie");
+                            return;
                         }
                     }
                 }
@@ -341,32 +335,32 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
     }
 
     // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
-    let startPoint = Object.keys(new_busy_timestamps)[0]
-    let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1]
-    console.log("startpoint ", startPoint, " endpoint ", endPoint)
+    let startPoint = Object.keys(new_busy_timestamps)[0];
+    let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1];
+    console.log("startpoint ", startPoint, " endpoint ", endPoint);
 
     for (let reservationsHour in busy_timestamps_endTimePicker) {
         if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
-            console.log("Tijdstip overlapt met een bestaande reservatie")
-            window.alert("Tijdstip overlapt met een bestaande reservatie")
-            return
+            console.log("Tijdstip overlapt met een bestaande reservatie");
+            window.alert("Tijdstip overlapt met een bestaande reservatie");
+            return;
         }
     }
 
     // Kijken of een slot niet langer dan 90 minuten duurt
-    let start = new Date("2022-01-01 " + inputString.slice(0, 8))
-    let end = new Date("2022-01-01 " + inputString.slice(9, 18))
+    let start = new Date("2022-01-01 " + inputString.slice(0, 8));
+    let end = new Date("2022-01-01 " + inputString.slice(9, 18));
     var diff = Math.abs(end - start);
     var minutes = Math.floor((diff / 1000) / 60);
     if (minutes > 90) {
-        console.log("Je kan slechts maximum 90 minuten reserveren !")
-        window.alert("Je kan slechts maximum 90 minuten reserveren !")
-        return
+        console.log("Je kan slechts maximum 90 minuten reserveren !");
+        window.alert("Je kan slechts maximum 90 minuten reserveren !");
+        return;
     }
-    console.log("Dit tijdstip is in orde, sla de reservatie op")
-    let todayString = new Date().getFullYear() + "-" + addZero((parseInt(new Date().getMonth()) + 1).toString()) + "-" + addZero(new Date().getDate())
-    let startTime = todayString + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00"
-    let endTime = todayString + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00"
+    console.log("Dit tijdstip is in orde, sla de reservatie op");
+    let todayString = new Date().getFullYear() + "-" + addZero((parseInt(new Date().getMonth()) + 1).toString()) + "-" + addZero(new Date().getDate());
+    let startTime = todayString + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00";
+    let endTime = todayString + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00";
     const body = {
 
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
@@ -374,30 +368,30 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         "startTime": startTime,
 
         "endTime": endTime
-    }
-    console.log(body)
-    console.log("Wordt opgeslagen")
+    };
+    console.log(body);
+    console.log("Wordt opgeslagen");
     handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
-    if (!eventListenerExistsEndTimePicker) {
-        htmlStartRegistration.addEventListener('click', function() {
+    if (! eventListenerExistsEndTimePicker) {
+        htmlStartRegistration.addEventListener('click', function () {
             eventListenerExistsEndTimePicker = true;
-            CheckIfValidReservationEndTimePicker()
-        })
+            CheckIfValidReservationEndTimePicker();
+        });
     }
 }
 
 function setReservationEndTimePicker(jsonObject) {
-    let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject)
-    console.log(todaysReservations)
-    busy_timestamps_endTimePicker = getBusyTimestamps(todaysReservations)
-    console.log("busy_timestamps", busy_timestamps_endTimePicker)
-    disableBusyHours(busy_timestamps_endTimePicker)
-    disablePast()
-    htmlEndHourEndTimePicker.addEventListener('change', setNewMinutes)
-    ListenToConfirmRegistrationEndTimePicker()
+    let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject);
+    console.log(todaysReservations);
+    busy_timestamps_endTimePicker = getBusyTimestamps(todaysReservations);
+    console.log("busy_timestamps", busy_timestamps_endTimePicker);
+    disableBusyHours(busy_timestamps_endTimePicker);
+    disablePast();
+    htmlEndHourEndTimePicker.addEventListener('change', setNewMinutes);
+    ListenToConfirmRegistrationEndTimePicker();
 }
 
 const getReservationsEndTimePicker = function() {
@@ -406,42 +400,42 @@ const getReservationsEndTimePicker = function() {
 
 function fillOptionsSelectEndTimePicker() {
     for (let hour = 5; hour < 23; hour++) {
-        htmlEndHourEndTimePicker.innerHTML += `<option value="${hour}">${hour}</option>`
+        htmlEndHourEndTimePicker.innerHTML += `<option value="${hour}">${hour}</option>`;
 
     }
     for (let minute = 0; minute < 60; minute += 10) {
         if (minute < 10) {
-            htmlEndMinuteEndTimepicker.innerHTML += `<option value="${minute}">0${minute}</option>`
+            htmlEndMinuteEndTimepicker.innerHTML += `<option value="${minute}">0${minute}</option>`;
         } else {
-            htmlEndMinuteEndTimepicker.innerHTML += `<option value="${minute}">${minute}</option>`
+            htmlEndMinuteEndTimepicker.innerHTML += `<option value="${minute}">${minute}</option>`;
         }
 
     }
 }
 
 function DisplayNoneEndTimePicker() {
-    htmlPopUpEndTimePicker.style = "display: none"
+    htmlPopUpEndTimePicker.style = "display: none";
 }
 
 function listenToClickCancelEndTimePicker() {
     let htmlTerug = document.querySelector('.js-cancel-reg-btn')
-    htmlTerug.addEventListener('click', function() {
+    htmlTerug.addEventListener('click', function () {
         htmlBackground.style = '';
-        htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s"
-        setTimeout(DisplayNoneEndTimePicker, 300)
-    })
+        htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
+        setTimeout(DisplayNoneEndTimePicker, 300);
+    });
 }
 
 function listenToClickToggleLockerEndTimePicker(lockerid) {
     htmlLockerSvg.addEventListener('click', function() {
         htmlBackground.style = 'filter: blur(8px);';
-        console.log("Timepicker verschijnt")
-        htmlPopUpEndTimePicker.style = "display: block;"
-        htmlPopUpEndTimePicker.style.animation = "fadein 0.3s"
-        fillOptionsSelectEndTimePicker()
-        getReservationsEndTimePicker()
-        listenToClickCancelEndTimePicker()
-    })
+        console.log("Timepicker verschijnt");
+        htmlPopUpEndTimePicker.style = "display: block;";
+        htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
+        fillOptionsSelectEndTimePicker();
+        getReservationsEndTimePicker();
+        listenToClickCancelEndTimePicker();
+    });
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
@@ -459,9 +453,8 @@ function callbackOpenLocker(registration) {
     htmlLockerSvg.innerHTML = getSvg('locker open');
     document.querySelector('.js-locker-instructions').innerHTML = 'Vergeet de locker niet manueel te sluiten';
     htmlPopUp.style.animation = 'fadeout 0.3s';
-    handleData(`${APIURI}/lockers/${
-        registration.lockerId
-    }/open`, null, null, 'POST', null, userToken);
+    handleData(`${APIURI}/lockers/${registration.lockerId
+        }/open`, null, null, 'POST', null, userToken);
 }
 
 function listenToOpenLockerPopupCancel() {
@@ -477,7 +470,7 @@ function DisplayNone() {
 }
 
 function listenToLockerReservate(lockerId) {
-    document.querySelector('.js-locker-reservate').addEventListener('click', function() {
+    document.querySelector('.js-locker-reservate').addEventListener('click', function () {
         window.location.href = `${
             location.origin
         }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
@@ -513,7 +506,7 @@ function ListenToUserLogout() {
 }
 
 function ListenToUserReservations() {
-    document.querySelector('.js-reservations').addEventListener('click', function() {
+    document.querySelector('.js-reservations').addEventListener('click', function () {
         window.location.href = `${
             location.origin
         }/profielreservatie${WEBEXTENTION}`;
@@ -545,7 +538,7 @@ function listenToMenuBtn() {
 }
 
 function listenToProfileBtn() {
-    htmlProfileButton.addEventListener('click', function() {
+    htmlProfileButton.addEventListener('click', function () {
         window.location.href = `${
             location.origin
         }/profiel${WEBEXTENTION}`;
@@ -554,11 +547,11 @@ function listenToProfileBtn() {
 
 // #endregion
 
-document.addEventListener('DOMContentLoaded', function() { // Authentication
+document.addEventListener('DOMContentLoaded', function () { // Authentication
     userToken = sessionStorage.getItem("usertoken");
-    if (userToken == null)
+    if (userToken == null) 
         window.location.href = location.origin;
-
+    
 
 
     // Navigation
@@ -579,13 +572,8 @@ document.addEventListener('DOMContentLoaded', function() { // Authentication
         listenToBackBtn();
 
 
-
-    if (htmlProfileButton)
+    if (htmlProfileButton) 
         listenToProfileBtn();
-
-    if (htmlMenuButton)
-        listenToMenuBtn();
-
 
 
     // Pages
