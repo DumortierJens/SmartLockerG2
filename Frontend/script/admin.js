@@ -1,7 +1,4 @@
-let jsonUser
-
 const showAdminProfileAdmin = function (user) {
-    jsonUser = user
     document.querySelector(".js-profile-picture").src = user.picture;
     document.querySelector(".js-name").innerHTML = user.name;
     document.querySelector(".js-email").innerHTML = user.email;
@@ -13,13 +10,8 @@ const showAdminProfileAdmin = function (user) {
 
 const listenToRemoveAdmin = function (id) {
     document.querySelector(".js-block").addEventListener('click', function () {
-        handleData(`${APIURI}/users/${id}/rmadmin`, showAdminRemoved, null, 'POST', null, userToken);
+        handleData(`${APIURI}/users/${id}/rmadmin`, showAdminProfileAdmin, null, 'POST', null, userToken);
     })
-}
-
-const showAdminRemoved = function () {
-    alert(`${jsonUser.name} is geen admin meer`)
-    window.location.href = `${location.origin}/admins${WEBEXTENTION}`;
 }
 
 const getUserProfileAdmin = function (id) {
