@@ -63,7 +63,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
 
                 // Check if user is blocked
                 if (user.IsBlocked)
-                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+                    return new BadRequestObjectResult(new { code = 888, message = "This account is blocked" });
 
                 // Add/update user details
                 await container.UpsertItemAsync(user, new PartitionKey(user.Id.ToString()));

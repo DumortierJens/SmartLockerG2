@@ -21,6 +21,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -52,6 +55,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin" && userId != "me")
                     return new UnauthorizedResult();
                 else if (userId == "me")
@@ -86,6 +92,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -121,6 +130,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -154,7 +166,10 @@ namespace SmartLockerFunctionApp
             ILogger log)
         {
             try
-            { 
+            {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Users");
 
