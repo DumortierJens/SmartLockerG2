@@ -63,14 +63,14 @@ const getLockersOverview = function () {
 
 let htmlPopup,
     htmlPopUpOpen,
-    htmlPopUpTimePicker,
+    htmlPopUpEndTimePicker,
     htmlEndHourEndTimePicker,
     htmlEndMinuteEndTimepicker,
     htmlPopUpCancel,
     htmlPopupMessage;
 let htmlBackground,
     htmlStartRegistration,
-    eventListenerExists,
+    eventListenerExistsEndTimePicker,
     busy_timestamps_endTimePicker,
     htmlLockerSvg;
 
@@ -86,7 +86,7 @@ ws.onmessage = (event) => {
 
 const showLockerDetail = function (locker) {
     console.log(locker);
-    eventListenerExists = false
+    eventListenerExistsEndTimePicker = false
     const htmlLockerTitle = document.querySelector('.js-locker-name');
     const htmlLockerDescription = document.querySelector('.js-locker-description');
     const htmlLockerStatus = document.querySelector('.js-locker-status');
@@ -94,7 +94,7 @@ const showLockerDetail = function (locker) {
     const htmlLockerSvg = document.querySelector('.js-locker-svg');
     const htmlLockerReservate = document.querySelector('.js-locker-reservate');
     const htmlLockerPopupMessage = document.querySelector('.js-popup-message');
-    htmlPopUpTimePicker = document.querySelector('.js-popup-endtimepicker')
+    htmlPopUpEndTimePicker = document.querySelector('.js-popup-endtimepicker')
     htmlEndHourEndTimePicker = document.querySelector('.js-end-hour-endtimepicker')
     htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker')
     htmlStartRegistration = document.querySelector('.js-start-reg-btn')
@@ -242,11 +242,14 @@ function setNewMinutes() {
             option.disabled = false
         }
     }
+
+    // selecteer automatisch eerst beschikbare minuten
+    $('.js-end-minute-endtimepicker').children('option:enabled').eq(0).prop('selected', true);
 }
 
 function disableBusyHours(busy_timestamps_endTimePicker) {
     for (const [key, value] of Object.entries(busy_timestamps_endTimePicker)) {
-        if (busy_timestamps_endTimePicker[key].length == 60) {
+        if (busy_timestamps_endTimePicker[key].includes(0) && busy_timestamps_endTimePicker[key].includes(10) && busy_timestamps_endTimePicker[key].includes(20) && busy_timestamps_endTimePicker[key].includes(30) && busy_timestamps_endTimePicker[key].includes(40) && busy_timestamps_endTimePicker[key].includes(50)) {
             for (let option of htmlEndHourEndTimePicker) {
                 let optionValue = parseInt(option.value)
                 if (optionValue == key) {
@@ -361,10 +364,9 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         return
     }
     console.log("Dit tijdstip is in orde, sla de reservatie op")
-    let startTime = new Date().toLocaleDateString() + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00"
-    let endTime = new Date().toLocaleDateString() + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00"
-    console.log(startTime, "start")
-    console.log(endTime, "einde")
+    let todayString = new Date().getFullYear() + "-" + addZero((parseInt(new Date().getMonth()) + 1).toString()) + "-" + addZero(new Date().getDate())
+    let startTime = todayString + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00"
+    let endTime = todayString + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00"
     const body = {
 
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
@@ -379,9 +381,9 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
-    if (! eventListenerExists) {
+    if (! eventListenerExistsEndTimePicker) {
         htmlStartRegistration.addEventListener('click', function () {
-            eventListenerExists = true;
+            eventListenerExistsEndTimePicker = true;
             CheckIfValidReservationEndTimePicker()
         })
     }
@@ -417,11 +419,28 @@ function fillOptionsSelectEndTimePicker() {
     }
 }
 
+function DisplayNoneEndTimePicker() {
+    htmlPopUpEndTimePicker.style = "display: none"
+}
+
+function listenToClickCancelEndTimePicker() {
+    let htmlTerug = document.querySelector('.js-cancel-reg-btn')
+    htmlTerug.addEventListener('click', function () {
+        htmlBackground.style = '';
+        htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s"
+        setTimeout(DisplayNoneEndTimePicker, 300)
+    })
+}
+
 function listenToClickToggleLockerEndTimePicker(lockerid) {
-    fillOptionsSelectEndTimePicker()
-    getReservationsEndTimePicker()
     htmlLockerSvg.addEventListener('click', function () {
+        htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt")
+        htmlPopUpEndTimePicker.style = "display: block;"
+        htmlPopUpEndTimePicker.style.animation = "fadein 0.3s"
+        fillOptionsSelectEndTimePicker()
+        getReservationsEndTimePicker()
+        listenToClickCancelEndTimePicker()
     })
 }
 
@@ -476,7 +495,7 @@ const getLockerDetail = function (lockerId) {
 const showUserProfile = function (user) {
     console.log(user);
 
-    document.querySelector('.js-profile_picture').src = user.picture;
+    document.querySelector(".js-profile-picture").src = user.picture;
     document.querySelector(".js-name").innerHTML = user.name;
     document.querySelector(".js-email").innerHTML = user.email;
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
@@ -563,6 +582,7 @@ document.addEventListener('DOMContentLoaded', function () { // Authentication
     const htmlPageOverview = document.querySelector('.js-overview-page');
     const htmlPageLocker = document.querySelector('.js-locker-page');
     const htmlPageProfile = document.querySelector('.js-profile-page');
+    const htmlPageGebruiker = document.querySelector('.js-gebruiker-page');
 
     if (htmlPageOverview) {
         getLockersOverview();

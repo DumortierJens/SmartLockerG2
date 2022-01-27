@@ -69,7 +69,6 @@ p {
     margin: 0;
 }
 
-
 /*Lockerdetailpage*/
 
 .header_smartlocker {
@@ -252,7 +251,18 @@ p {
     text-align: center;
 }
 
+.cancel_registration_btn{
+    background-color: var(--status-outofuse);
+    border-style: none;
+    color: white;
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .locker_detail_popup_endtimepicker {
+    display: none;
     position: fixed;
     width: 18.75rem;
     top: 50%;
@@ -437,7 +447,6 @@ p {
     align-self: center;
 }
 
-
 /* Login Page */
 
 .login_page_bg {
@@ -529,9 +538,8 @@ p {
 }
 
 .login-link {
-    color: white
+    color: white;
 }
-
 
 /* Reservatiepagina */
 
@@ -848,7 +856,7 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked+.checkbox_box {
+.checkbox_input:checked + .checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -866,7 +874,6 @@ p {
     width: 1.5rem;
     cursor: pointer;
 }
-
 
 /* Profielpagina */
 
@@ -956,7 +963,6 @@ p {
     margin-bottom: 1rem;
 }
 
-
 /* Lockerbeheer */
 
 .status_selector {
@@ -1001,7 +1007,6 @@ p {
 .locker_status_available {
     color: var(--status-available);
 }
-
 
 /* Add reservation */
 
@@ -1109,7 +1114,6 @@ p {
     color: var(--red-verlopen);
 }
 
-
 /* Loading screen */
 
 .loading_container {
@@ -1127,7 +1131,6 @@ p {
     top: 0;
     width: 100%;
 }
-
 
 /* Animations*/
 
