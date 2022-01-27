@@ -1,7 +1,3 @@
-const callbackToggleBlock = function (obj) {
-    window.location.reload();
-};
-
 const showUserProfileAdmin = function (user) {
     console.log(user);
 
@@ -9,7 +5,8 @@ const showUserProfileAdmin = function (user) {
     document.querySelector(".js-name").innerHTML = user.name;
     document.querySelector(".js-email").innerHTML = user.email;
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
-    document.querySelector(".js-block-icon").innerHTML = user.isBlocked ? "block" : "check_circle";
+    document.querySelector(".js-block-icon").innerHTML = user.isBlocked ? "check_circle" : "block";
+    document.querySelector(".js-block-text").innerHTML = user.isBlocked ? "Deblockkeren" : "Blokkeren";
 
     listenToToggleBlock(user.id, user.isBlocked);
     listenToUserReservations(user.id);
@@ -17,7 +14,7 @@ const showUserProfileAdmin = function (user) {
 
 function listenToToggleBlock(id, isBlocked) {
     document.querySelector('.js-block').addEventListener('click', function () {
-        handleData(`${APIURI}/users/${id}/${isBlocked ? "unblock" : "block"}`, callbackToggleBlock, null, 'POST', null, userToken);
+        handleData(`${APIURI}/users/${id}/${isBlocked ? "unblock" : "block"}`, showUserProfileAdmin, null, 'POST', null, userToken);
     });
 }
 
