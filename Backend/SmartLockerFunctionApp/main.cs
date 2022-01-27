@@ -27,6 +27,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Logs");
                 List<Log> logs = new List<Log>();

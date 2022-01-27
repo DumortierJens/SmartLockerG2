@@ -48,6 +48,8 @@ html {
     background-color: white;
 }
 
+
+
 *,
 *:before,
 *:after {
@@ -59,6 +61,21 @@ html {
     color: white;
     text-shadow: none;
 }
+
+a {
+    color: var(--blue-accent-color);
+}
+
+a:visited,
+a:active {
+    color: var(--blue-accent-color-dark);
+}
+
+a:hover,
+a:focus {
+    color: var(--blue-accent-color-light);
+}
+
 
 img {
     max-width: 100%;

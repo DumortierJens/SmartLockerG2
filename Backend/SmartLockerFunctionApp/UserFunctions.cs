@@ -21,6 +21,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -82,6 +85,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin" && userId != "me")
                     return new UnauthorizedResult();
                 else if (userId == "me")
@@ -116,6 +122,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -151,6 +160,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -257,6 +269,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin" && userId != "me")
                     return new UnauthorizedResult();
                 else if (userId == "me")
@@ -264,7 +279,7 @@ namespace SmartLockerFunctionApp
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Models.User updatedUser = JsonConvert.DeserializeObject<Models.User>(requestBody);
-
+                
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Users");
 
@@ -278,7 +293,7 @@ namespace SmartLockerFunctionApp
                     return new NotFoundResult();
                 }
 
-                user.phoneNumber = updatedUser.PhoneNumber;
+                user.Tel = updatedUser.Tel;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
                 return new OkResult();
