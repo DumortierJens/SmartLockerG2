@@ -4,7 +4,7 @@ let userToken;
 
 // #region Overview
 
-const showLockers = function (lockers) {
+const showLockers = function(lockers) {
     console.log(lockers);
 
     let htmlString = ``;
@@ -35,11 +35,11 @@ const showLockers = function (lockers) {
     listenToLockerIcon();
 };
 
-const listenToLockerIcon = function () {
+const listenToLockerIcon = function() {
     const lockers = document.querySelectorAll('.js-locker');
 
     for (const locker of lockers) {
-        locker.addEventListener('click', function () {
+        locker.addEventListener('click', function() {
             window.location.href = `${location.origin
                 }/locker${WEBEXTENTION}?lockerId=${this.dataset.id
                 }`;
@@ -47,7 +47,7 @@ const listenToLockerIcon = function () {
     }
 };
 
-const getLockersOverview = function () {
+const getLockersOverview = function() {
     handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
 };
 
@@ -61,7 +61,8 @@ let htmlPopup,
     htmlEndHourEndTimePicker,
     htmlEndMinuteEndTimepicker,
     htmlPopUpCancel,
-    htmlPopupMessage;
+    htmlPopupMessage,
+    htmlMenuButton
 let htmlBackground,
     htmlStartRegistration,
     eventListenerExistsEndTimePicker,
@@ -78,7 +79,11 @@ ws.onmessage = (event) => {
     }
 };
 
-const showLockerDetail = function (locker) {
+const showHamburger = function() {
+    htmlMenuButton.style = "display:flex"
+}
+
+const showLockerDetail = function(locker) {
     console.log(locker);
     eventListenerExistsEndTimePicker = false;
     const htmlLockerTitle = document.querySelector('.js-locker-name');
@@ -131,7 +136,7 @@ const showLockerDetail = function (locker) {
 };
 
 function listenToClickToggleLocker(lockerId) {
-    htmlLockerSvg.addEventListener('click', function () {
+    htmlLockerSvg.addEventListener('click', function() {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -372,7 +377,7 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
 
 function ListenToConfirmRegistrationEndTimePicker() {
     if (!eventListenerExistsEndTimePicker) {
-        htmlStartRegistration.addEventListener('click', function () {
+        htmlStartRegistration.addEventListener('click', function() {
             eventListenerExistsEndTimePicker = true;
             CheckIfValidReservationEndTimePicker();
         });
@@ -390,7 +395,7 @@ function setReservationEndTimePicker(jsonObject) {
     ListenToConfirmRegistrationEndTimePicker();
 }
 
-const getReservationsEndTimePicker = function () {
+const getReservationsEndTimePicker = function() {
     handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationEndTimePicker, null, 'GET', null, userToken);
 };
 
@@ -415,7 +420,7 @@ function DisplayNoneEndTimePicker() {
 
 function listenToClickCancelEndTimePicker() {
     let htmlTerug = document.querySelector('.js-cancel-reg-btn');
-    htmlTerug.addEventListener('click', function () {
+    htmlTerug.addEventListener('click', function() {
         htmlBackground.style = '';
         htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
         setTimeout(DisplayNoneEndTimePicker, 300);
@@ -423,7 +428,7 @@ function listenToClickCancelEndTimePicker() {
 }
 
 function listenToClickToggleLockerEndTimePicker(lockerid) {
-    htmlLockerSvg.addEventListener('click', function () {
+    htmlLockerSvg.addEventListener('click', function() {
         htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt");
         htmlPopUpEndTimePicker.style = "display: block;";
@@ -435,7 +440,7 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
-    htmlPopUpOpen.addEventListener('click', function () {
+    htmlPopUpOpen.addEventListener('click', function() {
         setTimeout(DisplayNone, 300);
         const endTimeReservation = new Date();
         endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
@@ -454,7 +459,7 @@ function callbackOpenLocker(registration) {
 }
 
 function listenToOpenLockerPopupCancel() {
-    htmlPopUpCancel.addEventListener('click', function () {
+    htmlPopUpCancel.addEventListener('click', function() {
         htmlPopUp.style.animation = 'fadeout 0.3s';
         htmlBackground.style = '';
         setTimeout(DisplayNone, 300);
@@ -466,13 +471,13 @@ function DisplayNone() {
 }
 
 function listenToLockerReservate(lockerId) {
-    document.querySelector('.js-locker-reservate').addEventListener('click', function () {
+    document.querySelector('.js-locker-reservate').addEventListener('click', function() {
         window.location.href = `${location.origin
             }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
 }
 
-const getLockerDetail = function (lockerId) {
+const getLockerDetail = function(lockerId) {
     handleData(`${APIURI}/lockers/${lockerId}`, showLockerDetail, null, 'GET', null, userToken);
 };
 
@@ -480,7 +485,7 @@ const getLockerDetail = function (lockerId) {
 
 // #region Profile Page
 
-const showUserProfile = function (user) {
+const showUserProfile = function(user) {
     console.log(user);
 
     document.querySelector(".js-profile-picture").src = user.picture;
@@ -493,7 +498,7 @@ const showUserProfile = function (user) {
 };
 
 function ListenToUserLogout() {
-    document.querySelector('.js-logout').addEventListener('click', function () {
+    document.querySelector('.js-logout').addEventListener('click', function() {
         console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
         sessionStorage.removeItem('usertoken');
         window.location.reload();
@@ -501,14 +506,14 @@ function ListenToUserLogout() {
 }
 
 function ListenToUserReservations() {
-    document.querySelector('.js-reservations').addEventListener('click', function () {
+    document.querySelector('.js-reservations').addEventListener('click', function() {
         window.location.href = `${location.origin
             }/profielreservatie${WEBEXTENTION}`;
         console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }
 
-const getUserProfile = function () {
+const getUserProfile = function() {
     handleData(`${APIURI}/users/me`, showUserProfile, null, 'GET', null, userToken);
 };
 
@@ -520,19 +525,19 @@ let htmlBackButton,
     htmlProfileButton;
 
 function listenToBackBtn() {
-    htmlBackButton.addEventListener('click', function () {
+    htmlBackButton.addEventListener('click', function() {
         window.history.back();
     });
 }
 
 function listenToMenuBtn() {
-    htmlMenuButton.addEventListener('click', function () {
+    htmlMenuButton.addEventListener('click', function() {
         window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
     });
 }
 
 function listenToProfileBtn() {
-    htmlProfileButton.addEventListener('click', function () {
+    htmlProfileButton.addEventListener('click', function() {
         window.location.href = `${location.origin
             }/profiel${WEBEXTENTION}`;
     });
@@ -543,14 +548,14 @@ function listenToProfileBtn() {
 function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
     return JSON.parse(jsonPayload);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
 
     // Pages
     const htmlPageLogin = document.querySelector('.js-login-page');
@@ -565,10 +570,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (userToken) {
         const payload = parseJwt(userToken);
         if (htmlPageBlocked == null && payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
-    }
-    else if (htmlPageLogin == null) {
+    } else if (htmlPageLogin == null) {
         window.location.href = location.origin;
     }
+
+
 
     // Navigation
     htmlBackButton = document.querySelector('.js-back');
@@ -595,10 +601,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Pages load content
     if (htmlPageOverview) {
+        const payload = parseJwt(userToken);
+        if (payload.role == "Admin") showHamburger()
         getLockersOverview();
     }
 
     if (htmlPageLocker) {
+        const payload = parseJwt(userToken);
+        if (payload.role == "Admin") showHamburger()
         const urlParams = new URLSearchParams(window.location.search);
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
@@ -606,6 +616,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (htmlPageProfile) {
+        const payload = parseJwt(userToken);
+        if (payload.role == "Admin") showHamburger()
         getUserProfile();
     }
 
