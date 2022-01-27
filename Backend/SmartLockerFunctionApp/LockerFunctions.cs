@@ -105,6 +105,10 @@ namespace SmartLockerFunctionApp
                     return new UnauthorizedResult();
 
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Environment.GetEnvironmentVariable("IoTHubAdmin"));
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Lockers");
+
+                Locker locker;
 
                 try
                 {
@@ -113,6 +117,9 @@ namespace SmartLockerFunctionApp
                 }
                 catch (Exception)
                 {
+                    locker = await container.ReadItemAsync<Locker>(lockerId.ToString(), new PartitionKey(lockerId.ToString()));
+                    locker.Status = "Buiten gebruik";
+                    await container.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
                     return new StatusCodeResult(503);
                 }
 
