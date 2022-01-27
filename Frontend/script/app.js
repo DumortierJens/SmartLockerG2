@@ -488,13 +488,11 @@ const showUserProfile = function (user) {
     document.querySelector(".js-email").innerHTML = user.email;
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
 
-    ListenToUserLogout();
     ListenToUserReservations();
 };
 
 function ListenToUserLogout() {
     document.querySelector('.js-logout').addEventListener('click', function () {
-        console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
         sessionStorage.removeItem('usertoken');
         window.location.reload();
     });
@@ -504,7 +502,6 @@ function ListenToUserReservations() {
     document.querySelector('.js-reservations').addEventListener('click', function () {
         window.location.href = `${location.origin
             }/profielreservatie${WEBEXTENTION}`;
-        console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }
 
@@ -607,6 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (htmlPageProfile) {
         getUserProfile();
+        ListenToUserLogout();
     }
 
 });
