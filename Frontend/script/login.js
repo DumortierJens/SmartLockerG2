@@ -1,4 +1,4 @@
-window.fbAsyncInit = function() {
+window.fbAsyncInit = function () {
     FB.init({
         appId: '4670544903052300',
         cookie: true,
@@ -8,35 +8,35 @@ window.fbAsyncInit = function() {
 
     FB.AppEvents.logPageView();
 
-    FB.getLoginStatus(function(response) {
+    FB.getLoginStatus(function (response) {
         statusChangeCallback(response);
     });
 };
 
-const statusChangeCallback = function(response) {
+const statusChangeCallback = function (response) {
     if (response.status === 'connected') {
         if (document.querySelector('.js-login-page')) loginUser(response.authResponse.accessToken);
     }
 };
 
-const checkLoginState = function() {
-    FB.getLoginStatus(function(response) {
+const checkLoginState = function () {
+    FB.getLoginStatus(function (response) {
         statusChangeCallback(response);
     });
 };
 
-const callbackLoginSucceed = function(response) {
+const callbackLoginSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
     FB.logout();
-    window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+    goToCorrectPage();
 };
 
-const callbackLoginFailed = function(response) {
+const callbackLoginFailed = function (response) {
     console.log(response);
 };
 
-const loginUser = function(accessToken) {
+const loginUser = function (accessToken) {
     console.log(accessToken);
     const body = JSON.stringify({
         accessToken: accessToken
@@ -44,7 +44,7 @@ const loginUser = function(accessToken) {
     handleData(`${APIURI}/users/login`, callbackLoginSucceed, callbackLoginFailed, 'POST', body);
 };
 
-(function(d, s, id) {
+(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) { return; }
     js = d.createElement(s);
@@ -53,9 +53,8 @@ const loginUser = function(accessToken) {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-document.addEventListener('DOMContentLoaded', function () {
+const goToCorrectPage = function () {
     const userToken = sessionStorage.getItem("usertoken");
-
     if (userToken) {
         const payload = parseJwt(userToken);
         if (payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
@@ -63,4 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (payload.role == "User") window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
         else if (payload.role == "Admin") window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
     }
-});
+};
+
+document.addEventListener('DOMContentLoaded', goToCorrectPage);
