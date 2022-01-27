@@ -177,6 +177,43 @@ namespace SmartLockerFunctionApp
                 return new StatusCodeResult(500);
             }
         }
+
+
+        [FunctionName("RemoveAdmin")]
+        public async Task<IActionResult> RemoveAdmin(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/rmadmin")] HttpRequest req,
+            string userId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                Models.User user;
+                try
+                {
+                    user = await container.ReadItemAsync<Models.User>(userId, new PartitionKey(userId));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                user.Role = "User";
+                await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
+
+                return new OkObjectResult(user);
+            }
+            catch (Exception)
+            {
+                return new OkResult();
+            }
+        }
+
         [FunctionName("AddPhoneNumber")]
         public async Task<IActionResult> AddPhoneNumber(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/{phoneNumber}")] HttpRequest req,
