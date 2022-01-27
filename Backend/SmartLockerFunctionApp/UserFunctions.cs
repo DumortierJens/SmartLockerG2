@@ -149,12 +149,20 @@ namespace SmartLockerFunctionApp
         }
         [FunctionName("AddPhoneNumber")]
         public async Task<IActionResult> AddPhoneNumber(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/{phoneNumber}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/phonenumber")] HttpRequest req,
             string userId, string phoneNumber,
             ILogger log)
         {
             try
-            { 
+            {
+                if (Auth.Role != "Admin" && userId != "me")
+                    return new UnauthorizedResult();
+                else if (userId == "me")
+                    userId = Auth.Id;
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                Models.User updatedUser = JsonConvert.DeserializeObject<Models.User>(requestBody);
+
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Users");
 
@@ -168,7 +176,7 @@ namespace SmartLockerFunctionApp
                     return new NotFoundResult();
                 }
 
-                user.Tel = phoneNumber;
+                user.phoneNumber = updatedUser.PhoneNumber;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
                 return new OkResult();
