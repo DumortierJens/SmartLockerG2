@@ -47,6 +47,36 @@ namespace SmartLockerFunctionApp
             }
         }
 
+        [FunctionName("GetAdmins")]
+        public async Task<IActionResult> GetAdmins(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/admin")] HttpRequest req,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                List<Models.User> users = new List<Models.User>();
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Users u WHERE u.role = 'Admin'");
+                FeedIterator<Models.User> iterator = container.GetItemQueryIterator<Models.User>(query);
+                while (iterator.HasMoreResults)
+                {
+                    FeedResponse<Models.User> response = await iterator.ReadNextAsync();
+                    users.AddRange(response);
+                }
+
+                return new OkObjectResult(users);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [FunctionName("GetUser")]
         public async Task<IActionResult> GetUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/{userId}")] HttpRequest req,
@@ -159,6 +189,78 @@ namespace SmartLockerFunctionApp
                 return new StatusCodeResult(500);
             }
         }
+
+
+        [FunctionName("RemoveAdmin")]
+        public async Task<IActionResult> RemoveAdmin(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/rmadmin")] HttpRequest req,
+            string userId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                Models.User user;
+                try
+                {
+                    user = await container.ReadItemAsync<Models.User>(userId, new PartitionKey(userId));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                user.Role = "User";
+                await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
+
+                return new OkObjectResult(user);
+            }
+            catch (Exception)
+            {
+                return new OkResult();
+            }
+        }
+
+        [FunctionName("AddAdmin")]
+        public async Task<IActionResult> AddAdmin(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users/{userId}/addadmin")] HttpRequest req,
+            string userId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                Models.User user;
+                try
+                {
+                    user = await container.ReadItemAsync<Models.User>(userId, new PartitionKey(userId));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                user.Role = "Admin";
+                await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
+
+                return new OkObjectResult(user);
+            }
+            catch (Exception)
+            {
+                return new OkResult();
+            }
+        }
+
         [FunctionName("AddPhoneNumber")]
         public async Task<IActionResult> AddPhoneNumber(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/{phoneNumber}")] HttpRequest req,

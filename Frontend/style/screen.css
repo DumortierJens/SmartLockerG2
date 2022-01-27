@@ -251,7 +251,18 @@ p {
     text-align: center;
 }
 
+.cancel_registration_btn{
+    background-color: var(--status-outofuse);
+    border-style: none;
+    color: white;
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .locker_detail_popup_endtimepicker {
+    display: none;
     position: fixed;
     width: 18.75rem;
     top: 50%;
@@ -881,6 +892,17 @@ p {
     width: 80%;
     max-width: 31.25rem;
     grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    margin: 1.5rem auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
+.profile_icons_container__one-column {
+    display: grid;
+    width: 80%;
+    max-width: 31.25rem;
+    grid-template-columns: 1fr;
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
