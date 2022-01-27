@@ -29,7 +29,7 @@ const callbackLoginSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
     FB.logout();
-    window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+    goToCorrectPage();
 };
 
 const callbackLoginFailed = function (response) {
@@ -53,22 +53,15 @@ const loginUser = function (accessToken) {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-function parseJwt(token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
+const goToCorrectPage = function () {
+    const userToken = sessionStorage.getItem("usertoken");
+    if (userToken) {
+        const payload = parseJwt(userToken);
+        if (payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
+        else if (payload.role == "User" && payload.tel == null) window.location.href = `${location.origin}/gsm-nummer${WEBEXTENTION}`;
+        else if (payload.role == "User") window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+        else if (payload.role == "Admin") window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
+    }
 };
 
-document.addEventListener('DOMContentLoaded', function () {
-    const userToken = sessionStorage.getItem("usertoken");
-
-    if (userToken) {
-        const userTokenPayload = parseJwt(userToken);
-        if (userTokenPayload.role === "Admin") window.location.href = `${location.origin}/lockerbeheer${WEBEXTENTION}`;
-        else if (userTokenPayload.role === "User") window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
-    }
-});
+document.addEventListener('DOMContentLoaded', goToCorrectPage);

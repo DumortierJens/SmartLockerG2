@@ -1,4 +1,8 @@
-const showUserProfileAdmin = function (user) {
+const callbackReloadPage = function(user) {
+    window.location.reload();
+};
+
+const showUserProfileAdmin = function(user) {
     console.log(user);
 
     document.querySelector(".js-profile-picture").src = user.picture;
@@ -6,34 +10,35 @@ const showUserProfileAdmin = function (user) {
     document.querySelector(".js-email").innerHTML = user.email;
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
     document.querySelector(".js-block-icon").innerHTML = user.isBlocked ? "check_circle" : "block";
-    document.querySelector(".js-block-text").innerHTML = user.isBlocked ? "Deblockkeren" : "Blokkeren";
+    document.querySelector(".js-block-text").innerHTML = user.isBlocked ? "Deblokkeren" : "Blokkeren";
 
     listenToToggleBlock(user.id, user.isBlocked);
-    listenToUserReservations(user.id);
 };
 
-function listenToToggleBlock(id, isBlocked) {
-    document.querySelector('.js-block').addEventListener('click', function () {
-        handleData(`${APIURI}/users/${id}/${isBlocked ? "unblock" : "block"}`, showUserProfileAdmin, null, 'POST', null, userToken);
+const listenToToggleBlock = function(id, isBlocked) {
+    const htmlBlock = document.querySelector('.js-block');
+    htmlBlock.addEventListener('click', function() {
+        handleData(`${APIURI}/users/${id}/${isBlocked ? "unblock" : "block"}`, callbackReloadPage, null, 'POST', null, userToken);
     });
-}
+};
 
-function listenToUserReservations(id) {
-    document.querySelector('.js-reservations').addEventListener('click', function () {
-        window.location.href = `${location.origin}/profielreservatie${WEBEXTENTION}?id=${id}`;
+const listenToUserReservations = function(id) {
+    document.querySelector('.js-reservations').addEventListener('click', function() {
+        window.location.href = `${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`;
     });
-}
+};
 
-const getUserProfileAdmin = function (id) {
+const getUserProfileAdmin = function(id) {
     handleData(`${APIURI}/users/${id}`, showUserProfileAdmin, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const htmlPageUserProfileAdmin = document.querySelector('.js-user-profile-admin-page');
 
     if (htmlPageUserProfileAdmin) {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         getUserProfileAdmin(id);
+        listenToUserReservations(id);
     }
 });

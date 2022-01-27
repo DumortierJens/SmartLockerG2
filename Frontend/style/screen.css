@@ -60,6 +60,20 @@ html {
     text-shadow: none;
 }
 
+a {
+    color: var(--blue-accent-color);
+}
+
+a:visited,
+a:active {
+    color: var(--blue-accent-color-dark);
+}
+
+a:hover,
+a:focus {
+    color: var(--blue-accent-color-light);
+}
+
 img {
     max-width: 100%;
     vertical-align: top;
@@ -68,6 +82,7 @@ img {
 p {
     margin: 0;
 }
+
 
 /*Lockerdetailpage*/
 
@@ -79,6 +94,12 @@ p {
     font-size: 2rem;
     font-weight: 400;
     align-items: center;
+}
+
+@media (max-width: 400px) {
+    .header_smartlocker {
+        font-size: 1.5rem;
+    }
 }
 
 .header_smartlocker_center {
@@ -256,7 +277,7 @@ p {
     text-align: center;
 }
 
-.cancel_registration_btn{
+.cancel_registration_btn {
     background-color: var(--status-outofuse);
     border-style: none;
     color: white;
@@ -352,6 +373,7 @@ p {
     cursor: pointer;
     margin: 0.5rem 0 0.5rem 0;
 }
+
 
 /* overview pagina */
 
@@ -478,6 +500,7 @@ p {
     align-self: center;
 }
 
+
 /* Login Page */
 
 .login_page_bg {
@@ -525,19 +548,26 @@ p {
 .phonenumber_input {
     max-width: 10em;
     font-family: 'MyFont';
+    border-color: var(--blue-accent-color);
+    border-radius: 5px;
 }
 
 .gsm-btn-doorgaan {
-    margin: 3rem 0 0 0;
-    background-color: white;
+    margin: 1.5rem 0 1rem 0;
+    background-color: var(--blue-accent-color);
     border-style: none;
-    color: var(--blue-accent-color);
+    color: white;
     font-family: 'MyFont';
     padding: 0.5rem;
     border-radius: 5px;
     cursor: pointer;
     height: 2.5rem;
     align-items: center;
+}
+
+.info-gsm {
+    font-size: 1rem;
+    color: var(--blue-accent-color)
 }
 
 .facebook_login {
@@ -564,6 +594,26 @@ p {
 .login-link {
     color: white;
 }
+
+
+/*Dashboard*/
+
+.dashboard-content {
+    display: flex;
+    align-items: center;
+    gap: 1.2em
+}
+
+.dashboard-content-img {
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-icon {
+    margin: 0 0 0 0.8em;
+    color: var(--blue-accent-color)
+}
+
 
 /* Reservatiepagina */
 
@@ -881,7 +931,7 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked + .checkbox_box {
+.checkbox_input:checked+.checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -903,6 +953,7 @@ p {
     width: 1.5rem;
     cursor: pointer;
 }
+
 
 /* Profielpagina */
 
@@ -929,6 +980,17 @@ p {
     width: 80%;
     max-width: 31.25rem;
     grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    margin: 1.5rem auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
+.profile_icons_container__one-column {
+    display: grid;
+    width: 80%;
+    max-width: 31.25rem;
+    grid-template-columns: 1fr;
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
@@ -992,6 +1054,7 @@ p {
     margin-bottom: 1rem;
 }
 
+
 /* Lockerbeheer */
 
 .status_selector {
@@ -1036,6 +1099,7 @@ p {
 .locker_status_available {
     color: var(--status-available);
 }
+
 
 /* Add reservation */
 
@@ -1143,6 +1207,7 @@ p {
     color: var(--red-verlopen);
 }
 
+
 /* Loading screen */
 
 .loading_container {
@@ -1160,6 +1225,7 @@ p {
     top: 0;
     width: 100%;
 }
+
 
 /* Animations*/
 

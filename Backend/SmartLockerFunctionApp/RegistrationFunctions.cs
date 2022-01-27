@@ -26,6 +26,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 // Get registration info
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Registration registration = JsonConvert.DeserializeObject<Registration>(requestBody);
@@ -82,6 +85,13 @@ namespace SmartLockerFunctionApp
                 Container userContainer = cosmosClient.GetContainer("SmartLocker", "Users");
                 Models.User user = await userContainer.ReadItemAsync<Models.User>(registration.UserId, new PartitionKey(registration.UserId));
 
+                //Locker Status Aanpassen
+                Locker locker;
+                CosmosClient lockerClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container lockerContainer = cosmosClient.GetContainer("SmartLocker", "Lockers");
+                locker = await lockerContainer.ReadItemAsync<Locker>(registration.LockerId.ToString(), new PartitionKey(registration.LockerId.ToString()));
+                locker.Status = "Bezet";
+                await lockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
 
                 SmsService.AddMessageToQueue(user, reservation);
 
@@ -138,6 +148,15 @@ namespace SmartLockerFunctionApp
 
                 // Update registration
                 await container.ReplaceItemAsync<Registration>(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
+
+                //Locker Status Aanpassen
+                Locker locker;
+                CosmosClient lockerClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container lockerContainer = cosmosClient.GetContainer("SmartLocker", "Lockers");
+                locker = await lockerContainer.ReadItemAsync<Locker>(registration.LockerId.ToString(), new PartitionKey(registration.LockerId.ToString()));
+                locker.Status = "Beschikbaar";
+                await lockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
+
 
                 return new OkObjectResult(registration);
             }

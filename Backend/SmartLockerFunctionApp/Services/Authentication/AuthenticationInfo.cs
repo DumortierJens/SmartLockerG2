@@ -15,7 +15,9 @@ namespace SmartLockerFunctionApp.Services.Authentication
         public bool IsValid { get; }
         public string Id { get; }
         public string Name { get; }
+        public string Tel { get; }
         public string Role { get; }
+        public bool IsBlocked { get; }
 
         public AuthenticationInfo(HttpRequest request)
         {
@@ -62,7 +64,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
             }
 
             // Check if we have user claim.
-            if (!claims.ContainsKey("id") || !claims.ContainsKey("name"))
+            if (!claims.ContainsKey("id") || !claims.ContainsKey("role") || !claims.ContainsKey("isBlocked"))
             {
                 IsValid = false;
 
@@ -72,7 +74,9 @@ namespace SmartLockerFunctionApp.Services.Authentication
             IsValid = true;
             Id = Convert.ToString(claims["id"]);
             Name = Convert.ToString(claims["name"]);
+            Tel = Convert.ToString(claims["tel"]);
             Role = Convert.ToString(claims["role"]);
+            IsBlocked = bool.Parse(Convert.ToString(claims["isBlocked"]));
         }
     }
 }

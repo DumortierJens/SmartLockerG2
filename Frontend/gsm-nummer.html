@@ -11,10 +11,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/img/safe-deposit16.png" />
     <link rel="stylesheet" href="/style/normalize.css" />
     <link rel="stylesheet" href="/style/screen.css" />
+    <script src="/script/gsm-nummer.js"></script>
     <script src="/script/datahandler.js"></script>
     <script src="/script/constants.js"></script>
     <script src="/script/loading.js"></script>
-    <title>Loginpagina</title>
+    <title>Smart Locker | Telefoonnummer</title>
 </head>
 
 <body class="js-login-page">
@@ -33,14 +34,16 @@
                 <div class="login_content_gsm">
                     Mogen wij om uw gsm-nummer vragen?
                     <div class="facebook_login">
-                        <input class="phonenumber_input" type="tel" value="">
+                        <input class="phonenumber_input js-input-phonenumber" type="tel" value="">
+                    </div>
+                    <p class="info-gsm">Formaat: +32XXXXXXXXX</p>
+                    <div class="centerflex flex">
+                        <button class="gsm-btn-doorgaan flex js-doorgaan">Doorgaan</button>
                     </div>
                 </div>
             </div>
-            <div class="centerflex flex">
-                <button class="gsm-btn-doorgaan flex">Doorgaan</button>
-            </div>
-            <p class="login_info">Opmerking: Wij zullen uw gsm-nummer enkel gebruiken om herrineringen te sturen.</p>
+
+            <p class="login_info">Opmerking: Wij zullen uw gsm-nummer enkel gebruiken om herinneringen te sturen.</p>
         </div>
     </div>
 </body>

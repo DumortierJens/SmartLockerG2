@@ -1,4 +1,4 @@
-let htmlReservationContent, htmlExtraInfo,htmlPopupCancel, htmlPopupDelete;
+let htmlReservationContent, htmlExtraInfo, htmlPopupCancel, htmlPopupDelete;
 
 function DisplayNone() {
     htmlPopup.style = "display: none;";
@@ -245,6 +245,7 @@ const showReservations = function(jsonObject) {
 };
 
 const showUsers = function(jsonObject) {
+    console.log(jsonObject)
     for (i = 0; i < jsonObject.length; i++) {
         usersnames = document.querySelectorAll(`.js-username-${jsonObject[i].id}`)
         for (const user of usersnames) {
@@ -262,7 +263,7 @@ const getReservations = function() {
 };
 
 const getUsers = function(id) {
-    handleData(`${APIURI}/users`, showUsers, null, 'GET', null, userToken);
+    handleData(`${APIURI}/usersandadmins`, showUsers, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function() {
