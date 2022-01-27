@@ -4,19 +4,19 @@ let userToken;
 
 // #region Overview
 
-const showLockers = function (lockers) {
+const showLockers = function(lockers) {
     console.log(lockers);
 
     let htmlString = ``;
     for (const locker of lockers) {
         let statusClass = '';
-        if (locker.status == 'Beschikbaar') 
+        if (locker.status == 'Beschikbaar')
             statusClass = 'svg-avaible';
-         else if (locker.status == 'Bezet') 
+        else if (locker.status == 'Bezet')
             statusClass = 'svg-unavaible';
-         else if (locker.status == 'Buiten gebruik') 
+        else if (locker.status == 'Buiten gebruik')
             statusClass = 'svg-outofuse';
-        
+
 
 
         htmlString += `<g class="js-locker cursor_pointer" data-id="${
@@ -39,11 +39,11 @@ const showLockers = function (lockers) {
     listenToLockerIcon();
 };
 
-const listenToLockerIcon = function () {
+const listenToLockerIcon = function() {
     const lockers = document.querySelectorAll('.js-locker');
 
     for (const locker of lockers) {
-        locker.addEventListener('click', function () {
+        locker.addEventListener('click', function() {
             window.location.href = `${
                 location.origin
             }/locker${WEBEXTENTION}?lockerId=${
@@ -53,7 +53,7 @@ const listenToLockerIcon = function () {
     }
 };
 
-const getLockersOverview = function () {
+const getLockersOverview = function() {
     handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
 };
 
@@ -84,7 +84,7 @@ ws.onmessage = (event) => {
     }
 };
 
-const showLockerDetail = function (locker) {
+const showLockerDetail = function(locker) {
     console.log(locker);
     eventListenerExistsEndTimePicker = false
     const htmlLockerTitle = document.querySelector('.js-locker-name');
@@ -137,7 +137,7 @@ const showLockerDetail = function (locker) {
 };
 
 function listenToClickToggleLocker(lockerId) {
-    htmlLockerSvg.addEventListener('click', function () {
+    htmlLockerSvg.addEventListener('click', function() {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -167,22 +167,22 @@ function getBusyTimestamps(todaysReservations) {
         let endHour = parseInt(end.slice(0, 2))
         let startMinute = parseInt(start.slice(3, 5))
         let endMinute = parseInt(end.slice(3, 5))
-        // De uren zijn hetzelfde
+            // De uren zijn hetzelfde
         if (startHour == endHour) {
-            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
+            if (!dict_busy_timestamps.hasOwnProperty(startHour)) {
                 dict_busy_timestamps[startHour] = []
             }
             for (let busyMinutes = startMinute; busyMinutes <= endMinute; busyMinutes++) {
                 dict_busy_timestamps[startHour].push(busyMinutes)
             }
         } else {
-            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
+            if (!dict_busy_timestamps.hasOwnProperty(startHour)) {
                 dict_busy_timestamps[startHour] = []
             }
             for (let busyMinutes = startMinute; busyMinutes <= 59; busyMinutes++) {
                 dict_busy_timestamps[startHour].push(busyMinutes)
             }
-            if (! dict_busy_timestamps.hasOwnProperty(endHour)) {
+            if (!dict_busy_timestamps.hasOwnProperty(endHour)) {
                 dict_busy_timestamps[endHour] = []
             }
             for (let busyMinutes = 0; busyMinutes <= endMinute; busyMinutes++) {
@@ -381,8 +381,8 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
-    if (! eventListenerExistsEndTimePicker) {
-        htmlStartRegistration.addEventListener('click', function () {
+    if (!eventListenerExistsEndTimePicker) {
+        htmlStartRegistration.addEventListener('click', function() {
             eventListenerExistsEndTimePicker = true;
             CheckIfValidReservationEndTimePicker()
         })
@@ -400,7 +400,7 @@ function setReservationEndTimePicker(jsonObject) {
     ListenToConfirmRegistrationEndTimePicker()
 }
 
-const getReservationsEndTimePicker = function () {
+const getReservationsEndTimePicker = function() {
     handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationEndTimePicker, null, 'GET', null, userToken);
 };
 
@@ -425,7 +425,7 @@ function DisplayNoneEndTimePicker() {
 
 function listenToClickCancelEndTimePicker() {
     let htmlTerug = document.querySelector('.js-cancel-reg-btn')
-    htmlTerug.addEventListener('click', function () {
+    htmlTerug.addEventListener('click', function() {
         htmlBackground.style = '';
         htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s"
         setTimeout(DisplayNoneEndTimePicker, 300)
@@ -433,7 +433,7 @@ function listenToClickCancelEndTimePicker() {
 }
 
 function listenToClickToggleLockerEndTimePicker(lockerid) {
-    htmlLockerSvg.addEventListener('click', function () {
+    htmlLockerSvg.addEventListener('click', function() {
         htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt")
         htmlPopUpEndTimePicker.style = "display: block;"
@@ -445,11 +445,11 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
-    htmlPopUpOpen.addEventListener('click', function () {
+    htmlPopUpOpen.addEventListener('click', function() {
         setTimeout(DisplayNone, 300);
         const endTimeReservation = new Date();
         endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
-        handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({lockerId, endTimeReservation}), userToken);
+        handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({ lockerId, endTimeReservation }), userToken);
     });
 }
 
@@ -465,7 +465,7 @@ function callbackOpenLocker(registration) {
 }
 
 function listenToOpenLockerPopupCancel() {
-    htmlPopUpCancel.addEventListener('click', function () {
+    htmlPopUpCancel.addEventListener('click', function() {
         htmlPopUp.style.animation = 'fadeout 0.3s';
         htmlBackground.style = '';
         setTimeout(DisplayNone, 300);
@@ -477,14 +477,14 @@ function DisplayNone() {
 }
 
 function listenToLockerReservate(lockerId) {
-    document.querySelector('.js-locker-reservate').addEventListener('click', function () {
+    document.querySelector('.js-locker-reservate').addEventListener('click', function() {
         window.location.href = `${
             location.origin
         }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
 }
 
-const getLockerDetail = function (lockerId) {
+const getLockerDetail = function(lockerId) {
     handleData(`${APIURI}/lockers/${lockerId}`, showLockerDetail, null, 'GET', null, userToken);
 };
 
@@ -492,7 +492,7 @@ const getLockerDetail = function (lockerId) {
 
 // #region Profile Page
 
-const showUserProfile = function (user) {
+const showUserProfile = function(user) {
     console.log(user);
 
     document.querySelector(".js-profile-picture").src = user.picture;
@@ -505,7 +505,7 @@ const showUserProfile = function (user) {
 };
 
 function ListenToUserLogout() {
-    document.querySelector('.js-logout').addEventListener('click', function () {
+    document.querySelector('.js-logout').addEventListener('click', function() {
         console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
         sessionStorage.removeItem('usertoken');
         window.location.reload();
@@ -513,7 +513,7 @@ function ListenToUserLogout() {
 }
 
 function ListenToUserReservations() {
-    document.querySelector('.js-reservations').addEventListener('click', function () {
+    document.querySelector('.js-reservations').addEventListener('click', function() {
         window.location.href = `${
             location.origin
         }/profielreservatie${WEBEXTENTION}`;
@@ -521,7 +521,7 @@ function ListenToUserReservations() {
     });
 }
 
-const getUserProfile = function () {
+const getUserProfile = function() {
     handleData(`${APIURI}/users/me`, showUserProfile, null, 'GET', null, userToken);
 };
 
@@ -533,13 +533,19 @@ let htmlBackButton,
     htmlProfileButton;
 
 function listenToBackBtn() {
-    htmlBackButton.addEventListener('click', function () {
+    htmlBackButton.addEventListener('click', function() {
         window.history.back();
     });
 }
 
+function listenToMenuBtn() {
+    htmlMenuButton.addEventListener('click', function() {
+        window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
+    });
+}
+
 function listenToProfileBtn() {
-    htmlProfileButton.addEventListener('click', function () {
+    htmlProfileButton.addEventListener('click', function() {
         window.location.href = `${
             location.origin
         }/profiel${WEBEXTENTION}`;
@@ -548,16 +554,17 @@ function listenToProfileBtn() {
 
 // #endregion
 
-document.addEventListener('DOMContentLoaded', function () { // Authentication
+document.addEventListener('DOMContentLoaded', function() { // Authentication
     userToken = sessionStorage.getItem("usertoken");
-    if (userToken == null) 
+    if (userToken == null)
         window.location.href = location.origin;
-    
+
 
 
     // Navigation
     htmlBackButton = document.querySelector('.js-back');
     htmlProfileButton = document.querySelector('.js-profile');
+    htmlMenuButton = document.querySelector('.js-menu');
 
     // Locker detail
     htmlLockerSvg = document.querySelector('.js-locker-svg');
@@ -568,14 +575,17 @@ document.addEventListener('DOMContentLoaded', function () { // Authentication
     htmlPopUpMessage = document.querySelector('.js-popup-message');
 
     // Nav buttons
-    if (htmlBackButton) 
+    if (htmlBackButton)
         listenToBackBtn();
-    
 
 
-    if (htmlProfileButton) 
+
+    if (htmlProfileButton)
         listenToProfileBtn();
-    
+
+    if (htmlMenuButton)
+        listenToMenuBtn();
+
 
 
     // Pages
