@@ -24,6 +24,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -47,6 +50,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 var reservations = await ReservationService.GetReservationsAsync(lockerId);
 
                 return new OkObjectResult(reservations);
@@ -67,6 +73,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin" && userId != "me")
                     return new UnauthorizedResult();
                 else if (userId == "me")
@@ -92,6 +101,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin" && userId != "me")
                     return new UnauthorizedResult();
                 else if (userId == "me")
@@ -127,6 +139,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Reservation updatedReservation = JsonConvert.DeserializeObject<Reservation>(requestBody);
 
@@ -169,6 +184,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 Reservation reservation;
                 try
                 {

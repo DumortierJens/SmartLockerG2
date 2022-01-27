@@ -3,6 +3,7 @@ using Microsoft.Azure.WebJobs.Host;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading;
@@ -15,8 +16,6 @@ namespace SmartLockerFunctionApp.Services.Authentication
     /// </summary>
     public abstract class AuthorizedServiceBase : IFunctionInvocationFilter
     {
-        private const string AuthenticationHeaderName = "Authorization";
-
         // Access the authentication info.
         protected AuthenticationInfo Auth { get; private set; }
 
@@ -29,16 +28,16 @@ namespace SmartLockerFunctionApp.Services.Authentication
         /// </remarks>
         public Task OnExecutingAsync(FunctionExecutingContext executingContext, CancellationToken cancellationToken)
         {
-            HttpRequest message = executingContext.Arguments.First().Value as HttpRequest;
+            HttpRequest httpRequest = executingContext.Arguments.First().Value as HttpRequest;
 
-            if (message == null || !message.Headers.ContainsKey(AuthenticationHeaderName))
+            if (httpRequest == null || !httpRequest.Headers.ContainsKey("Authorization"))
             {
                 return Task.FromException(new AuthenticationException("No Authorization header was present"));
             }
 
             try
             {
-                Auth = new AuthenticationInfo(message);
+                Auth = new AuthenticationInfo(httpRequest);
             }
             catch (Exception exception)
             {
@@ -47,7 +46,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
 
             if (!Auth.IsValid)
             {
-                return Task.FromException(new KeyNotFoundException("No identity key was found in the claims."));
+                return Task.FromException(new AuthenticationException("No identity key was found in the claims."));
             }
 
             return Task.CompletedTask;
@@ -58,7 +57,6 @@ namespace SmartLockerFunctionApp.Services.Authentication
         /// </summary>
         public Task OnExecutedAsync(FunctionExecutedContext executedContext, CancellationToken cancellationToken)
         {
-            // Nothing.
             return Task.CompletedTask;
         }
     }

@@ -26,6 +26,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 // Get registration info
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Registration registration = JsonConvert.DeserializeObject<Registration>(requestBody);

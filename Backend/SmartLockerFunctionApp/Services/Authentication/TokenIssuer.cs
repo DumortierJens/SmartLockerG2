@@ -40,7 +40,9 @@ namespace SmartLockerFunctionApp.Services.Authentication
             {
                 { "id", user.Id },
                 { "name", user.Name },
-                { "role", user.Role }
+                { "role", user.Role },
+                { "tel", user.Tel },
+                { "isBlocked", user.IsBlocked }
             };
 
             string token = _jwtEncoder.Encode(claims, Environment.GetEnvironmentVariable("JWTsecret"));

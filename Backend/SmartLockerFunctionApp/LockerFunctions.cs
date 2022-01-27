@@ -13,6 +13,7 @@ using SmartLockerFunctionApp.Services.LockerManagement;
 using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
+using System.Security.Authentication;
 
 namespace SmartLockerFunctionApp
 {
@@ -25,13 +26,16 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 888, message = "This account is blocked" });
+
                 var lockers = await LockerService.GetLockersAsync();
 
                 return new OkObjectResult(lockers);
             }
             catch (Exception)
             {
-                return new StatusCodeResult(500);
+                return new StatusCodeResult(400);
             }
         }
 
@@ -43,6 +47,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 888, message = "This account is blocked" });
+
                 Locker locker;
                 try
                 {
@@ -69,6 +76,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 888, message = "This account is blocked" });
+
                 List<bool> materialStatus = await LockerService.GetLockerMaterialStatusAsync(lockerId);
                 bool lockStatus = await LockerService.CheckLockStatusAsync(lockerId);
 
@@ -88,6 +98,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 888, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin" && !await LockerManagementService.CheckRegistrationAsync(lockerId, Auth.Id))
                     return new UnauthorizedResult();
 
@@ -119,6 +132,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 888, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
