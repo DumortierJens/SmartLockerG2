@@ -79,6 +79,39 @@ namespace SmartLockerFunctionApp
             }
         }
 
+        [FunctionName("GetUsersAndAdmins")]
+        public async Task<IActionResult> GetUsersAndAdmins(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "usersandadmins")] HttpRequest req,
+        ILogger log)
+        {
+            try
+            {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Users");
+
+                List<Models.User> users = new List<Models.User>();
+                QueryDefinition query = new QueryDefinition("SELECT * FROM Users");
+                FeedIterator<Models.User> iterator = container.GetItemQueryIterator<Models.User>(query);
+                while (iterator.HasMoreResults)
+                {
+                    FeedResponse<Models.User> response = await iterator.ReadNextAsync();
+                    users.AddRange(response);
+                }
+
+                return new OkObjectResult(users);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [FunctionName("GetUser")]
         public async Task<IActionResult> GetUser(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/{userId}")] HttpRequest req,
