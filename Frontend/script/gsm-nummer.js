@@ -1,7 +1,11 @@
+let htmlInputPhoneNumber;
+
 ListenToClickDoorgaanBtn = function() {
     document.querySelector('.js-doorgaan').addEventListener('click', function() {
         if (phonenumber(htmlInputPhoneNumber.value)) {
             console.log(true)
+            body = { 'phoneNumber': htmlInputPhoneNumber.value }
+            handleData(`${APIURI}users/me/phonenumber`, null, null, 'PUT', JSON.stringify(body), userToken);
         }
     })
 }
