@@ -46,7 +46,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("GetAdmins")]
         public async Task<IActionResult> GetAdmins(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "admins")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/admin")] HttpRequest req,
             ILogger log)
         {
             try
