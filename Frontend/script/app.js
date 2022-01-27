@@ -4,7 +4,7 @@ let userToken;
 
 // #region Overview
 
-const showLockers = function(lockers) {
+const showLockers = function (lockers) {
     console.log(lockers);
 
     let htmlString = ``;
@@ -18,11 +18,9 @@ const showLockers = function(lockers) {
             statusClass = 'svg-outofuse';
 
 
-        htmlString += `<g class="js-locker cursor_pointer" data-id="${
-            locker.id
-        }" transform="translate(${
-            locker.iconLocation
-        })">
+        htmlString += `<g class="js-locker cursor_pointer" data-id="${locker.id
+            }" transform="translate(${locker.iconLocation
+            })">
             <g class="${statusClass}">
                 <circle cx="18" cy="18" r="18" />
             </g>
@@ -37,21 +35,19 @@ const showLockers = function(lockers) {
     listenToLockerIcon();
 };
 
-const listenToLockerIcon = function() {
+const listenToLockerIcon = function () {
     const lockers = document.querySelectorAll('.js-locker');
 
     for (const locker of lockers) {
         locker.addEventListener('click', function () {
-            window.location.href = `${
-                location.origin
-            }/locker${WEBEXTENTION}?lockerId=${
-                this.dataset.id
-            }`;
+            window.location.href = `${location.origin
+                }/locker${WEBEXTENTION}?lockerId=${this.dataset.id
+                }`;
         });
     }
 };
 
-const getLockersOverview = function() {
+const getLockersOverview = function () {
     handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
 };
 
@@ -82,7 +78,7 @@ ws.onmessage = (event) => {
     }
 };
 
-const showLockerDetail = function(locker) {
+const showLockerDetail = function (locker) {
     console.log(locker);
     eventListenerExistsEndTimePicker = false;
     const htmlLockerTitle = document.querySelector('.js-locker-name');
@@ -135,7 +131,7 @@ const showLockerDetail = function(locker) {
 };
 
 function listenToClickToggleLocker(lockerId) {
-    htmlLockerSvg.addEventListener('click', function() {
+    htmlLockerSvg.addEventListener('click', function () {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -159,29 +155,29 @@ function getTodaysReservationsEndTimePicker(jsonObject) {
 function getBusyTimestamps(todaysReservations) {
     let dict_busy_timestamps = {};
     for (let i = 0; i < todaysReservations.length; i++) {
-        let start = todaysReservations[i].slice(0, 8)
-        let end = todaysReservations[i].slice(9, 17)
-        let startHour = parseInt(start.slice(0, 2))
-        let endHour = parseInt(end.slice(0, 2))
-        let startMinute = parseInt(start.slice(3, 5))
-        let endMinute = parseInt(end.slice(3, 5))
+        let start = todaysReservations[i].slice(0, 8);
+        let end = todaysReservations[i].slice(9, 17);
+        let startHour = parseInt(start.slice(0, 2));
+        let endHour = parseInt(end.slice(0, 2));
+        let startMinute = parseInt(start.slice(3, 5));
+        let endMinute = parseInt(end.slice(3, 5));
         // De uren zijn hetzelfde
         if (startHour == endHour) {
-            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
-                dict_busy_timestamps[startHour] = []
+            if (!dict_busy_timestamps.hasOwnProperty(startHour)) {
+                dict_busy_timestamps[startHour] = [];
             }
             for (let busyMinutes = startMinute; busyMinutes <= endMinute; busyMinutes++) {
                 dict_busy_timestamps[startHour].push(busyMinutes);
             }
         } else {
-            if (! dict_busy_timestamps.hasOwnProperty(startHour)) {
-                dict_busy_timestamps[startHour] = []
+            if (!dict_busy_timestamps.hasOwnProperty(startHour)) {
+                dict_busy_timestamps[startHour] = [];
             }
             for (let busyMinutes = startMinute; busyMinutes <= 59; busyMinutes++) {
                 dict_busy_timestamps[startHour].push(busyMinutes);
             }
-            if (! dict_busy_timestamps.hasOwnProperty(endHour)) {
-                dict_busy_timestamps[endHour] = []
+            if (!dict_busy_timestamps.hasOwnProperty(endHour)) {
+                dict_busy_timestamps[endHour] = [];
             }
             for (let busyMinutes = 0; busyMinutes <= endMinute; busyMinutes++) {
                 dict_busy_timestamps[endHour].push(busyMinutes);
@@ -375,7 +371,7 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
-    if (! eventListenerExistsEndTimePicker) {
+    if (!eventListenerExistsEndTimePicker) {
         htmlStartRegistration.addEventListener('click', function () {
             eventListenerExistsEndTimePicker = true;
             CheckIfValidReservationEndTimePicker();
@@ -394,7 +390,7 @@ function setReservationEndTimePicker(jsonObject) {
     ListenToConfirmRegistrationEndTimePicker();
 }
 
-const getReservationsEndTimePicker = function() {
+const getReservationsEndTimePicker = function () {
     handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationEndTimePicker, null, 'GET', null, userToken);
 };
 
@@ -418,7 +414,7 @@ function DisplayNoneEndTimePicker() {
 }
 
 function listenToClickCancelEndTimePicker() {
-    let htmlTerug = document.querySelector('.js-cancel-reg-btn')
+    let htmlTerug = document.querySelector('.js-cancel-reg-btn');
     htmlTerug.addEventListener('click', function () {
         htmlBackground.style = '';
         htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
@@ -427,7 +423,7 @@ function listenToClickCancelEndTimePicker() {
 }
 
 function listenToClickToggleLockerEndTimePicker(lockerid) {
-    htmlLockerSvg.addEventListener('click', function() {
+    htmlLockerSvg.addEventListener('click', function () {
         htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt");
         htmlPopUpEndTimePicker.style = "display: block;";
@@ -439,7 +435,7 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
-    htmlPopUpOpen.addEventListener('click', function() {
+    htmlPopUpOpen.addEventListener('click', function () {
         setTimeout(DisplayNone, 300);
         const endTimeReservation = new Date();
         endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
@@ -458,7 +454,7 @@ function callbackOpenLocker(registration) {
 }
 
 function listenToOpenLockerPopupCancel() {
-    htmlPopUpCancel.addEventListener('click', function() {
+    htmlPopUpCancel.addEventListener('click', function () {
         htmlPopUp.style.animation = 'fadeout 0.3s';
         htmlBackground.style = '';
         setTimeout(DisplayNone, 300);
@@ -471,13 +467,12 @@ function DisplayNone() {
 
 function listenToLockerReservate(lockerId) {
     document.querySelector('.js-locker-reservate').addEventListener('click', function () {
-        window.location.href = `${
-            location.origin
-        }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
+        window.location.href = `${location.origin
+            }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
 }
 
-const getLockerDetail = function(lockerId) {
+const getLockerDetail = function (lockerId) {
     handleData(`${APIURI}/lockers/${lockerId}`, showLockerDetail, null, 'GET', null, userToken);
 };
 
@@ -485,7 +480,7 @@ const getLockerDetail = function(lockerId) {
 
 // #region Profile Page
 
-const showUserProfile = function(user) {
+const showUserProfile = function (user) {
     console.log(user);
 
     document.querySelector(".js-profile-picture").src = user.picture;
@@ -498,7 +493,7 @@ const showUserProfile = function(user) {
 };
 
 function ListenToUserLogout() {
-    document.querySelector('.js-logout').addEventListener('click', function() {
+    document.querySelector('.js-logout').addEventListener('click', function () {
         console.log("popup om te bevestigen, Afmelden van zichzelf via usertoken en ga naar index.html");
         sessionStorage.removeItem('usertoken');
         window.location.reload();
@@ -507,14 +502,13 @@ function ListenToUserLogout() {
 
 function ListenToUserReservations() {
     document.querySelector('.js-reservations').addEventListener('click', function () {
-        window.location.href = `${
-            location.origin
-        }/profielreservatie${WEBEXTENTION}`;
+        window.location.href = `${location.origin
+            }/profielreservatie${WEBEXTENTION}`;
         console.log('Ga naar profielreservatie.html en toont reservaties van zichzelf via usertoken');
     });
 }
 
-const getUserProfile = function() {
+const getUserProfile = function () {
     handleData(`${APIURI}/users/me`, showUserProfile, null, 'GET', null, userToken);
 };
 
@@ -526,33 +520,44 @@ let htmlBackButton,
     htmlProfileButton;
 
 function listenToBackBtn() {
-    htmlBackButton.addEventListener('click', function() {
+    htmlBackButton.addEventListener('click', function () {
         window.history.back();
     });
 }
 
 function listenToMenuBtn() {
-    htmlMenuButton.addEventListener('click', function() {
+    htmlMenuButton.addEventListener('click', function () {
         window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
     });
 }
 
 function listenToProfileBtn() {
     htmlProfileButton.addEventListener('click', function () {
-        window.location.href = `${
-            location.origin
-        }/profiel${WEBEXTENTION}`;
+        window.location.href = `${location.origin
+            }/profiel${WEBEXTENTION}`;
     });
 }
 
 // #endregion
 
-document.addEventListener('DOMContentLoaded', function () { // Authentication
-    userToken = sessionStorage.getItem("usertoken");
-    if (userToken == null) 
-        window.location.href = location.origin;
-    
+document.addEventListener('DOMContentLoaded', function () {
 
+    // Pages
+    const htmlPageBlocked = document.querySelector('.js-blocked-page');
+    const htmlPageOverview = document.querySelector('.js-overview-page');
+    const htmlPageLocker = document.querySelector('.js-locker-page');
+    const htmlPageProfile = document.querySelector('.js-profile-page');
+    const htmlPageGebruiker = document.querySelector('.js-gebruiker-page');
+
+    // Authentication
+    userToken = sessionStorage.getItem("usertoken");
+    if (userToken) {
+        const payload = parseJwt(userToken);
+        if (htmlPageBlocked == null && payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
+    }
+    else {
+        window.location.href = location.origin;
+    }
 
     // Navigation
     htmlBackButton = document.querySelector('.js-back');
@@ -571,17 +576,13 @@ document.addEventListener('DOMContentLoaded', function () { // Authentication
     if (htmlBackButton)
         listenToBackBtn();
 
-
-    if (htmlProfileButton) 
+    if (htmlProfileButton)
         listenToProfileBtn();
 
+    if (htmlMenuButton)
+        listenToMenuBtn();
 
-    // Pages
-    const htmlPageOverview = document.querySelector('.js-overview-page');
-    const htmlPageLocker = document.querySelector('.js-locker-page');
-    const htmlPageProfile = document.querySelector('.js-profile-page');
-    const htmlPageGebruiker = document.querySelector('.js-gebruiker-page');
-
+    // Pages load content
     if (htmlPageOverview) {
         getLockersOverview();
     }
