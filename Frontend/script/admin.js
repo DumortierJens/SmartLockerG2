@@ -1,19 +1,21 @@
-const showUserProfileAdmin = function (user) {
-    console.log(user);
-
+const showAdminProfileAdmin = function (user) {
     document.querySelector(".js-profile-picture").src = user.picture;
     document.querySelector(".js-name").innerHTML = user.name;
     document.querySelector(".js-email").innerHTML = user.email;
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
-    document.querySelector(".js-block-icon").innerHTML = user.isBlocked ? "check_circle" : "block";
-    document.querySelector(".js-block-text").innerHTML = user.isBlocked ? "Deblockkeren" : "Blokkeren";
+    document.querySelector(".js-block-text").innerHTML = "Remove Admin";
 
-    listenToToggleBlock(user.id, user.isBlocked);
-    listenToUserReservations(user.id);
+    listenToRemoveAdmin(user.id);
 };
 
+const listenToRemoveAdmin = function (id) {
+    document.querySelector(".js-block").addEventListener('click', function () {
+        handleData(`${APIURI}/users/${id}/rmadmin`, showAdminProfileAdmin, null, 'POST', null, userToken);
+    })
+}
+
 const getUserProfileAdmin = function (id) {
-    handleData(`${APIURI}/users/${id}`, showUserProfileAdmin, null, 'GET', null, userToken);
+    handleData(`${APIURI}/users/${id}`, showAdminProfileAdmin, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function () {

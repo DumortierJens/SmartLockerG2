@@ -928,6 +928,17 @@ p {
     justify-items: center;
 }
 
+.profile_icons_container__one-column {
+    display: grid;
+    width: 80%;
+    max-width: 31.25rem;
+    grid-template-columns: 1fr;
+    margin: 1.5rem auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
 .profile_icons_container_container {
     display: grid;
     max-width: 31.25rem;
