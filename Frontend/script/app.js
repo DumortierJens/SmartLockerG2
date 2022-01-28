@@ -56,7 +56,7 @@ const getLockersOverview = function() {
 // #region Locker Detail
 
 let htmlPopup,
-    htmlPopUpOpen,
+    htmlPopUpOk,
     htmlPopUpEndTimePicker,
     htmlEndHourEndTimePicker,
     htmlEndMinuteEndTimepicker,
@@ -64,10 +64,14 @@ let htmlPopup,
     htmlPopupMessage,
     htmlMenuButton
 let htmlBackground,
+    htmlStopRegBack,
+    htmlStopRegConfirm,
     htmlStartRegistration,
     eventListenerExistsEndTimePicker,
     busy_timestamps_endTimePicker,
-    htmlLockerSvg;
+    htmlLockerSvg,
+    htmlstopRegistrationBtn,
+    eventListenerStopRegExists = false;
 
 let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
 ws.onmessage = (event) => {
@@ -85,7 +89,9 @@ const showHamburger = function() {
 
 const showLockerDetail = function(locker) {
     console.log(locker);
-    eventListenerExistsEndTimePicker = false;
+    eventListenerExistsEndTimePicker = false
+    eventListenerStopRegBack = false
+    eventListenerStopRegConfirm = false
     const htmlLockerTitle = document.querySelector('.js-locker-name');
     const htmlLockerDescription = document.querySelector('.js-locker-description');
     const htmlLockerStatus = document.querySelector('.js-locker-status');
@@ -93,11 +99,11 @@ const showLockerDetail = function(locker) {
     const htmlLockerSvg = document.querySelector('.js-locker-svg');
     const htmlLockerReservate = document.querySelector('.js-locker-reservate');
     const htmlLockerPopupMessage = document.querySelector('.js-popup-message');
-    htmlPopUpEndTimePicker = document.querySelector('.js-popup-endtimepicker');
-    htmlEndHourEndTimePicker = document.querySelector('.js-end-hour-endtimepicker');
-    htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker');
-    htmlStartRegistration = document.querySelector('.js-start-reg-btn');
-
+    htmlPopUpEndTimePicker = document.querySelector('.js-popup-endtimepicker')
+    htmlEndHourEndTimePicker = document.querySelector('.js-end-hour-endtimepicker')
+    htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker')
+    htmlStartRegistration = document.querySelector('.js-start-reg-btn')
+    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
     htmlLockerTitle.innerHTML = locker.name;
     htmlLockerDescription.innerHTML = locker.description;
     htmlLockerStatus.innerHTML = locker.status;
@@ -106,7 +112,6 @@ const showLockerDetail = function(locker) {
         htmlLockerInstructions.innerHTML = 'Tik op het slot om de locker te openen';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_available');
         listenToLockerReservate(locker.id);
-
         // checken of registratie al gestart is van deze gebruiker
         // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen
         //        en je kan nog steeds de locker openen zolang de registratie bezig is
@@ -114,10 +119,14 @@ const showLockerDetail = function(locker) {
         // reserveren van de locker kan je altijd
         if (registrationStarted) {
             htmlLockerStatus.innerHTML = 'Bezig';
+            htmlstopRegistrationBtn.style = "display: flex"
+            console.log("registratie is bezig")
             listenToClickToggleLocker(locker.id);
             htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
+            listenToLockerStopRegistration()
         } else {
-            listenToClickToggleLockerEndTimePicker(locker.id);
+            listenToClickToggleLockerEndTimePicker(locker.id)
+
             htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Kies een eindtijdstip";
             // listener van de registratie afsluit knop
             // andere htmlpopup met keuzemenu of alles in orde is
@@ -134,6 +143,125 @@ const showLockerDetail = function(locker) {
         htmlLockerReservate.style = 'display:none';
     }
 };
+
+function displayNoneStopRegistration() {
+    htmlPopUpStopRegistration.style = "display: none"
+}
+
+function ListenToClickCheckBoxes() {
+    const checkboxes = document.querySelectorAll('.js-checkbox-stop-registration')
+    for (let checkbox of checkboxes) {
+        checkbox.addEventListener('click', function () {
+            if (! checkbox.classList.contains('box_checked')) {
+                checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`
+                checkbox.style.animation = "fadein 0.5s"
+                checkbox.classList.add('box_checked');
+            } else {
+                checkbox.style = ``
+                checkbox.classList.remove('box_checked');
+            }
+        })
+    }
+}
+
+function listenToLockerStopRegistration() {
+    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
+    htmlstopRegistrationBtn.addEventListener('click', function () {
+        console.log("Stop registratie knop")
+        htmlPopUpStopRegistration = document.querySelector('.js-popup-stop-registration')
+        htmlPopUpCancelStopRegistration = document.querySelector('.js-popup-cancel-stop-reservation')
+        htmlPopUpConfirmStopRegistration = document.querySelector('.js-popup-stop-reservation')
+        htmlPopUpStopRegistration.style = "display:block"
+        htmlPopUpCancelStopRegistration.addEventListener('click', function () {
+            console.log("Cancel")
+            htmlPopUpStopRegistration.style.animation = "fadeout 0.3s"
+            setTimeout(displayNoneStopRegistration, 300)
+        })
+        htmlPopUpConfirmStopRegistration.addEventListener('click', function () {
+            console.log("Registratie wordt gestopt")
+            htmlPopUpStopRegistration.innerHTML = `<p class="stop-registration-message">Is het materiaal in orde?</p>
+                <div class="reservation_detail flex">
+                    <label class="checkbox">Materiële schade</label>
+                    <input class="checkbox_input" type="checkbox">
+                    <div class="checkbox_box js-checkbox-stop-registration"></div>
+                </div>
+                <div class="reservation_detail flex">
+                    <label class="checkbox">Ontbrekend materiaal</label>
+                    <input class="checkbox_input" type="checkbox">
+                    <div class="checkbox_box js-checkbox-stop-registration"></div>
+                </div>
+                <div class="reservation_opmerking">
+                    <label for="opmerking" class="reservation_opmerking_title">Opmerking
+                        <span class="textarea js-stop-reg-opmerking" role="textbox" contenteditable></span>
+                    </label>
+                </div>
+                <button class="stop-registration-info-back js-stop-registration-info-back">Terug</button>
+                <button class="stop-registration-info-confirm js-stop-registration-info-confirm">Indienen</button>`
+            ListenToClickCheckBoxes();
+            ListenToClickStopRegInfoBack()
+            ListenToClickStopRegInfoConfirm()
+        })
+
+    })
+}
+
+function ListenToClickStopRegInfoBack() {
+    htmlStopRegBack = document.querySelector('.js-stop-registration-info-back')
+    htmlStopRegBack.addEventListener('click', function () {
+        htmlPopUpStopRegistration.style = "display: none"
+        htmlPopUpStopRegistration.innerHTML = `
+            <p class="open_locker_message js-popup-message">Wil je stoppen met het materiaal te gebruiken?</p>
+            <div class="locker_detail_popup_buttons">
+                <button class="locker_detail_popup_terug js-popup-cancel-stop-reservation">Nee</button>
+                <button class="locker_detail_popup_open js-popup-stop-reservation">Ja</button>
+            </div>
+        `
+    })
+}
+function ListenToClickStopRegInfoConfirm() {
+    htmlStopRegConfirm = document.querySelector('.js-stop-registration-info-confirm')
+    htmlStopRegConfirm.addEventListener('click', function () {
+        let materiële_schade = "nee"
+        let ontbrekend_materiaal = "nee"
+        let opmerking = document.querySelector('.js-stop-reg-opmerking').innerHTML
+        if ($(".js-popup-stop-registration")[0]) {
+            const collection = document.getElementsByClassName("box_checked");
+            if (collection.length == 0) {
+                console.log("Er zijn geen checkboxes aangeduid")
+            }
+            if (collection.length == 2) {
+                console.log("Beide checkboxes zijn aangeduid")
+                materiële_schade = "ja"
+                ontbrekend_materiaal = "ja"
+            }
+            if (collection.length == 1) {
+                for (elem of collection) {
+                    let sister = elem.previousElementSibling
+                    let label = sister.previousElementSibling
+                    if(label.innerHTML == "Ontbrekend materiaal"){
+                        ontbrekend_materiaal = "ja"
+                    }
+                    else{
+                        materiële_schade = "ja"
+                    }
+                }
+            }
+        }
+        // console.log("materiele schade",materiële_schade)
+        // console.log("ontbrekend materiaal",ontbrekend_materiaal)
+        // console.log("opmerking",opmerking)
+        const body = {
+            "note": "Materiële_schade: "+materiële_schade+"\n"+"Ontbrekend_materiaal: "+ontbrekend_materiaal+"\n"+"Opmerking: "+opmerking+"\n"
+        }
+        handleData(`${APIURI}/registrations/users/me?lockerId="11cf21d4-03ef-4e0a-8a17-27c26ae80abd"`,cbEndRegistration,null,'GET',null,userToken)
+    })
+}
+
+function cbEndRegistration(jsonObject){
+    console.log(jsonObject)
+    //Hier moet ik mn registratieId ophalen om dan mee te geven in een handledata om zo mn data te sturen naar de backend, ook tijdstip wnr alles
+    //meegegeven wordt moet ook nog meegegeven worden aan de body en dat heb ik nog niet gedaan grt Jarne
+}
 
 function listenToClickToggleLocker(lockerId) {
     htmlLockerSvg.addEventListener('click', function() {
@@ -280,31 +408,26 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
     let chosenDay = new Date().getDate();
 
     if (startHour < hourNow && Day == chosenDay) {
-        console.log("starttijdstip ligt in het verleden");
-        window.alert("Starttijdstip ligt in het verleden");
-        htmlStartTitle.style.color = 'var(--red-verlopen)';
-        return;
+        console.log("starttijdstip ligt in het verleden")
+        window.alert("Starttijdstip ligt in het verleden")
+        return
     }
 
     if (startHour == hourNow && startMinute < minuteNow && Day == chosenDay) {
-        console.log("starttijdstip ligt in het verleden");
-        window.alert("Starttijdstip ligt in het verleden");
-        htmlStartTitle.style.color = 'var(--red-verlopen)';
-        return;
+        console.log("starttijdstip ligt in het verleden")
+        window.alert("Starttijdstip ligt in het verleden")
+        return
     }
     if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
-        console.log("Eindtijdstip moet later liggen dan starttijdstip");
-        window.alert("Eindtijdstip moet later liggen dan starttijdstip");
-        htmlEndTitle.style.color = 'var(--red-verlopen)';
-        return;
+        console.log("Eindtijdstip moet later liggen dan starttijdstip")
+        window.alert("Eindtijdstip moet later liggen dan starttijdstip")
+        return
     }
 
     if (startHour == endHour && startMinute == endMinute) {
-        console.log("Beide tijdstippen zijn hetzelfde");
-        window.alert("Beide tijdstippen zijn hetzelfde");
-        htmlEndTitle.style.color = 'var(--red-verlopen)';
-        htmlStartTitle.style.color = 'var(--red-verlopen)';
-        return;
+        console.log("Beide tijdstippen zijn hetzelfde")
+        window.alert("Beide tijdstippen zijn hetzelfde")
+        return
     }
 
     // Kijken of het niet overlapt met een bestaande reservatie
@@ -369,10 +492,45 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         "startTime": startTime,
 
         "endTime": endTime
-    };
-    console.log(body);
-    console.log("Wordt opgeslagen");
-    handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
+    }
+    console.log(body)
+    console.log("Wordt opgeslagen")
+    handleData(`${APIURI}/reservations/users/me`, cbStartRegistration, null, 'POST', JSON.stringify(body), userToken);
+}
+
+function cbStartRegistration() {
+    htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s"
+    htmlBackground.style = '';
+    registrationStarted = true
+    setTimeout(DisplayNoneEndTimePicker, 300)
+    document.querySelector('.js-locker-reservate').removeEventListener('click', function () {
+        window.location.href = `${
+            location.origin
+        }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
+    });
+    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
+    htmlstopRegistrationBtn.removeEventListener('click', function () {
+        console.log("Registratie wordt gestopt")
+    })
+
+    htmlLockerSvg.removeEventListener('click', function () {
+        htmlBackground.style = 'filter: blur(8px);';
+        console.log("Timepicker verschijnt")
+        htmlPopUpEndTimePicker.style = "display: block;"
+        htmlPopUpEndTimePicker.style.animation = "fadein 0.3s"
+        fillOptionsSelectEndTimePicker()
+        getReservationsEndTimePicker()
+        listenToClickCancelEndTimePicker()
+    })
+
+    htmlLockerSvg.removeEventListener('click', function () {
+        htmlPopUp.style = 'display:block';
+        htmlPopUp.style.animation = 'fadein 0.5s';
+        htmlBackground.style = 'filter: blur(8px);';
+        listenToOpenLockerPopupContinue(lockerId);
+        listenToOpenLockerPopupCancel();
+    });
+    getLockerDetail(currentLockerID);
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
@@ -440,12 +598,14 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
-    htmlPopUpOpen.addEventListener('click', function() {
-        setTimeout(DisplayNone, 300);
-        const endTimeReservation = new Date();
-        endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
-        handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({ lockerId, endTimeReservation }), userToken);
-    });
+    if (htmlPopUpOk) {
+        htmlPopUpOk.addEventListener('click', function () {
+            setTimeout(DisplayNone, 300);
+            const endTimeReservation = new Date();
+            endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
+            handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({lockerId, endTimeReservation}), userToken);
+        });
+    }
 }
 
 function callbackOpenLocker(registration) {
@@ -459,11 +619,13 @@ function callbackOpenLocker(registration) {
 }
 
 function listenToOpenLockerPopupCancel() {
-    htmlPopUpCancel.addEventListener('click', function() {
-        htmlPopUp.style.animation = 'fadeout 0.3s';
-        htmlBackground.style = '';
-        setTimeout(DisplayNone, 300);
-    });
+    if (htmlPopUpCancel) {
+        htmlPopUpCancel.addEventListener('click', function () {
+            htmlPopUp.style.animation = 'fadeout 0.3s';
+            htmlBackground.style = '';
+            setTimeout(DisplayNone, 300);
+        });
+    }
 }
 
 function DisplayNone() {
@@ -583,7 +745,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlBackground = document.querySelector('.js-background');
     htmlPopUp = document.querySelector('.js-popup');
     htmlPopUpCancel = document.querySelector('.js-popup-cancel');
-    htmlPopUpOpen = document.querySelector('.js-popup-open');
+    htmlPopUpOk = document.querySelector('.js-popup-ok');
     htmlPopUpMessage = document.querySelector('.js-popup-message');
 
     // Nav buttons

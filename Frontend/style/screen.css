@@ -203,7 +203,7 @@ p {
     margin: 0;
 }
 
-.locker_detail_opmerkingbtn {
+.locker_detail_opmerkingbtn, .locker_detail_stop_reg_btn {
     margin: 0 0 1.5rem 0;
     background-color: var(--blue-accent-color);
     border-style: none;
@@ -214,6 +214,11 @@ p {
     cursor: pointer;
     height: 2.5rem;
     align-items: center;
+}
+
+.locker_detail_stop_reg_btn{
+    background-color: var(--status-outofuse);
+    display: none;
 }
 
 .locker_detail_sendbtn {
@@ -305,6 +310,32 @@ p {
     border-radius: 5px;
     cursor: pointer;
     margin-right: 2rem;
+    min-width: 3.5rem;
+}
+
+.stop-registration-message{
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--blue-accent-color);
+}
+
+.stop-registration-info-confirm, .stop-registration-info-back{
+    border: none;
+    margin: 0.5rem;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 5px;
+    background-color: var(--blue-accent-color);
+    font-weight: 400;
+    font-family: 'MyFont';
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.stop-registration-info-back{
+    background-color: var(--status-outofuse);
 }
 
 .locker_detail_popup_open {
@@ -316,6 +347,7 @@ p {
     border-radius: 5px;
     cursor: pointer;
     margin-left: 2rem;
+    min-width: 3.5rem;
 }
 
 .open_locker_message {
@@ -820,8 +852,8 @@ p {
     display: block;
     width: 90%;
     overflow: hidden;
-    resize: both;
-    border: 1px solid var(--grey-bg);
+    resize: none;
+    border: 1px solid lightgrey;
     border-radius: 0.2rem;
     outline: none;
     min-height: 40px;
@@ -829,6 +861,7 @@ p {
     color: black;
     font-weight: 400;
     padding: 0.25rem;
+    max-height: 12.5rem;
 }
 
 .reservation_more_border {
@@ -889,7 +922,7 @@ p {
 .checkbox_box {
     width: 1rem;
     height: 1rem;
-    border: 2px solid var(--grey-bg);
+    border: 2px solid lightgray;
     border-radius: 3px;
     align-self: center;
     position: absolute;
@@ -903,11 +936,15 @@ p {
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
-.canceledit {
+.canceledit, .stop_registration {
     fill: var(--red-verlopen);
     height: 1rem;
     width: 1rem;
     cursor: pointer;
+}
+
+.stop_registration{
+    fill: white;
 }
 
 .doneedit {
