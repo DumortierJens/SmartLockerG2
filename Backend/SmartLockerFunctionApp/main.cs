@@ -44,9 +44,6 @@ namespace SmartLockerFunctionApp
             {
                 return new StatusCodeResult(500);
             }
-
         }
-
-        
     }
 }
