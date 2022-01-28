@@ -679,7 +679,7 @@ const getCurrentRegistration = function(lockerId) {
 
 const setRegistrationValue = function(jsonObject) {
     console.log(jsonObject)
-    if (jsonObject.length != 0) {
+    if (jsonObject[0] != null) {
         currentRegistrationID = jsonObject[0].id
         registrationStarted = true
     }
