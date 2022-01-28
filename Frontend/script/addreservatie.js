@@ -9,6 +9,7 @@ let htmlEndTitle;
 let eventListenerExists = false;
 let firstAction = "";
 let busy_timestamps;
+let currentlockerId
 
 function ListenToChangeDate() {
     htmlDate.addEventListener('change', function () {
@@ -178,7 +179,7 @@ function CheckIfValidReservation() { // Waarden die voorlopig ingevuld staan oph
     let endTime = htmlDate.value + "T" + addZero(parseInt(htmlEndHour.value)) + ":" + addZero(parseInt(htmlEndMinute.value)) + ":00+01:00"
     const body = {
 
-        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
+        "lockerId": `${currentlockerId}`,
 
         "startTime": startTime,
 
@@ -266,7 +267,7 @@ const showLockerReservation = function (jsonObject) {
 }
 
 const getReservations = function () {
-    handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, SetReservationTime, null, 'GET', null, userToken);
+    handleData(`${APIURI}/reservations/lockers/${currentlockerId}`, SetReservationTime, null, 'GET', null, userToken);
 };
 
 function addZero(value) {
@@ -287,7 +288,7 @@ function ListenToConfirmRegistration() {
 }
 
 const getLockerReservation = function () {
-    handleData(`${APIURI}/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, showLockerReservation, null, 'GET', null, userToken);
+    handleData(`${APIURI}/lockers/${currentlockerId}`, showLockerReservation, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -303,8 +304,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let todayDate = new Date()
     htmlDate.value = todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate()
     htmlDate.setAttribute("min", todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate())
-    // const urlParams = new URLSearchParams(window.location.search);
-    // const id = urlParams.get('id');
+    const urlParams = new URLSearchParams(window.location.search);
+    currentlockerId = urlParams.get('lockerId');
     getLockerReservation(); // later nog met id meesturen
 
 });
