@@ -4,11 +4,14 @@ ListenToClickDoorgaanBtn = function() {
     document.querySelector('.js-doorgaan').addEventListener('click', function() {
         if (phonenumber(htmlInputPhoneNumber.value)) {
             console.log(true)
-            body = { 'tel': htmlInputPhoneNumber.value }
-            handleData(`${APIURI}/users/me/phonenumber`, null, null, 'PUT', JSON.stringify(body), userToken);
-            window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+            body = { tel: htmlInputPhoneNumber.value }
+            handleData(`${APIURI}/users/me/phonenumber`, CallBackPhoneNumber, null, 'PUT', JSON.stringify(body), userToken);
         }
     })
+}
+
+CallBackPhoneNumber = function() {
+    window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
 }
 
 function phonenumber(inputtxt) {
