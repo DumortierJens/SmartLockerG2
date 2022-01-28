@@ -235,5 +235,77 @@ namespace SmartLockerFunctionApp
                 return new StatusCodeResult(500);
             }
         }
+        [FunctionName("GetRegistration")]
+        public async Task<IActionResult> GetRegistration(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/{registrationId}")] HttpRequest req,
+            string registrationId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
+
+                Models.Registration registration;
+                try
+                {
+                    registration = await container.ReadItemAsync<Models.Registration>(registrationId, new PartitionKey(registrationId));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                return new OkObjectResult(registration);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+        [FunctionName("UpdateRegistration")]
+        public async Task<IActionResult> UpdateRegistration(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "registrations/{registrationId}")] HttpRequest req,
+            string registrationId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
+                if (Auth.Role != "Admin")
+                    return new UnauthorizedResult();
+
+
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                Models.Registration updatedRegistration = JsonConvert.DeserializeObject<Models.Registration>(requestBody);
+
+                CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
+                Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
+
+                Models.Registration registration;
+                try
+                {
+                    registration = await container.ReadItemAsync<Models.Registration>(registrationId, new PartitionKey(registrationId));
+                }
+                catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new NotFoundResult();
+                }
+
+                registration.Note = updatedRegistration.Note;
+                await container.ReplaceItemAsync(registration, registration.Id, new PartitionKey(registration.Id));
+
+                return new OkObjectResult(new { Message = "succeed" });
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
     }
 }
