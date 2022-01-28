@@ -55,7 +55,7 @@ const loginFacebookUser = function (accessToken) {
 const callbackLoginGoogleSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
-    auth2.signOut();
+    gapi.auth2.getAuthInstance().auth2.signOut();
     goToCorrectPage();
 };
 
