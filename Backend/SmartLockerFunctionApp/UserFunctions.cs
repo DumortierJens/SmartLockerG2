@@ -331,7 +331,7 @@ namespace SmartLockerFunctionApp
                 user.Tel = updatedUser.Tel;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
-                return new OkObjectResult("succeed");
+                return new OkObjectResult(new {Message="succeed"});
             }
             catch (Exception)
             {
