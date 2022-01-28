@@ -298,7 +298,7 @@ namespace SmartLockerFunctionApp
                 }
 
                 registration.Note = updatedRegistration.Note;
-                await container.ReplaceItemAsync(registration, registration.Id, new PartitionKey(registration.Id));
+                await container.ReplaceItemAsync(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
 
                 return new OkObjectResult(new { Message = "succeed" });
             }
