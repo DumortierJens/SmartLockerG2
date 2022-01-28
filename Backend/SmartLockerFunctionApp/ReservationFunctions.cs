@@ -85,7 +85,6 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(reservations);
             }
-
             catch
             {
                 return new StatusCodeResult(500);
@@ -202,7 +201,7 @@ namespace SmartLockerFunctionApp
 
                 await ReservationService.Container.DeleteItemAsync<Reservation>(reservationId.ToString(), new PartitionKey(reservationId.ToString()));
 
-                return new OkResult();
+                return new OkObjectResult(reservation);
             }
             catch
             {

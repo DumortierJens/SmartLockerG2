@@ -183,7 +183,7 @@ namespace SmartLockerFunctionApp
             }
             catch (Exception)
             {
-                return new OkResult();
+                return new StatusCodeResult(500);
             }
         }
 
@@ -234,6 +234,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -257,7 +260,7 @@ namespace SmartLockerFunctionApp
             }
             catch (Exception)
             {
-                return new OkResult();
+                return new StatusCodeResult(500);
             }
         }
 
@@ -269,6 +272,9 @@ namespace SmartLockerFunctionApp
         {
             try
             {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
                 if (Auth.Role != "Admin")
                     return new UnauthorizedResult();
 
@@ -292,7 +298,7 @@ namespace SmartLockerFunctionApp
             }
             catch (Exception)
             {
-                return new OkResult();
+                return new StatusCodeResult(500);
             }
         }
 
@@ -331,7 +337,7 @@ namespace SmartLockerFunctionApp
                 user.Tel = updatedUser.Tel;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
-                return new OkObjectResult(new {Message="succeed"});
+                return new OkObjectResult(user);
             }
             catch (Exception)
             {
