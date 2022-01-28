@@ -1,3 +1,7 @@
+function callbackDeleteReservation() {
+    htmlPopUp.style = "display: none;";
+}
+
 function showDeletePopUp(id) {
     htmlPopUp.style = "display:block";
     htmlPopUp.style.animation = "fadein 0.5s";
@@ -10,8 +14,7 @@ function listenToDelete(id) {
     htmlPopUpOk.addEventListener('click', function () {
         htmlBackground.style = "";
         htmlPopUp.style.animation = "fadeout 0.3s";
-        console.log(`Reservatie met id ${id} wordt verwijderd`);
-        htmlPopUp.style = "display: none;";
+        handleData(`${APIURI}/reservations/${id}`, callbackDeleteReservation, null, 'DELETE', null, userToken);
     });
 }
 
@@ -51,6 +54,8 @@ const listenToTabs = function () {
 
         const id = htmlTab.dataset.id;
         const note = htmlNote.innerHTML;
+
+        console.log(id);
 
         htmlArrow.addEventListener('click', function () {
             if (htmlArrow.innerHTML == 'expand_more') {
@@ -97,13 +102,26 @@ const listenToTabs = function () {
 };
 
 const showRegistration = function (registration) {
-    for (const htmlStart of document.querySelectorAll(`.js-start-registration-${user.id}`)) {
-        htmlStart.innerHTML = registration.startTime;
+    const startTime = new Date(registration.startTime).toLocaleString('nl-BE');
+    const endTime = new Date(registration.endTime).toLocaleString('nl-BE');
+
+    for (const htmlStatus of document.querySelectorAll(`.js-status-registration-${registration.id}`)) {
+        if (endTime == "1/1/1 00:00:00") {
+            htmlStatus.classList.add('status_bezig_rect');
+            htmlStatus.innerHTML = 'Bezig';
+        }
+        else {
+            htmlStatus.classList.add('status_verlopen_rect');
+            htmlStatus.innerHTML = 'Verlopen';
+        }
     }
-    for (const htmlEnd of document.querySelectorAll(`.js-end-registration-${user.id}`)) {
-        htmlEnd.innerHTML = registration.endTime;
+    for (const htmlStart of document.querySelectorAll(`.js-start-registration-${registration.id}`)) {
+        htmlStart.innerHTML = startTime;
     }
-    for (const htmlNote of document.querySelectorAll(`.js-note-registration-${user.id}`)) {
+    for (const htmlEnd of document.querySelectorAll(`.js-end-registration-${registration.id}`)) {
+        htmlEnd.innerHTML = endTime != "1/1/1 00:00:00" ? endTime : "";
+    }
+    for (const htmlNote of document.querySelectorAll(`.js-note-registration-${registration.id}`)) {
         htmlNote.innerHTML = registration.note;
     }
 };
@@ -140,14 +158,14 @@ const showReservations = function (reservations) {
         const startTime = new Date(reservation.startTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
         const endTime = new Date(reservation.endTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
 
-        htmlString += `<div class="reservation_container js-tab js-tab-${reservation.id}">
+        htmlString += `<div class="reservation_container js-tab js-tab-${reservation.id}" data-id="${reservation.id}">
             <div class="js-tab-main reservation flex">
                 <img class="user_picture js-picture-${reservation.userId}" src="/img/profile_template.jpg" alt="user-picture" />
                 <div class="reservation_grid">
                     <p class="reservation_name js-name-${reservation.userId}"></p>
                     <p class="reservation_date">${startDate} ${startTime}</p>
                 </div >
-                <div class="status_bezig_rect flex centerflex">Bezig</div>
+                <div class="${reservation.registratieId == '00000000-0000-0000-0000-000000000000' ? 'status_wachten_rect' : ''} flex centerflex js-status-registration-${reservation.registratieId}">${reservation.registratieId == '00000000-0000-0000-0000-000000000000' ? 'Wachten' : ''}</div>
                 <span class="arrow_more js-arrow material-icons-outlined">expand_more</span>
             </div>
             <div class="js-tab-details" style="display: none; animation: fadein 0.5s">
@@ -173,15 +191,15 @@ const showReservations = function (reservations) {
                 </div>
                 <div class="reservation_detail flex">
                     <p class="reservation_detail_title">Geopend</p>
-                    <p class="reservation_detail_content js-start-registration-${reservation.registrationId}"></p>
+                    <p class="reservation_detail_content js-start-registration-${reservation.registratieId}"></p>
                 </div>
                 <div class="reservation_detail flex">
                     <p class="reservation_detail_title">Teruggebracht</p>
-                    <p class="reservation_detail_content js-end-registration-${reservation.registrationId}"></p>
+                    <p class="reservation_detail_content js-end-registration-${reservation.registratieId}"></p>
                 </div>
                 <div class="reservation_opmerking">
                     <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Opmerking</p>
-                    <p style="font-size: 0.75rem" class="reservation_opmerking_content js-note-registration-${reservation.registrationId}"></p>
+                    <p style="font-size: 0.75rem" class="reservation_opmerking_content js-note-registration-${reservation.registratieId}"></p>
                 </div>
             </div>
             <div class="js-tab-edit" style="display: none; animation: fadein 0.5s">
@@ -207,14 +225,14 @@ const showReservations = function (reservations) {
                 </div>
                 <div class="reservation_detail flex">
                     <p class="reservation_detail_title">Geopend</p>
-                    <p class="reservation_detail_content js-start-registration-${reservation.registrationId}"></p>
+                    <p class="reservation_detail_content js-start-registration-${reservation.registratieId}"></p>
                 </div>
                 <div class="reservation_detail flex">
                     <p class="reservation_detail_title">Teruggebracht</p>
-                    <p class="reservation_detail_content js-end-registration-${reservation.registrationId}"></p>
+                    <p class="reservation_detail_content js-end-registration-${reservation.registratieId}"></p>
                 </div>
                 <div class="reservation_opmerking">
-                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-note js-note-registration-${reservation.registrationId}" role="textbox" contenteditable></span></label>
+                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-note js-note-registration-${reservation.registratieId}" role="textbox" contenteditable></span></label>
                 </div>
             </div>
         </div>`;
