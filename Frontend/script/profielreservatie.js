@@ -96,6 +96,18 @@ const listenToTabs = function () {
     };
 };
 
+const showRegistration = function (registration) {
+    for (const htmlStart of document.querySelectorAll(`.js-start-registration-${user.id}`)) {
+        htmlStart.innerHTML = registration.startTime;
+    }
+    for (const htmlEnd of document.querySelectorAll(`.js-end-registration-${user.id}`)) {
+        htmlEnd.innerHTML = registration.endTime;
+    }
+    for (const htmlNote of document.querySelectorAll(`.js-note-registration-${user.id}`)) {
+        htmlNote.innerHTML = registration.note;
+    }
+};
+
 const showUser = function (user) {
     for (const htmlName of document.querySelectorAll(`.js-name-${user.id}`)) {
         htmlName.innerHTML = user.name;
@@ -120,8 +132,8 @@ const showReservations = function (reservations) {
     let htmlString = '';
     for (const reservation of reservations) {
 
-        if (!lockers.includes(reservation.lockerId)) lockers.push(reservation.lockerId);
-        if (!registrations.includes(reservation.registrationId)) registrations.push(reservation.registrationId);
+        if (!lockers.includes(reservation.lockerId) && reservation.lockerId != '00000000-0000-0000-0000-000000000000') lockers.push(reservation.lockerId);
+        if (!registrations.includes(reservation.registratieId) && reservation.registratieId != '00000000-0000-0000-0000-000000000000') registrations.push(reservation.registratieId);
 
         const startDate = new Date(reservation.startTime).toLocaleDateString("nl-BE");
         const endDate = new Date(reservation.endTime).toLocaleDateString("nl-BE");
@@ -212,12 +224,19 @@ const showReservations = function (reservations) {
 
     getUser();
 
+    console.log(lockers);
     for (const locker of lockers)
         getLocker(locker);
 
     console.log(registrations);
+    for (const registration of registrations)
+        getRegistration(registration);
 
     listenToTabs();
+};
+
+const getRegistration = function (id) {
+    handleData(`${APIURI}/registrations/${id}`, showRegistration, null, 'GET', null, userToken);
 };
 
 const getUser = function (id) {
