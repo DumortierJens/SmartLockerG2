@@ -548,8 +548,12 @@ p {
 .phonenumber_input {
     max-width: 10em;
     font-family: 'MyFont';
-    border-color: var(--blue-accent-color);
+    border: 1px solid var(--blue-accent-color);
     border-radius: 5px;
+    outline: none;
+    font-size: 1.5rem;
+    font-weight: 300;
+    text-align: center;
 }
 
 .gsm-btn-doorgaan {
@@ -784,6 +788,7 @@ p {
     align-self: center;
     cursor: pointer;
     color: black;
+    transform: scale(0.8);
 }
 
 .reservation_details_edit_and_delete {
@@ -937,6 +942,7 @@ p {
 }
 
 .canceledit, .stop_registration {
+    color: var(--red-verlopen);
     fill: var(--red-verlopen);
     height: 1rem;
     width: 1rem;
@@ -952,6 +958,15 @@ p {
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
+}
+
+.reservation_detail_content_name{
+    border: none;
+    border-bottom: 1px solid lightgrey;
+    text-align: center;
+    font-family: 'MyFont';
+    padding-bottom: 0.3rem;
+    outline: none;
 }
 
 
@@ -1130,7 +1145,6 @@ p {
 .add_reservation_sport,
 .add_reservation_date,
 .add_reservation_time {
-    background-color: var(--grey-bg);
     height: 3rem;
     border-radius: 5px;
     margin: 0.5rem auto 0 auto;
@@ -1226,6 +1240,10 @@ p {
     width: 100%;
 }
 
+.privacy_policy_content{
+    margin: 6rem 0 2rem 3rem;
+}
+
 
 /* Animations*/
 
@@ -1254,17 +1272,18 @@ p {
     .reservation_legende {
         text-align: start;
     }
-    .profile_info_content {
+    /* .profile_info_content {
         margin: 1.5rem 30% 0 30%;
-    }
+    } */
     .header_add_reservation {
         font-size: 2rem;
     }
 }
 
-@media (max-width: 800px) {
-    .profile_info_content {
-        margin: 1.5rem 1rem 0 1rem;
+@media (min-width: 800px) {
+    .centered_content {
+        position: absolute;
+        left: 12.5rem
     }
 }
 
