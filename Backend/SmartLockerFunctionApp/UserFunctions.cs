@@ -299,7 +299,7 @@ namespace SmartLockerFunctionApp
         [FunctionName("AddPhoneNumber")]
         public async Task<IActionResult> AddPhoneNumber(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "users/{userId}/phonenumber")] HttpRequest req,
-            string userId, string phoneNumber,
+            string userId,
             ILogger log)
         {
             try
@@ -331,7 +331,7 @@ namespace SmartLockerFunctionApp
                 user.Tel = updatedUser.Tel;
                 await container.ReplaceItemAsync(user, user.Id, new PartitionKey(user.Id));
 
-                return new OkResult();
+                return new OkObjectResult(new {Message="succeed"});
             }
             catch (Exception)
             {

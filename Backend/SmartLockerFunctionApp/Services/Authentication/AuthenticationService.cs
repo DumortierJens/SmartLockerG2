@@ -35,20 +35,32 @@ namespace SmartLockerFunctionApp.Services.Authentication
         {
             try
             {
-                // Get access token from user
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 JObject jObject = JObject.Parse(requestBody);
+
+                // Get access token from user
                 JToken accessToken;
                 if (!jObject.TryGetValue("accessToken", out accessToken))
                     return new BadRequestObjectResult(new { code = 850, message = "No accesstoken" });
+
+                // Get social from user
+                JToken socialType;
+                if (!jObject.TryGetValue("socialType", out socialType))
+                    return new BadRequestObjectResult(new { code = 851, message = "No socialType" });
 
                 // Create cosmosDB client
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Users");
 
                 // Get user by social access token & try to get user out of CosmosDB
-                Models.User user = await getUserFacebookDetails(accessToken.ToString());
-                
+                Models.User user;
+                if (socialType.ToString() == "facebook")
+                    user = await getUserFacebookDetails(accessToken.ToString());
+                else if (socialType.ToString() == "google")
+                    user = await getUserGoogleDetails(accessToken.ToString());
+                else
+                    return new BadRequestObjectResult(new { code = 852, message = "socialType is not 'facebook' or 'google'" });
+
                 try
                 {
                     Models.User foundUser = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
@@ -94,10 +106,48 @@ namespace SmartLockerFunctionApp.Services.Authentication
 
                         Models.User user = new Models.User()
                         {
-                            Id = jObject["id"].ToString(),
+                            Id = "facebook_" + jObject["id"].ToString(),
                             Name = jObject["name"].ToString(),
                             Email = jObject["email"].ToString(),
                             Picture = jObject["picture"]["data"]["url"].ToString()
+                        };
+
+                        return user;
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        private async Task<Models.User> getUserGoogleDetails(string accessToken)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            using (client)
+            {
+                try
+                {
+                    string url = $"https://oauth2.googleapis.com/tokeninfo?id_token={accessToken}";
+
+                    string json = await client.GetStringAsync(url);
+                    if (json != null)
+                    {
+                        JObject jObject = JObject.Parse(json);
+
+                        Models.User user = new Models.User()
+                        {
+                            Id = "google_" + jObject["sub"].ToString(),
+                            Name = jObject["name"].ToString(),
+                            Email = jObject["email"].ToString(),
+                            Picture = jObject["picture"].ToString()
                         };
 
                         return user;
