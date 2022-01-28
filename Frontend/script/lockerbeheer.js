@@ -145,7 +145,7 @@ const showLockersLockermanagement = function (lockers) {
             </div>
             <div class="reservation_detail flex">
                 <p class="reservation_detail_title">Name</p>
-                <input class="reservation_detail_content js-name" type="text" value="${locker.name}">
+                <input class="reservation_detail_content js-name reservation_detail_content_name" type="text" value="${locker.name}">
             </div>
             <div class="reservation_detail flex">
                 <p class="reservation_detail_title">Sport</p>
