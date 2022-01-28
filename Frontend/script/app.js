@@ -1,4 +1,5 @@
 let currentLockerID;
+let currentRegistrationID
 let registrationStarted = false;
 let userToken;
 
@@ -151,8 +152,8 @@ function displayNoneStopRegistration() {
 function ListenToClickCheckBoxes() {
     const checkboxes = document.querySelectorAll('.js-checkbox-stop-registration')
     for (let checkbox of checkboxes) {
-        checkbox.addEventListener('click', function () {
-            if (! checkbox.classList.contains('box_checked')) {
+        checkbox.addEventListener('click', function() {
+            if (!checkbox.classList.contains('box_checked')) {
                 checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`
                 checkbox.style.animation = "fadein 0.5s"
                 checkbox.classList.add('box_checked');
@@ -166,18 +167,18 @@ function ListenToClickCheckBoxes() {
 
 function listenToLockerStopRegistration() {
     htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
-    htmlstopRegistrationBtn.addEventListener('click', function () {
+    htmlstopRegistrationBtn.addEventListener('click', function() {
         console.log("Stop registratie knop")
         htmlPopUpStopRegistration = document.querySelector('.js-popup-stop-registration')
         htmlPopUpCancelStopRegistration = document.querySelector('.js-popup-cancel-stop-reservation')
         htmlPopUpConfirmStopRegistration = document.querySelector('.js-popup-stop-reservation')
         htmlPopUpStopRegistration.style = "display:block"
-        htmlPopUpCancelStopRegistration.addEventListener('click', function () {
+        htmlPopUpCancelStopRegistration.addEventListener('click', function() {
             console.log("Cancel")
             htmlPopUpStopRegistration.style.animation = "fadeout 0.3s"
             setTimeout(displayNoneStopRegistration, 300)
         })
-        htmlPopUpConfirmStopRegistration.addEventListener('click', function () {
+        htmlPopUpConfirmStopRegistration.addEventListener('click', function() {
             console.log("Registratie wordt gestopt")
             htmlPopUpStopRegistration.innerHTML = `<p class="stop-registration-message">Is het materiaal in orde?</p>
                 <div class="reservation_detail flex">
@@ -207,7 +208,7 @@ function listenToLockerStopRegistration() {
 
 function ListenToClickStopRegInfoBack() {
     htmlStopRegBack = document.querySelector('.js-stop-registration-info-back')
-    htmlStopRegBack.addEventListener('click', function () {
+    htmlStopRegBack.addEventListener('click', function() {
         htmlPopUpStopRegistration.style = "display: none"
         htmlPopUpStopRegistration.innerHTML = `
             <p class="open_locker_message js-popup-message">Wil je stoppen met het materiaal te gebruiken?</p>
@@ -218,9 +219,10 @@ function ListenToClickStopRegInfoBack() {
         `
     })
 }
+
 function ListenToClickStopRegInfoConfirm() {
     htmlStopRegConfirm = document.querySelector('.js-stop-registration-info-confirm')
-    htmlStopRegConfirm.addEventListener('click', function () {
+    htmlStopRegConfirm.addEventListener('click', function() {
         let materiële_schade = "nee"
         let ontbrekend_materiaal = "nee"
         let opmerking = document.querySelector('.js-stop-reg-opmerking').innerHTML
@@ -238,10 +240,9 @@ function ListenToClickStopRegInfoConfirm() {
                 for (elem of collection) {
                     let sister = elem.previousElementSibling
                     let label = sister.previousElementSibling
-                    if(label.innerHTML == "Ontbrekend materiaal"){
+                    if (label.innerHTML == "Ontbrekend materiaal") {
                         ontbrekend_materiaal = "ja"
-                    }
-                    else{
+                    } else {
                         materiële_schade = "ja"
                     }
                 }
@@ -251,16 +252,16 @@ function ListenToClickStopRegInfoConfirm() {
         // console.log("ontbrekend materiaal",ontbrekend_materiaal)
         // console.log("opmerking",opmerking)
         const body = {
-            "note": "Materiële_schade: "+materiële_schade+"\n"+"Ontbrekend_materiaal: "+ontbrekend_materiaal+"\n"+"Opmerking: "+opmerking+"\n"
+            "note": "Materiële_schade: " + materiële_schade + "\n" + "Ontbrekend_materiaal: " + ontbrekend_materiaal + "\n" + "Opmerking: " + opmerking + "\n"
         }
-        handleData(`${APIURI}/registrations/users/me?lockerId="11cf21d4-03ef-4e0a-8a17-27c26ae80abd"`,cbEndRegistration,null,'GET',null,userToken)
+        handleData(`${APIURI}/registrations/${currentRegistrationID}/stop`, cbEndRegistration, null, 'POST', JSON.stringify(body), userToken);
     })
 }
 
-function cbEndRegistration(jsonObject){
-    console.log(jsonObject)
-    //Hier moet ik mn registratieId ophalen om dan mee te geven in een handledata om zo mn data te sturen naar de backend, ook tijdstip wnr alles
-    //meegegeven wordt moet ook nog meegegeven worden aan de body en dat heb ik nog niet gedaan grt Jarne
+function cbEndRegistration() {
+    console.log("ja")
+        //Hier moet ik mn registratieId ophalen om dan mee te geven in een handledata om zo mn data te sturen naar de backend, ook tijdstip wnr alles
+        //meegegeven wordt moet ook nog meegegeven worden aan de body en dat heb ik nog niet gedaan grt Jarne
 }
 
 function listenToClickToggleLocker(lockerId) {
@@ -488,32 +489,28 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
     const body = {
 
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
-
         "startTime": startTime,
-
         "endTime": endTime
     }
     console.log(body)
     console.log("Wordt opgeslagen")
-    handleData(`${APIURI}/reservations/users/me`, cbStartRegistration, null, 'POST', JSON.stringify(body), userToken);
+        //handleData(`${APIURI}/reservations/users/me`, cbStartRegistration, null, 'POST', JSON.stringify(body), userToken);
+    const bodyRegistration = {
+        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
+        "endTimeReservation": endTime
+    }
+    handleData(`${APIURI}/registrations/start`, CallBackStartRegistration, null, 'POST', JSON.stringify(bodyRegistration), userToken);
+
 }
 
-function cbStartRegistration() {
+function CallBackStartRegistration() {
     htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s"
     htmlBackground.style = '';
     registrationStarted = true
-    setTimeout(DisplayNoneEndTimePicker, 300)
-    document.querySelector('.js-locker-reservate').removeEventListener('click', function () {
-        window.location.href = `${
-            location.origin
-        }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
+    document.querySelector('.js-locker-reservate').removeEventListener('click', function() {
+        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
-    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
-    htmlstopRegistrationBtn.removeEventListener('click', function () {
-        console.log("Registratie wordt gestopt")
-    })
-
-    htmlLockerSvg.removeEventListener('click', function () {
+    htmlLockerSvg.removeEventListener('click', function() {
         htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt")
         htmlPopUpEndTimePicker.style = "display: block;"
@@ -523,13 +520,34 @@ function cbStartRegistration() {
         listenToClickCancelEndTimePicker()
     })
 
-    htmlLockerSvg.removeEventListener('click', function () {
+    htmlLockerSvg.removeEventListener('click', function() {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
         listenToOpenLockerPopupContinue(lockerId);
         listenToOpenLockerPopupCancel();
     });
+    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
+    htmlstopRegistrationBtn.removeEventListener('click', function() {
+
+    })
+    getCurrentRegistration()
+}
+
+function cbStartRegistration() {
+    htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s"
+    htmlBackground.style = '';
+    registrationStarted = true
+    setTimeout(DisplayNoneEndTimePicker, 300)
+    document.querySelector('.js-locker-reservate').removeEventListener('click', function() {
+        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
+    });
+    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration')
+    htmlstopRegistrationBtn.removeEventListener('click', function() {
+        console.log("Registratie wordt gestopt")
+    })
+
+
     getLockerDetail(currentLockerID);
 }
 
@@ -599,11 +617,11 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 
 function listenToOpenLockerPopupContinue(lockerId) {
     if (htmlPopUpOk) {
-        htmlPopUpOk.addEventListener('click', function () {
+        htmlPopUpOk.addEventListener('click', function() {
             setTimeout(DisplayNone, 300);
             const endTimeReservation = new Date();
             endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
-            handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({lockerId, endTimeReservation}), userToken);
+            handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({ lockerId, endTimeReservation }), userToken);
         });
     }
 }
@@ -620,7 +638,7 @@ function callbackOpenLocker(registration) {
 
 function listenToOpenLockerPopupCancel() {
     if (htmlPopUpCancel) {
-        htmlPopUpCancel.addEventListener('click', function () {
+        htmlPopUpCancel.addEventListener('click', function() {
             htmlPopUp.style.animation = 'fadeout 0.3s';
             htmlBackground.style = '';
             setTimeout(DisplayNone, 300);
@@ -637,6 +655,20 @@ function listenToLockerReservate(lockerId) {
         window.location.href = `${location.origin
             }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
+}
+
+const getCurrentRegistration = function(lockerId) {
+    handleData(`${APIURI}/registrations/users/me?lockerId=${lockerId}`, setRegistrationValue, null, 'GET', null, userToken);
+};
+
+const setRegistrationValue = function(jsonObject) {
+    console.log(jsonObject)
+    if (jsonObject != null) {
+        currentRegistrationID = jsonObject[0].id
+        registrationStarted = true
+    }
+
+    getLockerDetail(currentLockerID);
 }
 
 const getLockerDetail = function(lockerId) {
@@ -659,7 +691,7 @@ const showUserProfile = function(user) {
 };
 
 function ListenToUserLogout() {
-    document.querySelector('.js-logout').addEventListener('click', function () {
+    document.querySelector('.js-logout').addEventListener('click', function() {
         sessionStorage.removeItem('usertoken');
         window.location.reload();
     });
@@ -675,6 +707,8 @@ function ListenToUserReservations() {
 const getUserProfile = function() {
     handleData(`${APIURI}/users/me`, showUserProfile, null, 'GET', null, userToken);
 };
+
+
 
 // #endregion
 
@@ -771,7 +805,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
-        getLockerDetail(lockerId);
+        getCurrentRegistration(currentLockerID)
+
     }
 
     if (htmlPageProfile) {
