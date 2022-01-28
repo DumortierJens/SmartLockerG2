@@ -56,7 +56,7 @@ const getLockersOverview = function () {
 // #region Locker Detail
 
 let htmlPopup,
-    htmlPopUpOpen,
+    htmlPopUpOk,
     htmlPopUpEndTimePicker,
     htmlEndHourEndTimePicker,
     htmlEndMinuteEndTimepicker,
@@ -435,7 +435,7 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
-    htmlPopUpOpen.addEventListener('click', function () {
+    htmlPopUpOk.addEventListener('click', function () {
         setTimeout(DisplayNone, 300);
         const endTimeReservation = new Date();
         endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
@@ -577,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function () {
     htmlBackground = document.querySelector('.js-background');
     htmlPopUp = document.querySelector('.js-popup');
     htmlPopUpCancel = document.querySelector('.js-popup-cancel');
-    htmlPopUpOpen = document.querySelector('.js-popup-open');
+    htmlPopUpOk = document.querySelector('.js-popup-ok');
     htmlPopUpMessage = document.querySelector('.js-popup-message');
 
     // Nav buttons
