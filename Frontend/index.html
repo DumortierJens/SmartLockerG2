@@ -5,11 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="google-signin-client_id" content="729000584526-0uijgqr1o1c7ckbfmmdvb5imqibnnfq1.apps.googleusercontent.com" />
         <link rel="apple-touch-icon" sizes="128x128" href="/img/safe-deposit128.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/img/safe-deposit32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/img/safe-deposit16.png" />
         <link rel="stylesheet" href="/style/normalize.css" />
         <link rel="stylesheet" href="/style/screen.css" />
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script src="/script/datahandler.js"></script>
         <script src="/script/constants.js"></script>
         <script src="/script/app.js"></script>
@@ -35,6 +37,9 @@
                         Meld je aan met Facebook
                         <div class="facebook_login">
                             <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
+                        </div>
+                        <div class="facebook_login">
+                            <div class="g-signin2" data-onsuccess="onSignIn"></div>
                         </div>
                     </div>
                 </div>
