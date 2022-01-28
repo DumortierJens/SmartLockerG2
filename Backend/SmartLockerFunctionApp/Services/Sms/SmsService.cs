@@ -78,7 +78,6 @@ namespace SmartLockerFunctionApp.Services.Sms
                         
                     }
                 }
-
             }
             else
             {

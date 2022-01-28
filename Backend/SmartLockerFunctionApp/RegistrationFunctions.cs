@@ -157,7 +157,6 @@ namespace SmartLockerFunctionApp
                 locker.Status = "Beschikbaar";
                 await lockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
 
-
                 return new OkObjectResult(registration);
             }
             catch (Exception)
@@ -216,9 +215,10 @@ namespace SmartLockerFunctionApp
         {
             try
             {
-                if (Auth.Role != "Admin" && userId != "me")
-                    return new UnauthorizedResult();
-                else if (userId == "me")
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
+                if (userId == "me")
                     userId = Auth.Id;
 
                 List<Registration> registrations = new List<Registration>();
@@ -277,30 +277,29 @@ namespace SmartLockerFunctionApp
                 if (Auth.IsBlocked)
                     return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
 
-                if (Auth.Role != "Admin")
-                    return new UnauthorizedResult();
-
-
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                Models.Registration updatedRegistration = JsonConvert.DeserializeObject<Models.Registration>(requestBody);
+                Models.Registration updatedRegistration = JsonConvert.DeserializeObject<Registration>(requestBody);
 
                 CosmosClient cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
                 Container container = cosmosClient.GetContainer("SmartLocker", "Registrations");
 
-                Models.Registration registration;
+                Registration registration;
                 try
                 {
-                    registration = await container.ReadItemAsync<Models.Registration>(registrationId, new PartitionKey(registrationId));
+                    registration = await container.ReadItemAsync<Registration>(registrationId, new PartitionKey(registrationId));
                 }
                 catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     return new NotFoundResult();
                 }
 
+                if (Auth.Role != "Admin" || Auth.Id == registration.UserId)
+                    return new UnauthorizedResult();
+
                 registration.Note = updatedRegistration.Note;
                 await container.ReplaceItemAsync(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
 
-                return new OkObjectResult(new { Message = "succeed" });
+                return new OkObjectResult(registration);
             }
             catch (Exception)
             {
