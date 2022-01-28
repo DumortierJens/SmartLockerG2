@@ -19,13 +19,10 @@
     <title>Smart Locker | Dashboard</title>
 </head>
 
-<body class="lightgrey-bg">
+<body class="lightgrey-bg" style="overflow:hidden">
     <div class="locker_detail_blur js-background">
         <div class="header_smartlocker flex position_fixed">
             <p class="header_smartlocker_center flex">Dashboard</p>
-            <div class="header_right_icon_profile flex js-menu">
-                <span class="material-icons-outlined">menu</span>
-            </div>
             <div class="header_right_icon flex js-profile">
                 <span class="material-icons-outlined">person</span>
             </div>
@@ -42,6 +39,12 @@
         <div class="user_management_content users_table js-dashboard">
             <div class="js-users">
                 <div class="locker_container js-user">
+                    <div class="locker pointer users_container flex js-dashboard-overzicht">
+                        <div class="dashboard-content">
+                            <span class="material-icons-outlined dashboard-icon">map</span>
+                            <p class="locker_name">Overzicht</p>
+                        </div>
+                    </div>
                     <div class="locker pointer users_container flex js-dashboard-lockers">
                         <div class="dashboard-content js-">
                             <span class="material-icons-outlined dashboard-icon">lock</span>
@@ -66,6 +69,7 @@
                             <p class="locker_name">Admins</p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
