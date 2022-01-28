@@ -1,3 +1,4 @@
+// Facebook login
 window.fbAsyncInit = function () {
     FB.init({
         appId: '4670544903052300',
@@ -15,7 +16,7 @@ window.fbAsyncInit = function () {
 
 const statusChangeCallback = function (response) {
     if (response.status === 'connected') {
-        if (document.querySelector('.js-login-page')) loginUser(response.authResponse.accessToken);
+        if (document.querySelector('.js-login-page')) loginFacebookUser(response.authResponse.accessToken);
     }
 };
 
@@ -25,23 +26,20 @@ const checkLoginState = function () {
     });
 };
 
-const callbackLoginSucceed = function (response) {
+const callbackLoginFacebookSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
     FB.logout();
     goToCorrectPage();
 };
 
-const callbackLoginFailed = function (response) {
-    console.log(response);
-};
-
-const loginUser = function (accessToken) {
+const loginFacebookUser = function (accessToken) {
     console.log(accessToken);
     const body = JSON.stringify({
+        socialType: "facebook",
         accessToken: accessToken
     });
-    handleData(`${APIURI}/users/login`, callbackLoginSucceed, callbackLoginFailed, 'POST', body);
+    handleData(`${APIURI}/users/login`, callbackLoginFacebookSucceed, callbackLoginFailed, 'POST', body);
 };
 
 (function (d, s, id) {
@@ -52,6 +50,32 @@ const loginUser = function (accessToken) {
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+
+// Google login
+const callbackLoginGoogleSucceed = function (response) {
+    console.log("Login succeed");
+    sessionStorage.setItem("usertoken", response.token);
+    gapi.auth2.getAuthInstance().auth2.signOut();
+    goToCorrectPage();
+};
+
+const loginGoogleUser = function (accessToken) {
+    console.log(accessToken);
+    const body = JSON.stringify({
+        socialType: 'google',
+        accessToken: accessToken
+    });
+    handleData(`${APIURI}/users/login`, callbackLoginGoogleSucceed, callbackLoginFailed, 'POST', body);
+};
+
+function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    loginGoogleUser(id_token);
+}
+
+const callbackLoginFailed = function (response) {
+    console.log(response);
+};
 
 const goToCorrectPage = function () {
     const userToken = sessionStorage.getItem("usertoken");
