@@ -5,7 +5,8 @@ ListenToClickDoorgaanBtn = function() {
         if (phonenumber(htmlInputPhoneNumber.value)) {
             console.log(true)
             body = { 'tel': htmlInputPhoneNumber.value }
-            handleData(`${APIURI}users/me/phonenumber`, null, null, 'PUT', JSON.stringify(body), userToken);
+            handleData(`${APIURI}/users/me/phonenumber`, null, null, 'PUT', JSON.stringify(body), userToken);
+            window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
         }
     })
 }
