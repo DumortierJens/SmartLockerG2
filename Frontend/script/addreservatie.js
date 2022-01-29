@@ -12,7 +12,7 @@ let busy_timestamps;
 let currentlockerId;
 
 function ListenToChangeDate() {
-    htmlDate.addEventListener('change', function () {
+    htmlDate.addEventListener('change', function() {
         htmlStartHour.value = new Date().getHours();
         htmlEndHour.value = new Date().getHours();
         htmlStartMinute.value = 0;
@@ -196,7 +196,7 @@ function SetReservationTime(jsonObject) {
     let date = new Date(htmlDate.value).getDate();
     htmlStartHour.value = new Date().getHours();
     htmlEndHour.value = new Date().getHours();
-    htmlStartHour.addEventListener('change', function () {
+    htmlStartHour.addEventListener('change', function() {
         let chosenHour = parseInt(htmlStartHour.value);
         // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
         if (busy_timestamps[chosenHour]) {
@@ -215,7 +215,7 @@ function SetReservationTime(jsonObject) {
             }
         }
     });
-    htmlEndHour.addEventListener('change', function () {
+    htmlEndHour.addEventListener('change', function() {
         let chosenHour = parseInt(htmlEndHour.value);
         // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
         if (busy_timestamps[chosenHour]) {
@@ -255,14 +255,14 @@ function FillOptionsSelect() {
     }
 }
 
-const showLockerReservation = function (jsonObject) {
+const showLockerReservation = function(jsonObject) {
     htmlName.innerHTML = jsonObject.name;
     console.log(jsonObject);
     FillOptionsSelect();
     getReservations();
 };
 
-const getReservations = function () {
+const getReservations = function() {
     handleData(`${APIURI}/reservations/lockers/${currentlockerId}`, SetReservationTime, null, 'GET', null, userToken);
 };
 
@@ -276,18 +276,18 @@ function addZero(value) {
 
 function ListenToConfirmRegistration() {
     if (!eventListenerExists && firstAction != 'changedDate') {
-        htmlConfirm.addEventListener('click', function () {
+        htmlConfirm.addEventListener('click', function() {
             eventListenerExists = true;
             CheckIfValidReservation();
         });
     }
 }
 
-const getLockerReservation = function () {
+const getLockerReservation = function() {
     handleData(`${APIURI}/lockers/${currentlockerId}`, showLockerReservation, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     htmlName = document.querySelector('.js-name');
     htmlStartHour = document.querySelector('.js-start-hour');
     htmlStartMinute = document.querySelector('.js-start-minute');
@@ -300,6 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let todayDate = new Date();
     htmlDate.value = todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate();
     htmlDate.setAttribute("min", todayDate.getFullYear() + "-" + todayDate.getMonth() + 1 + "-" + todayDate.getDate());
+    if (userTokenPayload.role == "Admin") showHamburger();
     const urlParams = new URLSearchParams(window.location.search);
     currentlockerId = urlParams.get('lockerId');
     getLockerReservation(); // later nog met id meesturen
