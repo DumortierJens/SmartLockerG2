@@ -89,8 +89,8 @@ const showHamburger = function () {
     htmlMenuButton.style = "display:flex";
 };
 
-const getUserId = function (jsonObject) {
-    handleData(`${APIURI}/registrations/users/${jsonObject.id}`, setRegistrationStarted, null, 'GET', null, userToken);
+const getUserRegistration = function () {
+    handleData(`${APIURI}/registrations/users/me`, setRegistrationStarted, null, 'GET', null, userToken);
 };
 
 const setRegistrationStarted = function (jsonObject) {
@@ -103,7 +103,7 @@ const setRegistrationStarted = function (jsonObject) {
 };
 
 const showLockerDetail = function (locker) {
-    handleData(`${APIURI}/users/me`, getUserId, null, 'GET', null, userToken);
+    getUserRegistration();
     console.log(locker);
     eventListenerExistsEndTimePicker = false;
     eventListenerStopRegBack = false;
