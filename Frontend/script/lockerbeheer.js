@@ -147,14 +147,17 @@ const showLockersLockermanagement = function(lockers) {
             </div>
             <div class="reservation_detail flex">
                 <p class="reservation_detail_title">Sport</p>
-                <select class="reservation_detail_content status_selector js-sport js-${locker.sport}" id="sport">
-
+                <select class="reservation_detail_content status_selector js-sport" id="sport">
+                    <option value="Voetbal">Voetbal</option>
+                    <option value="Basketbal">Basketbal</option>
                 </select>
             </div>
             <div class="reservation_detail flex">
                 <p for="status" class="reservation_detail_title">Status</p>
-                <select class="reservation_detail_content status_selector js-status js-${locker.status}" id="status">
-
+                <select class="reservation_detail_content status_selector js-status" id="status">
+                    <option value="Beschikbaar">Beschikbaar</option>
+                    <option value="Bezet">Bezet</option>
+                    <option value="Buiten gebruik">Buiten gebruik</option>
                 </select>
             </div>
             <div class="reservation_opmerking">
@@ -163,7 +166,8 @@ const showLockersLockermanagement = function(lockers) {
                 </label>
             </div>
         </div>`;
-        if (locker.sport == "Voetbal") {
+
+        /*if (locker.sport == "Voetbal") {
             console.log("voetbal")
             document.querySelectorAll('.js-Voetbal').innerHTML = `<option value="Voetbal" selected>Voetbal</option>
             <option value="Basketbal">Basketbal</option>`
@@ -184,7 +188,7 @@ const showLockersLockermanagement = function(lockers) {
             document.querySelectorAll('.js-Buiten').innerHTML = `<option value="Beschikbaar" >Beschikbaar</option>
             <option value="Bezet">Bezet</option>
             <option value="Buiten gebruik" selected>Buiten gebruik</option>`
-        }
+        }*/
 
         // Set sport & status
         document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-sport').value = locker.sport;
