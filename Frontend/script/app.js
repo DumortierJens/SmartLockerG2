@@ -2,6 +2,7 @@ let currentLockerID;
 let currentRegistrationID;
 let registrationStarted = false;
 let userToken;
+let urlParams, userTokenPayload;
 
 // #region Overview
 
@@ -717,7 +718,7 @@ function ListenToUserLogout() {
 function ListenToUserReservations() {
     document.querySelector('.js-reservations').addEventListener('click', function () {
         window.location.href = `${location.origin
-            }/profielreservatie${WEBEXTENTION}`;
+            }/reservaties${WEBEXTENTION}?users=me`;
     });
 }
 
@@ -767,6 +768,9 @@ function parseJwt(token) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    // Url params
+    urlParams = new URLSearchParams(window.location.search);
+
     // Pages
     const htmlPageLogin = document.querySelector('.js-login-page');
     const htmlPageBlocked = document.querySelector('.js-blocked-page');
@@ -778,13 +782,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Authentication
     userToken = sessionStorage.getItem("usertoken");
     if (userToken) {
-        const payload = parseJwt(userToken);
-        if (htmlPageBlocked == null && payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
+        userTokenPayload = parseJwt(userToken);
+        if (htmlPageBlocked == null && userTokenPayload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
     } else if (htmlPageLogin == null) {
         window.location.href = location.origin;
     }
-
-
 
     // Navigation
     htmlBackButton = document.querySelector('.js-back');
@@ -811,15 +813,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Pages load content
     if (htmlPageOverview) {
-        const payload = parseJwt(userToken);
-        if (payload.role == "Admin") showHamburger();
+        if (userTokenPayload.role == "Admin") showHamburger();
         getLockersOverview();
     }
 
     if (htmlPageLocker) {
-        const payload = parseJwt(userToken);
-        if (payload.role == "Admin") showHamburger();
-        const urlParams = new URLSearchParams(window.location.search);
+        if (userTokenPayload.role == "Admin") showHamburger();
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
         getCurrentRegistration(currentLockerID);
@@ -827,8 +826,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (htmlPageProfile) {
-        const payload = parseJwt(userToken);
-        if (payload.role == "Admin") showHamburger();
+        if (userTokenPayload.role == "Admin") showHamburger();
         getUserProfile();
         ListenToUserLogout();
     }

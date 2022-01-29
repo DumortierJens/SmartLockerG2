@@ -144,16 +144,19 @@ const showLocker = function (locker) {
 };
 
 const showReservations = function (reservations) {
-    // console.log(reservations);
+    console.log(reservations);
 
     let lockers = [];
     let registrations = [];
+    let users = [];
 
     let htmlString = '';
     for (const reservation of reservations) {
 
-        if (!lockers.includes(reservation.lockerId) && reservation.lockerId != '00000000-0000-0000-0000-000000000000') lockers.push(reservation.lockerId);
+
         if (!registrations.includes(reservation.registratieId) && reservation.registratieId != '00000000-0000-0000-0000-000000000000') registrations.push(reservation.registratieId);
+        if (!lockers.includes(reservation.lockerId)) lockers.push(reservation.lockerId);
+        if (!users.includes(reservation.userId)) users.push(reservation.userId);
 
         const startDate = new Date(reservation.startTime).toLocaleDateString("nl-BE");
         const endDate = new Date(reservation.endTime).toLocaleDateString("nl-BE");
@@ -240,11 +243,19 @@ const showReservations = function (reservations) {
 
     document.querySelector('.js-reservations').innerHTML = htmlString;
 
-    getUser('me');
     for (const locker of lockers)
         getLocker(locker);
+
     for (const registration of registrations)
         getRegistration(registration);
+
+    if (userTokenPayload.role == 'Admin') {
+        for (const user of users)
+            getUser(user);
+    }
+    else {
+        getUser('me');
+    }
 
     listenToTabs();
 };
@@ -261,10 +272,17 @@ const getLocker = function (id) {
     handleData(`${APIURI}/lockers/${id} `, showLocker, null, 'GET', null, userToken);
 };
 
-const getReservations = function () {
-    handleData(`${APIURI}/reservations/users/me`, showReservations, null, 'GET', null, userToken);
+const getReservations = function (userId) {
+    handleData(`${APIURI}/reservations${userId == 'all' ? '' : '/users/' + userId}`, showReservations, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-    getReservations();
+    const htmlPageReservations = document.querySelector('.js-reservations-page');
+    const userId = urlParams.get('users');
+
+    if (htmlPageReservations) {
+        if (userTokenPayload.role == 'User') getReservations('me');
+        else if (userTokenPayload.role == 'Admin' && !(userId == undefined || userId == 'all')) getReservations(userId);
+        else getReservations('all');
+    }
 });

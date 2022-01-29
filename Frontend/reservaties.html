@@ -12,14 +12,14 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
         <script src="script/svg.js"></script>
         <script src="script/app.js"></script>
-        <script src="script/profielreservatie.js"></script>
+        <script src="script/reservaties.js"></script>
         <script src="script/constants.js"></script>
         <script src="script/datahandler.js"></script>
         <script src="/script/loading.js"></script>
         <title>Smart Locker | Reservaties</title>
     </head>
 
-    <body>
+    <body class="js-reservations-page">
         <div class="locker_detail_blur js-background reservations_bg">
             <div class="header_smartlocker flex position_fixed">
                 <p class="header_smartlocker_center flex">Reservaties</p>
@@ -28,6 +28,9 @@
                 </div>
                 <div class="header_right_icon flex js-profile">
                     <span class="material-icons-outlined">person</span>
+                </div>
+                <div class="header_right_icon_profile flex js-menu">
+                    <span class="material-icons-outlined"> menu </span>
                 </div>
             </div>
             <div class="loading_container">
@@ -55,7 +58,7 @@
         <div class="locker_detail_popup js-popup popupreservation">
             <p class="open_locker_message">Weet je zeker dat je deze reservatie wil verwijderen?</p>
             <button class="locker_detail_popup_terug js-popup-cancel">Terug</button>
-            <button class="locker_detail_popup_open js-popup-ok">Verwijderen</button>
+            <button class="locker_detail_popup_open js-popup-open">Verwijderen</button>
         </div>
     </body>
 </html>

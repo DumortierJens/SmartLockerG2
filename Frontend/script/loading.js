@@ -9,7 +9,7 @@ function ShowPage() {
 
 function ShowLoadingScreen(timeout) {
     globalhtmlelement.style.opacity = "0";
-    htmloading.style.animation = `fadeout ${timeout / 1000}s`;
+    htmloading.style.animation = `fadeout 0.3s`;
     setTimeout(ShowPage, timeout);
 }
 
@@ -17,7 +17,6 @@ function init() {
     htmloading = document.querySelector('.loading_container');
     htmllogin = document.querySelector('.js-loginpage');
     htmlusers = document.querySelector('.js-userspage');
-    htmldashboard = document.querySelector('.js-dashboard');
     htmloverview = document.querySelector('.js-overviewpage');
     htmllocker = document.querySelector('.js-lockerpage');
     htmllockermanagement = document.querySelector('.js-locker-managementpage');
@@ -37,10 +36,6 @@ function init() {
     if (htmllockermanagement) {
         globalhtmlelement = htmllockermanagement;
         ShowLoadingScreen(1600);
-    }
-    if (htmldashboard) {
-        globalhtmlelement = htmldashboard;
-        ShowLoadingScreen(800);
     }
     if (htmlusers) {
         globalhtmlelement = htmlusers;
