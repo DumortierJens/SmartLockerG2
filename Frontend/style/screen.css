@@ -1002,7 +1002,7 @@ p {
     display: grid;
     width: 80%;
     max-width: 31.25rem;
-    grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon' 'afmeldentext activiteittext reservatietext';
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
