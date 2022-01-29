@@ -29,7 +29,9 @@ const checkLoginState = function () {
 const callbackLoginFacebookSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
+
     FB.logout();
+    console.log('User signed out of facebook.');
     goToCorrectPage();
 };
 
@@ -55,8 +57,12 @@ const loginFacebookUser = function (accessToken) {
 const callbackLoginGoogleSucceed = function (response) {
     console.log("Login succeed");
     sessionStorage.setItem("usertoken", response.token);
-    gapi.auth2.getAuthInstance().auth2.signOut();
-    goToCorrectPage();
+
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out of google.');
+        goToCorrectPage();
+    });
 };
 
 const loginGoogleUser = function (accessToken) {
