@@ -893,6 +893,7 @@ p {
 
 .deleteicon {
     cursor: pointer;
+    color: var(--blue-accent-color);
 }
 
 .popupreservation {
@@ -1040,6 +1041,7 @@ p {
 }
 
 .profile_icon_reservations {
+    color: var(--blue-accent-color);
     width: 1.5rem;
     height: 1.5rem;
     grid-area: reservatieicon;
