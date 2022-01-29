@@ -64,6 +64,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                 try
                 {
                     Models.User foundUser = await container.ReadItemAsync<Models.User>(user.Id, new PartitionKey(user.Id.ToString()));
+                    user.Tel = foundUser.Tel;
                     user.Role = foundUser.Role;
                     user.UserCreated = foundUser.UserCreated;
                 }
