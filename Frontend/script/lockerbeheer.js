@@ -167,11 +167,11 @@ const showLockersLockermanagement = function (lockers) {
                 </label>
             </div>
         </div>`;
-    }
 
-    // Set sport & status
-    document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-sport').value = locker.sport;
-    document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-status').value = locker.status;
+        // Set sport & status
+        document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-sport').value = locker.sport;
+        document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-status').value = locker.status;
+    }
 
     listenToTabs();
 };
