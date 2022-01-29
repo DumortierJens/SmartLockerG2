@@ -1,4 +1,4 @@
-function callbackDeleteReservation(reservation) {
+function callbackReloadPage() {
     htmlPopUp.style = "display: none;";
     window.location.reload();
 }
@@ -15,7 +15,7 @@ function listenToDelete(id) {
     htmlPopUpOk.addEventListener('click', function () {
         htmlBackground.style = "";
         htmlPopUp.style.animation = "fadeout 0.3s";
-        handleData(`${APIURI}/reservations/${id}`, callbackDeleteReservation, null, 'DELETE', null, userToken);
+        handleData(`${APIURI}/reservations/${id}`, callbackReloadPage, null, 'DELETE', null, userToken);
     });
 }
 
@@ -51,12 +51,11 @@ const listenToTabs = function () {
         const htmlCancelEditIcon = htmlTab.querySelector('.js-cancelEditIcon');
         const htmlDeleteIcon = htmlTab.querySelector('.js-deleteIcon');
 
-        const htmlNote = document.querySelector(`.js-note`);
-
         const id = htmlTab.dataset.id;
-        const note = htmlNote.innerHTML;
+        const registrationId = htmlTab.dataset.registrationId;
 
-        console.log(id);
+        const htmlNote = document.querySelector(`.js-note-registration-${registrationId}`);
+        const htmlUpdatedNote = document.querySelector(`.js-updatedNote`);
 
         htmlArrow.addEventListener('click', function () {
             if (htmlArrow.innerHTML == 'expand_more') {
@@ -75,15 +74,17 @@ const listenToTabs = function () {
             }
         });
 
-        htmlEditIcon.addEventListener('click', function () {
-            htmlTabDetails.style.display = 'none';
-            htmlTabEdit.style.display = 'block';
-        });
+        if (htmlEditIcon) {
+            htmlEditIcon.addEventListener('click', function () {
+                htmlTabDetails.style.display = 'none';
+                htmlTabEdit.style.display = 'block';
+            });
+        }
 
         htmlSaveEditIcon.addEventListener('click', function () {
-            const updatedNote = htmlNote.innerHTML;
+            const updatedNote = htmlUpdatedNote.innerHTML;
             const body = { note: updatedNote };
-            handleData(`${APIURI}/reservations/${id}`, showUpdatedReservation, null, 'PUT', JSON.stringify(body), userToken);
+            handleData(`${APIURI}/registrations/${registrationId}`, callbackReloadPage, null, 'PUT', JSON.stringify(body), userToken);
         });
 
         htmlCancelEditIcon.addEventListener('click', function () {
@@ -95,7 +96,7 @@ const listenToTabs = function () {
         });
 
         const cancelEdit = function () {
-            htmlNote.innerHTML = note;
+            htmlUpdatedNote.innerHTML = htmlNote.innerHTML;
             htmlTabEdit.style.display = 'none';
             htmlTabDetails.style.display = 'block';
         };
@@ -143,7 +144,7 @@ const showLocker = function (locker) {
 };
 
 const showReservations = function (reservations) {
-    console.log(reservations);
+    // console.log(reservations);
 
     let lockers = [];
     let registrations = [];
@@ -159,7 +160,7 @@ const showReservations = function (reservations) {
         const startTime = new Date(reservation.startTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
         const endTime = new Date(reservation.endTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
 
-        htmlString += `<div class="reservation_container js-tab js-tab-${reservation.id}" data-id="${reservation.id}">
+        htmlString += `<div class="reservation_container js-tab js-tab-${reservation.id}" data-id="${reservation.id}" data-registration-id="${reservation.registratieId}">
             <div class="js-tab-main reservation flex">
                 <img class="user_picture js-picture-${reservation.userId}" src="/img/profile_template.jpg" alt="user-picture" />
                 <div class="reservation_grid">
@@ -171,13 +172,11 @@ const showReservations = function (reservations) {
             </div>
             <div class="js-tab-details" style="display: none; animation: fadein 0.5s">
                 <div class="reservation_details_edit_and_delete flex">
-                    <div class="reservation_details_edit flex centerflex">
-                        <span class="editicon js-editIcon material-icons-outlined">edit</span>
-                    </div>
+                    ${(parseJwt(userToken).role == 'Admin' && reservation.registratieId != '00000000-0000-0000-0000-000000000000') ? '<div class="reservation_details_edit flex centerflex"><span class="editicon js-editIcon material-icons-outlined">edit</span></div>' : ""}
                     <div class="reservation_details_delete flex centerflex">
                         <span class="deleteicon js-deleteIcon material-icons-outlined">delete</span>
                     </div>
-                </div>
+                </div >
                 <div class="reservation_detail flex">
                     <p class="reservation_detail_title">Locker</p>
                     <p class="reservation_detail_content js-name-locker-${reservation.lockerId}"></p>
@@ -202,7 +201,7 @@ const showReservations = function (reservations) {
                     <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Opmerking</p>
                     <p style="font-size: 0.75rem" class="reservation_opmerking_content js-note-registration-${reservation.registratieId}"></p>
                 </div>
-            </div>
+            </div >
             <div class="js-tab-edit" style="display: none; animation: fadein 0.5s">
                 <div class="reservation_details_edit_and_delete flex">
                     <div class="reservation_details_edit flex centerflex">
@@ -233,21 +232,17 @@ const showReservations = function (reservations) {
                     <p class="reservation_detail_content js-end-registration-${reservation.registratieId}"></p>
                 </div>
                 <div class="reservation_opmerking">
-                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-note js-note-registration-${reservation.registratieId}" role="textbox" contenteditable></span></label>
+                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-updatedNote js-note-registration-${reservation.registratieId}" role="textbox" contenteditable></span></label>
                 </div>
             </div>
-        </div>`;
+        </div > `;
     }
 
     document.querySelector('.js-reservations').innerHTML = htmlString;
 
-    getUser();
-
-    console.log(lockers);
+    getUser('me');
     for (const locker of lockers)
         getLocker(locker);
-
-    console.log(registrations);
     for (const registration of registrations)
         getRegistration(registration);
 
@@ -255,15 +250,15 @@ const showReservations = function (reservations) {
 };
 
 const getRegistration = function (id) {
-    handleData(`${APIURI}/registrations/${id}`, showRegistration, null, 'GET', null, userToken);
+    handleData(`${APIURI}/registrations/${id} `, showRegistration, null, 'GET', null, userToken);
 };
 
 const getUser = function (id) {
-    handleData(`${APIURI}/users/me`, showUser, null, 'GET', null, userToken);
+    handleData(`${APIURI}/users/${id}`, showUser, null, 'GET', null, userToken);
 };
 
 const getLocker = function (id) {
-    handleData(`${APIURI}/lockers/${id}`, showLocker, null, 'GET', null, userToken);
+    handleData(`${APIURI}/lockers/${id} `, showLocker, null, 'GET', null, userToken);
 };
 
 const getReservations = function () {

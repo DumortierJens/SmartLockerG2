@@ -16,14 +16,14 @@ const handleData = function (url, callbackFunctionName, callbackErrorFunctionNam
           callbackErrorFunctionName(response);
         }
       } else {
-        console.info('>> Er is een response teruggekomen van de server');
+        // console.info('>> Er is een response teruggekomen van de server');
         return response.json();
       }
     })
     .then(function (jsonObject) {
-      if (jsonObject) {
-        console.info('>> JSONobject is aangemaakt');
-        console.info(`>> Callbackfunctie ${callbackFunctionName.name}(response) wordt opgeroepen`);
+      if (jsonObject && callbackFunctionName) {
+        // console.info('>> JSONobject is aangemaakt');
+        // console.info(`>> Callbackfunctie ${callbackFunctionName.name}(response) wordt opgeroepen`);
         callbackFunctionName(jsonObject);
       }
     });
