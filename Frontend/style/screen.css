@@ -962,6 +962,7 @@ p {
 
 .doneedit {
     fill: var(--green-bezig);
+    color: var(--green-bezig);
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
