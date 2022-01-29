@@ -43,36 +43,7 @@
             </div>
 
             <div class="reservations_table js-profilepage">
-                <div class="js-registrations reservations_table_content">
-                    <div class="reservation_container js-tab js-tab-${reservation.id}" data-id="${reservation.id}" data-registration-id="${reservation.registratieId}">
-                        <div class="js-tab-main reservation flex">
-                            <img class="user_picture js-picture-${reservation.userId}" src="/img/profile_template.jpg" alt="user-picture" />
-                            <div class="reservation_grid">
-                                <p class="reservation_name js-name-${reservation.userId}"></p>
-                                <p class="reservation_date">${startDate} ${startTime}</p>
-                            </div>
-                            <span class="arrow_more js-arrow material-icons-outlined">expand_more</span>
-                        </div>
-                        <div class="js-tab-details" style="display: block; animation: fadein 0.5s">
-                            <div class="reservation_detail flex">
-                                <p class="reservation_detail_title">Locker</p>
-                                <p class="reservation_detail_content js-name-locker-${reservation.lockerId}"></p>
-                            </div>
-                            <div class="reservation_detail flex">
-                                <p class="reservation_detail_title">Geopend</p>
-                                <p class="reservation_detail_content js-start-registration-${reservation.registratieId}"></p>
-                            </div>
-                            <div class="reservation_detail flex">
-                                <p class="reservation_detail_title">Teruggebracht</p>
-                                <p class="reservation_detail_content js-end-registration-${reservation.registratieId}"></p>
-                            </div>
-                            <div class="reservation_opmerking">
-                                <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Opmerking</p>
-                                <p style="font-size: 0.75rem" class="reservation_opmerking_content js-note-registration-${reservation.registratieId}"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="js-registrations reservations_table_content"></div>
             </div>
         </div>
     </body>
