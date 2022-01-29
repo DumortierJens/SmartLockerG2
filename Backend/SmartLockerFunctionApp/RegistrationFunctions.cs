@@ -61,7 +61,7 @@ namespace SmartLockerFunctionApp
                         LockerId = registration.LockerId,
                         UserId = registration.UserId,
                         RegistrationId = registration.Id,
-                        StartTime = DateTime.Now,
+                        StartTime = DateTime.UtcNow,
                         EndTime = endTimeReservation,
                         IsUsed = true
                     };
@@ -131,7 +131,7 @@ namespace SmartLockerFunctionApp
                 }
 
                 // Set registration defaults
-                registration.EndTime = DateTime.Now;
+                registration.EndTime = DateTime.UtcNow;
                 registration.Note = registrationEnd.Note;
 
                 // Validate end registration
