@@ -1,5 +1,6 @@
-function callbackDeleteReservation() {
+function callbackDeleteReservation(reservation) {
     htmlPopUp.style = "display: none;";
+    window.location.reload();
 }
 
 function showDeletePopUp(id) {
