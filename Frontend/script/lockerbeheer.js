@@ -96,7 +96,6 @@ const listenToTabs = function () {
 const showLockersLockermanagement = function (lockers) {
     console.log(lockers);
 
-    let htmlString = ``;
     for (const locker of lockers) {
 
         let statusClass = '';
@@ -107,7 +106,7 @@ const showLockersLockermanagement = function (lockers) {
         else if (locker.status == "Buiten gebruik")
             statusClass = "locker_status_out_of_use";
 
-        htmlString += `<div class="js-tab js-tab-${locker.id} locker_container" data-id="${locker.id}">
+        document.querySelector(".js-lockers").innerHTML += `<div class="js-tab js-tab-${locker.id} locker_container" data-id="${locker.id}">
             <div class="locker flex js-locker-${locker.id}">
             <img class="locker_img" src="/img/safe-deposit32.png" height="32" width="32" />
             <div class="locker_grid">
@@ -149,16 +148,15 @@ const showLockersLockermanagement = function (lockers) {
             </div>
             <div class="reservation_detail flex">
                 <p class="reservation_detail_title">Sport</p>
-                <p class="reservation_detail_content">${locker.sport}</p>
-                <select class="reservation_detail_content status_selector js-sport" id="sport" value="${locker.sport}">
+                <select class="reservation_detail_content status_selector js-sport" id="sport">
                     <option value="Voetbal">Voetbal</option>
                     <option value="Basketbal">Basketbal</option>
                 </select>
             </div>
             <div class="reservation_detail flex">
                 <p for="status" class="reservation_detail_title">Status</p>
-                <select class="reservation_detail_content status_selector js-status" id="status" value="${locker.status}">
-                    <option value="Beschikbaar">Beschikbaar</option>
+                <select class="reservation_detail_content status_selector js-status" id="status">
+                    <option value="Beschikbaar" >Beschikbaar</option>
                     <option value="Bezet">Bezet</option>
                     <option value="Buiten gebruik">Buiten gebruik</option>
                 </select>
@@ -171,7 +169,10 @@ const showLockersLockermanagement = function (lockers) {
         </div>`;
     }
 
-    document.querySelector(".js-lockers").innerHTML = htmlString;
+    // Set sport & status
+    document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-sport').value = locker.sport;
+    document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-status').value = locker.status;
+
     listenToTabs();
 };
 
