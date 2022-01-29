@@ -25,7 +25,7 @@ const listenToToggleBlock = function (id, isBlocked) {
 
 const listenToUserReservations = function (id) {
     document.querySelector('.js-reservations').addEventListener('click', function () {
-        window.location.href = `${location.origin}/profielreservatie_admin${WEBEXTENTION}?id=${id}`;
+        window.location.href = `${location.origin}/reservaties${WEBEXTENTION}?users=${id}`;
     });
 };
 
