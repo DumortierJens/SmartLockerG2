@@ -1023,7 +1023,7 @@ p {
 }
 
 .profile_icon_afmelden {
-    fill: var(--blue-accent-color);
+    color: var(--blue-accent-color);
     width: 1.5rem;
     height: 1.5rem;
     grid-area: afmeldenicon;
