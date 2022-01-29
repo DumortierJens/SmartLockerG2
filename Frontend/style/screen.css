@@ -203,7 +203,8 @@ p {
     margin: 0;
 }
 
-.locker_detail_opmerkingbtn, .locker_detail_stop_reg_btn {
+.locker_detail_opmerkingbtn,
+.locker_detail_stop_reg_btn {
     margin: 0 0 1.5rem 0;
     background-color: var(--blue-accent-color);
     border-style: none;
@@ -216,7 +217,7 @@ p {
     align-items: center;
 }
 
-.locker_detail_stop_reg_btn{
+.locker_detail_stop_reg_btn {
     background-color: var(--status-outofuse);
     display: none;
 }
@@ -313,7 +314,7 @@ p {
     min-width: 3.5rem;
 }
 
-.stop-registration-message{
+.stop-registration-message {
     font-size: 1.2rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -321,7 +322,8 @@ p {
     color: var(--blue-accent-color);
 }
 
-.stop-registration-info-confirm, .stop-registration-info-back{
+.stop-registration-info-confirm,
+.stop-registration-info-back {
     border: none;
     margin: 0.5rem;
     color: white;
@@ -334,7 +336,7 @@ p {
     cursor: pointer;
 }
 
-.stop-registration-info-back{
+.stop-registration-info-back {
     background-color: var(--status-outofuse);
 }
 
@@ -534,6 +536,7 @@ p {
 
 .login_content {
     font-size: 1.5rem;
+    text-align: center;
     color: var(--blue-accent-color);
     padding: 1rem;
 }
@@ -575,9 +578,11 @@ p {
 }
 
 .facebook_login {
+    display: flex;
+    justify-content: center;
     text-align: center;
     cursor: pointer;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
 .login_info {
@@ -941,7 +946,8 @@ p {
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
-.canceledit, .stop_registration {
+.canceledit,
+.stop_registration {
     color: var(--red-verlopen);
     fill: var(--red-verlopen);
     height: 1rem;
@@ -949,7 +955,7 @@ p {
     cursor: pointer;
 }
 
-.stop_registration{
+.stop_registration {
     fill: white;
 }
 
@@ -960,7 +966,7 @@ p {
     cursor: pointer;
 }
 
-.reservation_detail_content_name{
+.reservation_detail_content_name {
     border: none;
     border-bottom: 1px solid lightgrey;
     text-align: center;
@@ -1240,7 +1246,7 @@ p {
     width: 100%;
 }
 
-.privacy_policy_content{
+.privacy_policy_content {
     margin: 6rem 0 2rem 3rem;
 }
 
