@@ -1,8 +1,8 @@
-const callbackReloadPage = function (user) {
+const callbackReloadPage = function(user) {
     window.location.reload();
 };
 
-const showUserProfileAdmin = function (user) {
+const showUserProfileAdmin = function(user) {
     console.log(user);
 
     document.querySelector(".js-profile-picture").src = user.picture;
@@ -16,24 +16,31 @@ const showUserProfileAdmin = function (user) {
     listenToToggleBlock(user.id, user.isBlocked);
 };
 
-const listenToToggleBlock = function (id, isBlocked) {
+const listenToToggleBlock = function(id, isBlocked) {
     const htmlBlock = document.querySelector('.js-block');
-    htmlBlock.addEventListener('click', function () {
+    htmlBlock.addEventListener('click', function() {
         handleData(`${APIURI}/users/${id}/${isBlocked ? "unblock" : "block"}`, callbackReloadPage, null, 'POST', null, userToken);
     });
 };
 
-const listenToUserReservations = function (id) {
-    document.querySelector('.js-reservations').addEventListener('click', function () {
+const listenToUserReservations = function(id) {
+    document.querySelector('.js-reservations').addEventListener('click', function() {
         window.location.href = `${location.origin}/reservaties${WEBEXTENTION}?users=${id}`;
     });
 };
 
-const getUserProfileAdmin = function (id) {
+function ListenToUserActivities() {
+    document.querySelector('.js-activities').addEventListener('click', function() {
+        window.location.href = `${location.origin
+            }/activiteiten${WEBEXTENTION}?users=me`;
+    });
+}
+
+const getUserProfileAdmin = function(id) {
     handleData(`${APIURI}/users/${id}`, showUserProfileAdmin, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const htmlPageUserProfileAdmin = document.querySelector('.js-user-profile-admin-page');
 
     if (htmlPageUserProfileAdmin) {
@@ -41,5 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const id = urlParams.get('id');
         getUserProfileAdmin(id);
         listenToUserReservations(id);
+        ListenToUserActivities(id)
     }
 });
