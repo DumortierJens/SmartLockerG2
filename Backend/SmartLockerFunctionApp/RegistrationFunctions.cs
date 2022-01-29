@@ -168,7 +168,7 @@ namespace SmartLockerFunctionApp
 
         [FunctionName("GetAllRegistrations")]
         public async Task<IActionResult> GetRegistrations(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/all")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations")] HttpRequest req,
             ILogger log)
         {
             try
@@ -207,9 +207,35 @@ namespace SmartLockerFunctionApp
             }
         }
 
+        [FunctionName("GetRegistrationsByUserId")]
+        public async Task<IActionResult> GetRegistrationsByUserId(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/users/{userId}")] HttpRequest req,
+            string userId,
+            ILogger log)
+        {
+            try
+            {
+                if (Auth.IsBlocked)
+                    return new BadRequestObjectResult(new { code = 851, message = "This account is blocked" });
+
+                if (Auth.Role != "Admin" && userId != "me")
+                    return new UnauthorizedResult();
+                else if (userId == "me")
+                    userId = Auth.Id;
+
+                List<Registration> registrations = await RegistrationService.GetRegistrationsAsync(userId);
+
+                return new OkObjectResult(registrations);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         [FunctionName("GetCurrentRegistrationsByUserId")]
         public async Task<IActionResult> GetCurrentRegistrationsByUserId(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/users/{userId}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/users/{userId}/current")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -223,7 +249,7 @@ namespace SmartLockerFunctionApp
 
                 List<Registration> registrations = new List<Registration>();
                 IDictionary<string, string> queryParams = req.GetQueryParameterDictionary();
-                if (Guid.TryParse(queryParams["lockerId"], out Guid lockerId))
+                if (queryParams.Count > 0 && Guid.TryParse(queryParams["lockerId"].ToString(), out Guid lockerId))
                     registrations.Add(await RegistrationService.GetCurrentRegistrationAsync(lockerId, userId));
                 else
                     registrations.AddRange(await RegistrationService.GetCurrentRegistrationsAsync(userId));
@@ -235,6 +261,7 @@ namespace SmartLockerFunctionApp
                 return new StatusCodeResult(500);
             }
         }
+
         [FunctionName("GetRegistration")]
         public async Task<IActionResult> GetRegistration(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrations/{registrationId}")] HttpRequest req,

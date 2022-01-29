@@ -30,8 +30,24 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Registration>> GetRegistrationsAsync(Guid lockerId)
         {
             List<Registration> registrations = new List<Registration>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.lockerId = @id ORDER BY r._ts DESC");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.lockerId = @id ORDER BY r.startTime DESC");
             query.WithParameter("@id", lockerId);
+
+            FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
+            while (iterator.HasMoreResults)
+            {
+                FeedResponse<Registration> response = await iterator.ReadNextAsync();
+                registrations.AddRange(response);
+            }
+
+            return registrations;
+        }
+
+        public static async Task<List<Registration>> GetRegistrationsAsync(string userId)
+        {
+            List<Registration> registrations = new List<Registration>();
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r WHERE r.userId = @id ORDER BY r.startTime DESC");
+            query.WithParameter("@id", userId);
 
             FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
             while (iterator.HasMoreResults)
