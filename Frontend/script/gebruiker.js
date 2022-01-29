@@ -29,12 +29,11 @@ const listenToUserReservations = function(id) {
     });
 };
 
-function ListenToUserActivities() {
+const ListenToUserActivities = function(id) {
     document.querySelector('.js-activities').addEventListener('click', function() {
-        window.location.href = `${location.origin
-            }/activiteiten${WEBEXTENTION}?users=me`;
+        window.location.href = `${location.origin}/activiteiten${WEBEXTENTION}?users=${id}`;
     });
-}
+};
 
 const getUserProfileAdmin = function(id) {
     handleData(`${APIURI}/users/${id}`, showUserProfileAdmin, null, 'GET', null, userToken);
