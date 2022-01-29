@@ -141,7 +141,7 @@ const getLocker = function (id) {
 };
 
 const getRegistrations = function (userId) {
-    handleData(`${APIURI}/registrations${userId == 'all' ? '/all' : '/users/' + userId}`, showRegistrations, null, 'GET', null, userToken);
+    handleData(`${APIURI}/registrations${userId == 'all' ? '' : '/users/' + userId}`, showRegistrations, null, 'GET', null, userToken);
 };
 
 document.addEventListener('DOMContentLoaded', function () {
