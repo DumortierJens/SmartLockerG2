@@ -29,7 +29,7 @@ const listenToUserReservations = function(id) {
     });
 };
 
-const ListenToUserActivities = function(id) {
+const listenToUserActivities = function(id) {
     document.querySelector('.js-activities').addEventListener('click', function() {
         window.location.href = `${location.origin}/activiteiten${WEBEXTENTION}?users=${id}`;
     });
@@ -47,6 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const id = urlParams.get('id');
         getUserProfileAdmin(id);
         listenToUserReservations(id);
-        ListenToUserActivities(id)
+        listenToUserActivities(id)
     }
 });
