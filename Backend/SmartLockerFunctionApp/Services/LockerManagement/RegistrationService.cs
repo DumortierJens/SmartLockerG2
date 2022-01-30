@@ -15,7 +15,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Registration>> GetRegistrationsAsync()
         {
             List<Registration> registrations = new List<Registration>();
-            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r ORDER BY r._ts DESC");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Registrations r ORDER BY r.startTime DESC");
 
             FeedIterator<Registration> iterator = Container.GetItemQueryIterator<Registration>(query);
             while (iterator.HasMoreResults)
