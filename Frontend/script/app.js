@@ -519,6 +519,8 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
 }
 
 function CallBackStartRegistration() {
+    console.log("cb start reg")
+    window.location.reload()
     htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
     htmlBackground.style = '';
     setTimeout(DisplayNoneEndTimePicker, 300);
