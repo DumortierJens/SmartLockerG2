@@ -7,7 +7,6 @@ let index = 0;
 let imgElement;
 
 function change() {
-    console.log(imgElement)
     imgElement.src = images[index];
     index > 1 ? index = 0 : index++;
 }

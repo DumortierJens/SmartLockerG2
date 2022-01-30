@@ -589,12 +589,16 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 1rem;
+    padding-top: 2rem;
     gap: 3rem
 }
 
 .desktop {
     display: none;
+}
+
+.logo {
+    max-width: 10rem;
 }
 
 @media (min-width: 550px) {
@@ -607,14 +611,9 @@ p {
     .desktop {
         display: flex;
     }
-}
-
-.logo {
-    max-width: 10rem;
-}
-
-.logo_2 {
-    max-width: 5rem;
+    .logo_2 {
+        max-width: 10rem;
+    }
 }
 
 .login_info {
@@ -762,9 +761,9 @@ p {
 
 .gebruiker_icon {
     display: flex;
-    color: var(--blue-accent-color);
-    padding-left: 6.25rem;
-    align-items: center;
+    position: absolute;
+    right: 0;
+    padding: 20px 1.25rem 0 0
 }
 
 .reservation_grid,
