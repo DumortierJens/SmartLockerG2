@@ -320,7 +320,7 @@ namespace SmartLockerFunctionApp
                     return new NotFoundResult();
                 }
 
-                if (Auth.Role != "Admin" || Auth.Id == registration.UserId)
+                if (Auth.Role != "Admin" && Auth.Id != registration.UserId)
                     return new UnauthorizedResult();
 
                 registration.Note = updatedRegistration.Note;
