@@ -183,7 +183,11 @@ function CheckIfValidReservation() { // Waarden die voorlopig ingevuld staan oph
     };
     console.log(body);
     console.log("Wordt opgeslagen");
-    handleData(`${APIURI}/reservations/users/me`, null, null, 'POST', JSON.stringify(body), userToken);
+    handleData(`${APIURI}/reservations/users/me`, cbAddRegistration, null, 'POST', JSON.stringify(body), userToken);
+}
+
+function cbAddRegistration(){
+    window.history.back()
 }
 
 function SetReservationTime(jsonObject) {
