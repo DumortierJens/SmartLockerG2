@@ -1,4 +1,4 @@
-let currentLockerID;
+let currentLockerID, currentReservation;
 let currentRegistrationID;
 let userToken;
 let urlParams, userTokenPayload;
@@ -108,39 +108,55 @@ const showLockerDetail = function (locker) {
     htmlEndMinuteEndTimepicker = document.querySelector('.js-end-minute-endtimepicker');
     htmlStartRegistration = document.querySelector('.js-start-reg-btn');
     htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration');
+
     htmlLockerTitle.innerHTML = locker.name;
     htmlLockerDescription.innerHTML = locker.description;
     htmlLockerStatus.innerHTML = locker.status;
+    htmlLockerSvg.innerHTML = getSvg('locker close');
 
-    if (locker.status == 'Beschikbaar' || currentRegistrationID != null) {
-        htmlLockerInstructions.innerHTML = 'Tik op het slot om de locker te openen';
+    console.log(currentReservation);
+    console.log(currentRegistrationID);
+
+    if (currentRegistrationID) {
+        console.log("Activiteit bezig");
+
+        htmlLockerInstructions.innerHTML = 'Tik op het slot om de locker opnieuw te openen';
+        htmlLockerStatus.classList.add('locker_detail_content_status_color_unavailable');
+
+        htmlLockerStatus.innerHTML = 'Bezig';
+        htmlstopRegistrationBtn.style = "display: flex";
+        listenToClickToggleLocker(locker.id);
+        htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
+        listenToLockerStopRegistration();
+    }
+    else if (locker.status == 'Beschikbaar' || currentReservation) {
+        console.log("Activiteit starten");
+
+        htmlLockerInstructions.innerHTML = 'Tik op het slot om een activiteit te starten';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_available');
-        listenToLockerReservate(locker.id);
-        // checken of registratie al gestart is van deze gebruiker
-        // ==>ja: toon een button die de registratie kan afsluiten (onder het lock), als je hier op drukt komt er een pop up waar je een opmerking in kan toevoegen
-        //        en je kan nog steeds de locker openen zolang de registratie bezig is
-        // ==>nee: je kan de registratie starten door de locker te openen
-        // reserveren van de locker kan je altijd
-        if (currentRegistrationID != null) {
-            htmlLockerStatus.innerHTML = 'Bezig';
-            htmlstopRegistrationBtn.style = "display: flex";
-            console.log("registratie is bezig");
-            listenToClickToggleLocker(locker.id);
-            htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
-            listenToLockerStopRegistration();
-        } else {
-            listenToClickToggleLockerEndTimePicker(locker.id);
 
-            htmlLockerPopupMessage.innerHTML = "Je staat op het punt de registratie te starten. Kies een eindtijdstip";
-            // listener van de registratie afsluit knop
-            // andere htmlpopup met keuzemenu of alles in orde is
+        if (currentReservation) {
+            console.log("Reservatie");
+            htmlLockerStatus.innerHTML = 'Gereserveerd';
+            document.querySelector('.js-popup-message-start').innerHTML = `Je staat op het punt om een activiteit te starten, deze activiteit is gereserveerd tot ${new Date(currentReservation.endTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' })}. <br /><b>Waarschuwing: Als je de activiteit start open je de locker. Deze kan enkel manueel gesloten worden.</b>`;
+            document.querySelector('.js-end-holder').style.display = 'none';
         }
-    } else if (locker.status == 'Bezet') {
+        else {
+            console.log("Geen reservatie");
+            document.querySelector('.js-popup-message-start').innerHTML = "Je staat op het punt om een activiteit te starten, selecteer het tijdstip tot wanneer je wil reserveren. <br /><b>Waarschuwing: Als je de activiteit start open je de locker. Deze kan enkel manueel gesloten worden.</b>";
+            document.querySelector('.js-end-holder').style.display = 'flex';
+        }
+
+        listenToClickToggleLockerEndTimePicker(locker.id);
+    }
+    else if (locker.status == 'Bezet') {
+        console.log("Locker bezet");
         htmlLockerInstructions.innerHTML = 'Deze locker is momenteel in gebruik';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_unavailable');
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
-        listenToLockerReservate(locker.id);
-    } else if (locker.status == 'Buiten gebruik') {
+    }
+    else if (locker.status == 'Buiten gebruik') {
+        console.log("Locker buiten gebruik");
         htmlLockerInstructions.innerHTML = 'Deze locker is momenteel buiten gebruik';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_outofuse');
         htmlLockerSvg.classList.add('locker_detail_content_toggleSvg_outofuse');
@@ -260,7 +276,7 @@ function ListenToClickStopRegInfoConfirm() {
 
 function callbackStopRegistration() {
     htmlPopUpEndTimePicker.style = "display: none";
-    location.reload();
+    window.location.reload();
 }
 
 function listenToClickToggleLocker(lockerId) {
@@ -396,28 +412,20 @@ function addZero(value) {
 }
 
 function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingevuld staan ophalen
+
+    if (currentReservation) {
+        if (new Date(currentReservation.endTime).getTime() < Date.now()) {
+            console.log("Reservatie is vervallen! De pagina wordt herladen");
+            window.alert("Reservatie is vervallen! De pagina wordt herladen");
+            window.location.reload();
+        }
+    }
+
     let startHour = new Date().getHours();
-    console.log("Startuur", startHour);
     let startMinute = new Date().getMinutes();
-    console.log("Startminuut", startMinute);
     let endHour = parseInt(htmlEndHourEndTimePicker.value);
     let endMinute = parseInt(htmlEndMinuteEndTimepicker.value);
-    let hourNow = new Date().getHours();
-    let minuteNow = new Date().getMinutes();
-    let Day = new Date().getDate();
-    let chosenDay = new Date().getDate();
 
-    if (startHour < hourNow && Day == chosenDay) {
-        console.log("starttijdstip ligt in het verleden");
-        window.alert("Starttijdstip ligt in het verleden");
-        return;
-    }
-
-    if (startHour == hourNow && startMinute < minuteNow && Day == chosenDay) {
-        console.log("starttijdstip ligt in het verleden");
-        window.alert("Starttijdstip ligt in het verleden");
-        return;
-    }
     if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
         console.log("Eindtijdstip moet later liggen dan starttijdstip");
         window.alert("Eindtijdstip moet later liggen dan starttijdstip");
@@ -590,7 +598,6 @@ function listenToClickStartReg() {
 function listenToClickToggleLockerEndTimePicker(lockerid) {
     htmlLockerSvg.addEventListener('click', function () {
         htmlBackground.style = 'filter: blur(8px);';
-        console.log("Timepicker verschijnt");
         htmlPopUpEndTimePicker.style = "display: block;";
         htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
         fillOptionsSelectEndTimePicker();
@@ -618,7 +625,11 @@ function callbackOpenLocker(registration) {
     document.querySelector('.js-locker-instructions').innerHTML = 'Vergeet de locker niet manueel te sluiten';
     htmlPopUp.style.animation = 'fadeout 0.3s';
     handleData(`${APIURI}/lockers/${registration.lockerId
-        }/open`, null, null, 'POST', null, userToken);
+        }/open`, callbackOpenLocker, null, 'POST', null, userToken);
+}
+
+function callbackOpenLocker(locker) {
+    console.log('locker openend');
 }
 
 function listenToOpenLockerPopupCancel() {
@@ -642,19 +653,28 @@ function listenToLockerReservate(lockerId) {
     });
 }
 
+const callbackUserReservations = function (reservations) {
+    for (const reservation of reservations) {
+        if (reservation.lockerId == currentLockerID && new Date(reservation.endTime) > Date.now() && new Date(reservation.startTime) < Date.now()) {
+            currentReservation = reservation;
+            break;
+        }
+    }
+    getCurrentRegistration();
+};
+
 const callbackCurrentRegistration = function (registration) {
     if (registration[0] != null)
         currentRegistrationID = registration[0].id;
-};
-
-const callbackCurrentRegistrationFirst = function (registration) {
-    callbackCurrentRegistration(registration);
     getLockerDetail(currentLockerID);
 };
 
-const getCurrentRegistration = function (lockerId, first) {
-    callback = first == true ? callbackCurrentRegistrationFirst : callbackCurrentRegistration;
-    handleData(`${APIURI}/registrations/users/me/current?lockerId=${lockerId}`, callback, null, 'GET', null, userToken);
+const getCurrentRegistration = function () {
+    handleData(`${APIURI}/registrations/users/me/current?lockerId=${currentLockerID}`, callbackCurrentRegistration, null, 'GET', null, userToken);
+};
+
+const getUserReservations = function () {
+    handleData(`${APIURI}/reservations/users/me`, callbackUserReservations, null, 'GET', null, userToken);
 };
 
 const getLockerDetail = function (lockerId) {
@@ -799,7 +819,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (userTokenPayload.role == "Admin") showHamburger();
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
-        getCurrentRegistration(lockerId, true);
+        getUserReservations();
+        listenToLockerReservate(lockerId);
     }
 
     if (htmlPageProfile) {

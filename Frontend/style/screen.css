@@ -83,7 +83,6 @@ p {
     margin: 0;
 }
 
-
 /*Lockerdetailpage*/
 
 .header_smartlocker {
@@ -182,7 +181,7 @@ p {
 }
 
 .locker_detail_content_toggleSvg {
-    height: 11.25rem;
+    height: 9.375rem;
     width: 9.375rem;
     cursor: pointer;
 }
@@ -267,15 +266,16 @@ p {
 .locker_detail_popup {
     display: none;
     position: fixed;
-    width: 18.75rem;
+    width: 80%;
     top: 50%;
     left: 50%;
     margin-top: -6.25rem;
-    margin-left: -9.375rem;
+    margin-left: -40%;
     background-color: white;
     border-radius: 4px;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     text-align: center;
+    padding: 1rem;
 }
 
 .cancel_registration_btn {
@@ -375,7 +375,6 @@ p {
     cursor: pointer;
     margin: 0.5rem 0 0.5rem 0;
 }
-
 
 /* overview pagina */
 
@@ -502,7 +501,6 @@ p {
     align-self: center;
 }
 
-
 /* Login Page */
 
 .login_page_bg {
@@ -604,7 +602,6 @@ p {
     color: white;
 }
 
-
 /*Dashboard*/
 
 .dashboard-content {
@@ -622,7 +619,6 @@ p {
     margin: 0 0 0 0.8em;
     color: var(--blue-accent-color);
 }
-
 
 /* Reservatiepagina */
 
@@ -961,18 +957,18 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked+.checkbox_box {
+.checkbox_input:checked + .checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
 .canceledit,
 .stop_registration {
-    color: var(--red-verlopen);
     fill: var(--red-verlopen);
-    height: 1rem;
-    width: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
     cursor: pointer;
+    display: flex;
 }
 
 .stop_registration {
@@ -995,7 +991,6 @@ p {
     padding-bottom: 0.3rem;
     outline: none;
 }
-
 
 /* Profielpagina */
 
@@ -1097,7 +1092,6 @@ p {
     margin-bottom: 1rem;
 }
 
-
 /* Lockerbeheer */
 
 .status_selector {
@@ -1142,7 +1136,6 @@ p {
 .locker_status_available {
     color: var(--status-available);
 }
-
 
 /* Add reservation */
 
@@ -1249,7 +1242,6 @@ p {
     color: var(--red-verlopen);
 }
 
-
 /* Loading screen */
 
 .loading_container {
@@ -1271,7 +1263,6 @@ p {
 .privacy_policy_content {
     margin: 6rem 0 2rem 3rem;
 }
-
 
 /* Animations*/
 
