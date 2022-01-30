@@ -123,7 +123,7 @@ namespace SmartLockerFunctionApp
                     return new StatusCodeResult(503);
                 }
 
-                return new OkObjectResult("Locker opened");
+                return new OkObjectResult(new { Message = "Locker Opened"});
             }
             catch (Exception)
             {

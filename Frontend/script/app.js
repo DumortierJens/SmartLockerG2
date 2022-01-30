@@ -1,6 +1,6 @@
 let currentLockerID;
 let currentRegistrationID;
-let registrationStarted = false;
+let registrationStarted;
 let userToken;
 let urlParams, userTokenPayload;
 
@@ -91,22 +91,9 @@ const showHamburger = function () {
     htmlMenuButton.style = "display:flex";
 };
 
-const getUserRegistration = function (lockerId) {
-    handleData(`${APIURI}/registrations/users/me?lockerId=${lockerId}`, setRegistrationStarted, null, 'GET', null, userToken);
-};
-
-const setRegistrationStarted = function (jsonObject) {
-    currRegistrationId = jsonObject.id;
-    if (jsonObject.id) {
-        registrationStarted = true;
-    } else {
-        registrationStarted = false;
-    }
-};
-
 const showLockerDetail = function (locker) {
-    getUserRegistration(locker.id);
     console.log(locker);
+
     eventListenerExistsEndTimePicker = false;
     eventListenerStopRegBack = false;
     eventListenerStopRegConfirm = false;
@@ -136,6 +123,7 @@ const showLockerDetail = function (locker) {
         // ==>nee: je kan de registratie starten door de locker te openen
         // reserveren van de locker kan je altijd
         if (registrationStarted) {
+            console.log(registrationStarted);
             htmlLockerStatus.innerHTML = 'Bezig';
             htmlstopRegistrationBtn.style = "display: flex";
             console.log("registratie is bezig");
@@ -516,11 +504,14 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
         "endTimeReservation": endTime
     };
-    handleData(`${APIURI}/registrations/start`, CallBackStartRegistration, null, 'POST', JSON.stringify(bodyRegistration), userToken);
+    handleData(`${APIURI}/registrations/start`, callbackStartRegistration, null, 'POST', JSON.stringify(bodyRegistration), userToken);
 
 }
 
-function CallBackStartRegistration() {
+function callbackStartRegistration() {
+    getCurrentRegistration(currentLockerID);
+    handleData(`${APIURI}/lockers/${currentLockerID}/open`, callbackOpenLocker, null, 'POST', null, userToken);
+
     htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
     htmlBackground.style = '';
     setTimeout(DisplayNoneEndTimePicker, 300);
@@ -549,24 +540,6 @@ function CallBackStartRegistration() {
     htmlstopRegistrationBtn.removeEventListener('click', function () {
 
     });
-    getCurrentRegistration();
-}
-
-function cbStartRegistration() {
-    htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
-    htmlBackground.style = '';
-    registrationStarted = true;
-    setTimeout(DisplayNoneEndTimePicker, 300);
-    document.querySelector('.js-locker-reservate').removeEventListener('click', function () {
-        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
-    });
-    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration');
-    htmlstopRegistrationBtn.removeEventListener('click', function () {
-        console.log("Registratie wordt gestopt");
-    });
-
-
-    getLockerDetail(currentLockerID);
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
@@ -675,18 +648,20 @@ function listenToLockerReservate(lockerId) {
     });
 }
 
-const getCurrentRegistration = function (lockerId) {
-    handleData(`${APIURI}/registrations/users/me?lockerId=${lockerId}`, setRegistrationValue, null, 'GET', null, userToken);
+const callbackCurrentRegistration = function (registration) {
+    registrationStarted = registration[0] != null ? true : false;
+    if (registrationStarted)
+        currRegistrationId = registration[0].id;
 };
 
-const setRegistrationValue = function (jsonObject) {
-    console.log(jsonObject);
-    if (jsonObject[0] != null) {
-        currentRegistrationID = jsonObject[0].id;
-        registrationStarted = true;
-    }
-
+const callbackCurrentRegistrationFirst = function (registration) {
+    callbackCurrentRegistration(registration);
     getLockerDetail(currentLockerID);
+};
+
+const getCurrentRegistration = function (lockerId, first) {
+    callback = first == true ? callbackCurrentRegistrationFirst : callbackCurrentRegistration;
+    handleData(`${APIURI}/registrations/users/me/current?lockerId=${lockerId}`, callback, null, 'GET', null, userToken);
 };
 
 const getLockerDetail = function (lockerId) {
@@ -831,7 +806,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (userTokenPayload.role == "Admin") showHamburger();
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
-        getCurrentRegistration(currentLockerID);
+        getCurrentRegistration(lockerId, true);
     }
 
     if (htmlPageProfile) {
