@@ -258,8 +258,8 @@ function ListenToClickStopRegInfoConfirm() {
     });
 }
 
-function cbEndRegistration() {
-    htmlPopUpEndTimePicker.style = "display: none"
+function callbackStopRegistration() {
+    htmlPopUpEndTimePicker.style = "display: none";
     location.reload();
 }
 
@@ -549,8 +549,8 @@ const getReservationsEndTimePicker = function () {
 };
 
 function fillOptionsSelectEndTimePicker() {
-    htmlEndHourEndTimePicker.innerHTML = ``
-    htmlEndMinuteEndTimepicker.innerHTML = ``
+    htmlEndHourEndTimePicker.innerHTML = ``;
+    htmlEndMinuteEndTimepicker.innerHTML = ``;
     for (let hour = 5; hour < 23; hour++) {
         htmlEndHourEndTimePicker.innerHTML += `<option value="${hour}">${hour}</option>`;
 
@@ -580,7 +580,7 @@ function listenToClickCancelEndTimePicker() {
 
 function listenToClickStartReg() {
     let htmlStartReg = document.querySelector('.js-start-reg-btn');
-    htmlStartReg.addEventListener('click', function() {
+    htmlStartReg.addEventListener('click', function () {
         htmlBackground.style = '';
         htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
         setTimeout(DisplayNoneEndTimePicker, 300);
@@ -595,7 +595,7 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
         htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
         fillOptionsSelectEndTimePicker();
         getReservationsEndTimePicker();
-        listenToClickCancelEndTimePicker()
+        listenToClickCancelEndTimePicker();
         listenToClickStartReg();
     });
 }
