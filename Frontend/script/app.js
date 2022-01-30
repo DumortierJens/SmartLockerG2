@@ -472,27 +472,24 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         }
     }
 
+    let now = new Date(Date.now());
+    let end = new Date(new Date(now).setHours(htmlEndHourEndTimePicker.value, htmlEndMinuteEndTimepicker.value, 0, 0));
+    let endTimeReservation = end.toISOString();
+
     // Kijken of een slot niet langer dan 90 minuten duurt
-    let start = new Date("2022-01-01 " + inputString.slice(0, 8));
-    let end = new Date("2022-01-01 " + inputString.slice(9, 18));
-    var diff = Math.abs(end - start);
-    var minutes = Math.floor((diff / 1000) / 60);
-    if (minutes > 90) {
+    let diffMin = new Date(end - now).getMinutes();
+    if (diffMin > 90) {
         console.log("Je kan slechts maximum 90 minuten reserveren !");
         window.alert("Je kan slechts maximum 90 minuten reserveren !");
         return;
     }
-    // console.log("Dit tijdstip is in orde, sla de reservatie op");
-    // let todayString = new Date().getFullYear() + "-" + addZero((parseInt(new Date().getMonth()) + 1).toString()) + "-" + addZero(new Date().getDate());
-    // let startTime = todayString + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00";
-    // let endTime = todayString + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00";
+
+    console.log("Geldig tijdstip");
     const body = {
         "lockerId": currentLockerID,
-        "endTimeReservation": end.toISOString()
+        "endTimeReservation": endTimeReservation
     };
-    console.log(body);
     handleData(`${APIURI}/registrations/start`, callbackStartRegistration, null, 'POST', JSON.stringify(body), userToken);
-
 }
 
 function callbackStartRegistration() {
