@@ -172,6 +172,9 @@ const showReservations = function (reservations) {
         </div > `;
     }
 
+    if (htmlString == '')
+        htmlString = 'Geen reservaties gevonden';
+
     document.querySelector('.js-reservations').innerHTML = htmlString;
 
     for (const locker of lockers)

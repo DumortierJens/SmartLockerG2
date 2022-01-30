@@ -179,6 +179,9 @@ const showRegistrations = function (registrations) {
         </div>`;
     }
 
+    if (htmlString == '')
+        htmlString = 'Geen activiteiten gevonden';
+
     document.querySelector('.js-registrations').innerHTML = htmlString;
 
     for (const locker of lockers)
