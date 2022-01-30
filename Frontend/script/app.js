@@ -275,9 +275,8 @@ function ListenToClickStopRegInfoConfirm() {
 }
 
 function cbEndRegistration() {
-    console.log("ja");
-    //Hier moet ik mn registratieId ophalen om dan mee te geven in een handledata om zo mn data te sturen naar de backend, ook tijdstip wnr alles
-    //meegegeven wordt moet ook nog meegegeven worden aan de body en dat heb ik nog niet gedaan grt Jarne
+    htmlPopUpEndTimePicker.style = "display: none"
+    location.reload();
 }
 
 function listenToClickToggleLocker(lockerId) {
@@ -593,6 +592,8 @@ const getReservationsEndTimePicker = function() {
 };
 
 function fillOptionsSelectEndTimePicker() {
+    htmlEndHourEndTimePicker.innerHTML = ``
+    htmlEndMinuteEndTimepicker.innerHTML = ``
     for (let hour = 5; hour < 23; hour++) {
         htmlEndHourEndTimePicker.innerHTML += `<option value="${hour}">${hour}</option>`;
 
@@ -620,6 +621,15 @@ function listenToClickCancelEndTimePicker() {
     });
 }
 
+function listenToClickStartReg() {
+    let htmlStartReg = document.querySelector('.js-start-reg-btn');
+    htmlStartReg.addEventListener('click', function() {
+        htmlBackground.style = '';
+        htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
+        setTimeout(DisplayNoneEndTimePicker, 300);
+    });
+}
+
 function listenToClickToggleLockerEndTimePicker(lockerid) {
     htmlLockerSvg.addEventListener('click', function() {
         htmlBackground.style = 'filter: blur(8px);';
@@ -628,7 +638,8 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
         htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
         fillOptionsSelectEndTimePicker();
         getReservationsEndTimePicker();
-        listenToClickCancelEndTimePicker();
+        listenToClickCancelEndTimePicker()
+        listenToClickStartReg();
     });
 }
 
