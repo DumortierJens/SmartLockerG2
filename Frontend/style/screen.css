@@ -83,7 +83,6 @@ p {
     margin: 0;
 }
 
-
 /*Lockerdetailpage*/
 
 .header_smartlocker {
@@ -376,7 +375,6 @@ p {
     margin: 0.5rem 0 0.5rem 0;
 }
 
-
 /* overview pagina */
 
 .overview_page {
@@ -502,7 +500,6 @@ p {
     align-self: center;
 }
 
-
 /* Login Page */
 
 .login_page_bg {
@@ -574,7 +571,7 @@ p {
 
 .info-gsm {
     font-size: 1rem;
-    color: var(--blue-accent-color)
+    color: var(--blue-accent-color);
 }
 
 .facebook_login {
@@ -604,13 +601,12 @@ p {
     color: white;
 }
 
-
 /*Dashboard*/
 
 .dashboard-content {
     display: flex;
     align-items: center;
-    gap: 1.2em
+    gap: 1.2em;
 }
 
 .dashboard-content-img {
@@ -620,9 +616,8 @@ p {
 
 .dashboard-icon {
     margin: 0 0 0 0.8em;
-    color: var(--blue-accent-color)
+    color: var(--blue-accent-color);
 }
-
 
 /* Reservatiepagina */
 
@@ -854,7 +849,7 @@ p {
     margin: 0 auto 0 auto;
     border-top: 1px solid var(--grey-bg);
     text-align: start;
-    padding: 0 0 1rem 1rem;
+    padding: 0 1rem 1rem;
     border-radius: 0 0 0.5rem 0.5rem;
 }
 
@@ -866,8 +861,9 @@ p {
 
 .textarea {
     display: block;
-    width: 90%;
-    overflow: hidden;
+    width: 100%;
+    overflow: auto;
+    overflow-x: hidden;
     resize: none;
     border: 1px solid lightgrey;
     border-radius: 0.2rem;
@@ -877,7 +873,7 @@ p {
     color: black;
     font-weight: 400;
     padding: 0.25rem;
-    max-height: 12.5rem;
+    margin-top: 1rem;
 }
 
 .reservation_more_border {
@@ -948,7 +944,7 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked+.checkbox_box {
+.checkbox_input:checked + .checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -982,7 +978,6 @@ p {
     padding-bottom: 0.3rem;
     outline: none;
 }
-
 
 /* Profielpagina */
 
@@ -1084,7 +1079,6 @@ p {
     margin-bottom: 1rem;
 }
 
-
 /* Lockerbeheer */
 
 .status_selector {
@@ -1129,7 +1123,6 @@ p {
 .locker_status_available {
     color: var(--status-available);
 }
-
 
 /* Add reservation */
 
@@ -1236,7 +1229,6 @@ p {
     color: var(--red-verlopen);
 }
 
-
 /* Loading screen */
 
 .loading_container {
@@ -1258,7 +1250,6 @@ p {
 .privacy_policy_content {
     margin: 6rem 0 2rem 3rem;
 }
-
 
 /* Animations*/
 
@@ -1298,7 +1289,7 @@ p {
 @media (min-width: 800px) {
     .centered_content {
         position: absolute;
-        left: 12.5rem
+        left: 12.5rem;
     }
 }
 

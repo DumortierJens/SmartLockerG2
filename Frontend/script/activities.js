@@ -25,9 +25,9 @@ const listenToTabs = function () {
         const htmlSaveEditIcon = htmlTab.querySelector('.js-saveEditIcon');
         const htmlCancelEditIcon = htmlTab.querySelector('.js-cancelEditIcon');
         const htmlNote = htmlTab.querySelector(`.js-note`);
-        const htmlUpdatedNote = htmlTab.querySelector(`.js-updated-note`);
 
         const id = htmlTab.dataset.id;
+        const note = htmlNote.innerHTML;
 
         htmlArrow.addEventListener('click', function () {
             if (htmlArrow.innerHTML == 'expand_more') {
@@ -54,7 +54,7 @@ const listenToTabs = function () {
         }
 
         htmlSaveEditIcon.addEventListener('click', function () {
-            const updatedNote = htmlUpdatedNote.innerHTML;
+            const updatedNote = htmlNote.innerHTML;
             const body = { note: updatedNote };
             handleData(`${APIURI}/registrations/${id}`, callbackReloadPage, null, 'PUT', JSON.stringify(body), userToken);
         });
@@ -64,8 +64,7 @@ const listenToTabs = function () {
         });
 
         const cancelEdit = function () {
-            console.log(htmlNote.innerHTML);
-            htmlUpdatedNote.innerHTML = htmlNote.innerHTML;
+            htmlNote.innerHTML = note;
             htmlTabEdit.style.display = 'none';
             htmlTabDetails.style.display = 'block';
         };
@@ -174,7 +173,7 @@ const showRegistrations = function (registrations) {
                     <p class="reservation_detail_content">${new Date(registration.endTime).toLocaleString('nl-BE')}</p>
                 </div>
                 <div class="reservation_opmerking">
-                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-updated-note" role="textbox" contenteditable>${registration.note}</span></label>
+                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <textarea class="textarea js-note" rows="5" >${registration.note}</textarea></label>
                 </div>
             </div>
         </div>`;
