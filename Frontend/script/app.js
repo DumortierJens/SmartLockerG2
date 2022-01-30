@@ -1,12 +1,12 @@
 let currentLockerID;
 let currentRegistrationID;
-let registrationStarted = false;
+let registrationStarted;
 let userToken;
 let urlParams, userTokenPayload;
 
 // #region Overview
 
-const showLockers = function(lockers) {
+const showLockers = function (lockers) {
     console.log(lockers);
 
     let htmlString = ``;
@@ -37,11 +37,11 @@ const showLockers = function(lockers) {
     listenToLockerIcon();
 };
 
-const listenToLockerIcon = function() {
+const listenToLockerIcon = function () {
     const lockers = document.querySelectorAll('.js-locker');
 
     for (const locker of lockers) {
-        locker.addEventListener('click', function() {
+        locker.addEventListener('click', function () {
             window.location.href = `${location.origin
                 }/locker${WEBEXTENTION}?lockerId=${this.dataset.id
                 }`;
@@ -50,7 +50,7 @@ const listenToLockerIcon = function() {
     }
 };
 
-const getLockersOverview = function() {
+const getLockersOverview = function () {
     handleData(`${APIURI}/lockers`, showLockers, null, 'GET', null, userToken);
 };
 
@@ -76,36 +76,24 @@ let htmlBackground,
     htmlstopRegistrationBtn,
     eventListenerStopRegExists = false;
 
-let ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
-ws.onmessage = (event) => {
-    console.log(event.data.json());
-    const data = JSON.parse(event.data);
-    if (data.device.lockerId == currentLockerID && data.log.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && data.log.value == 1) {
-        console.log('test');
-        htmlLockerSvg.innerHTML = getSvg('locker close');
-    }
+const listenToChangeLockerState = function () {
+    ws = new WebSocket('wss://smartlocker.webpubsub.azure.com/client/hubs/SmartLockerHub');
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log(data);
+        if (data.device.lockerId == currentLockerID && data.log.deviceId == "fc5a0661-20fc-4eb1-95d7-e27e19f211df" && data.log.value == 1) {
+            htmlLockerSvg.innerHTML = getSvg('locker close');
+        }
+    };
 };
 
-const showHamburger = function() {
+const showHamburger = function () {
     htmlMenuButton.style = "display:flex";
 };
 
-const getUserRegistration = function(lockerId) {
-    handleData(`${APIURI}/registrations/users/me?lockerId=${lockerId}`, setRegistrationStarted, null, 'GET', null, userToken);
-};
-
-const setRegistrationStarted = function(jsonObject) {
-    currRegistrationId = jsonObject.id;
-    if (jsonObject.id) {
-        registrationStarted = true;
-    } else {
-        registrationStarted = false;
-    }
-};
-
-const showLockerDetail = function(locker) {
-    getUserRegistration(locker.id);
+const showLockerDetail = function (locker) {
     console.log(locker);
+
     eventListenerExistsEndTimePicker = false;
     eventListenerStopRegBack = false;
     eventListenerStopRegConfirm = false;
@@ -135,6 +123,7 @@ const showLockerDetail = function(locker) {
         // ==>nee: je kan de registratie starten door de locker te openen
         // reserveren van de locker kan je altijd
         if (registrationStarted) {
+            console.log(registrationStarted);
             htmlLockerStatus.innerHTML = 'Bezig';
             htmlstopRegistrationBtn.style = "display: flex";
             console.log("registratie is bezig");
@@ -168,7 +157,7 @@ function displayNoneStopRegistration() {
 function ListenToClickCheckBoxes() {
     const checkboxes = document.querySelectorAll('.js-checkbox-stop-registration');
     for (let checkbox of checkboxes) {
-        checkbox.addEventListener('click', function() {
+        checkbox.addEventListener('click', function () {
             if (!checkbox.classList.contains('box_checked')) {
                 checkbox.style = `border-color: var(--blue-accent-color); content: url('/svg/iconmonstr-check-mark-17.svg');`;
                 checkbox.style.animation = "fadein 0.5s";
@@ -183,18 +172,18 @@ function ListenToClickCheckBoxes() {
 
 function listenToLockerStopRegistration() {
     htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration');
-    htmlstopRegistrationBtn.addEventListener('click', function() {
+    htmlstopRegistrationBtn.addEventListener('click', function () {
         console.log("Stop registratie knop");
         htmlPopUpStopRegistration = document.querySelector('.js-popup-stop-registration');
         htmlPopUpCancelStopRegistration = document.querySelector('.js-popup-cancel-stop-reservation');
         htmlPopUpConfirmStopRegistration = document.querySelector('.js-popup-stop-reservation');
         htmlPopUpStopRegistration.style = "display:block";
-        htmlPopUpCancelStopRegistration.addEventListener('click', function() {
+        htmlPopUpCancelStopRegistration.addEventListener('click', function () {
             console.log("Cancel");
             htmlPopUpStopRegistration.style.animation = "fadeout 0.3s";
             setTimeout(displayNoneStopRegistration, 300);
         });
-        htmlPopUpConfirmStopRegistration.addEventListener('click', function() {
+        htmlPopUpConfirmStopRegistration.addEventListener('click', function () {
             console.log("Registratie wordt gestopt");
             htmlPopUpStopRegistration.innerHTML = `<p class="stop-registration-message">Is het materiaal in orde?</p>
                 <div class="reservation_detail flex">
@@ -224,7 +213,7 @@ function listenToLockerStopRegistration() {
 
 function ListenToClickStopRegInfoBack() {
     htmlStopRegBack = document.querySelector('.js-stop-registration-info-back');
-    htmlStopRegBack.addEventListener('click', function() {
+    htmlStopRegBack.addEventListener('click', function () {
         htmlPopUpStopRegistration.style = "display: none";
         htmlPopUpStopRegistration.innerHTML = `
             <p class="open_locker_message js-popup-message">Wil je stoppen met het materiaal te gebruiken?</p>
@@ -238,7 +227,7 @@ function ListenToClickStopRegInfoBack() {
 
 function ListenToClickStopRegInfoConfirm() {
     htmlStopRegConfirm = document.querySelector('.js-stop-registration-info-confirm');
-    htmlStopRegConfirm.addEventListener('click', function() {
+    htmlStopRegConfirm.addEventListener('click', function () {
         let materiële_schade = "nee";
         let ontbrekend_materiaal = "nee";
         let opmerking = document.querySelector('.js-stop-reg-opmerking').innerHTML;
@@ -280,7 +269,7 @@ function cbEndRegistration() {
 }
 
 function listenToClickToggleLocker(lockerId) {
-    htmlLockerSvg.addEventListener('click', function() {
+    htmlLockerSvg.addEventListener('click', function () {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -514,21 +503,22 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
         "endTimeReservation": endTime
     };
-    handleData(`${APIURI}/registrations/start`, CallBackStartRegistration, null, 'POST', JSON.stringify(bodyRegistration), userToken);
+    handleData(`${APIURI}/registrations/start`, callbackStartRegistration, null, 'POST', JSON.stringify(bodyRegistration), userToken);
 
 }
 
-function CallBackStartRegistration() {
-    console.log("cb start reg")
-    window.location.reload()
+function callbackStartRegistration() {
+    getCurrentRegistration(currentLockerID);
+    handleData(`${APIURI}/lockers/${currentLockerID}/open`, callbackOpenLocker, null, 'POST', null, userToken);
+
     htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
     htmlBackground.style = '';
     setTimeout(DisplayNoneEndTimePicker, 300);
     registrationStarted = true;
-    document.querySelector('.js-locker-reservate').removeEventListener('click', function() {
+    document.querySelector('.js-locker-reservate').removeEventListener('click', function () {
         window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
-    htmlLockerSvg.removeEventListener('click', function() {
+    htmlLockerSvg.removeEventListener('click', function () {
         htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt");
         htmlPopUpEndTimePicker.style = "display: block;";
@@ -538,7 +528,7 @@ function CallBackStartRegistration() {
         listenToClickCancelEndTimePicker();
     });
 
-    htmlLockerSvg.removeEventListener('click', function() {
+    htmlLockerSvg.removeEventListener('click', function () {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
@@ -546,32 +536,14 @@ function CallBackStartRegistration() {
         listenToOpenLockerPopupCancel();
     });
     htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration');
-    htmlstopRegistrationBtn.removeEventListener('click', function() {
+    htmlstopRegistrationBtn.removeEventListener('click', function () {
 
     });
-    getCurrentRegistration();
-}
-
-function cbStartRegistration() {
-    htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
-    htmlBackground.style = '';
-    registrationStarted = true;
-    setTimeout(DisplayNoneEndTimePicker, 300);
-    document.querySelector('.js-locker-reservate').removeEventListener('click', function() {
-        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
-    });
-    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration');
-    htmlstopRegistrationBtn.removeEventListener('click', function() {
-        console.log("Registratie wordt gestopt");
-    });
-
-
-    getLockerDetail(currentLockerID);
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
     if (!eventListenerExistsEndTimePicker) {
-        htmlStartRegistration.addEventListener('click', function() {
+        htmlStartRegistration.addEventListener('click', function () {
             eventListenerExistsEndTimePicker = true;
             CheckIfValidReservationEndTimePicker();
         });
@@ -589,7 +561,7 @@ function setReservationEndTimePicker(jsonObject) {
     ListenToConfirmRegistrationEndTimePicker();
 }
 
-const getReservationsEndTimePicker = function() {
+const getReservationsEndTimePicker = function () {
     handleData(`${APIURI}/reservations/lockers/11cf21d4-03ef-4e0a-8a17-27c26ae80abd`, setReservationEndTimePicker, null, 'GET', null, userToken);
 };
 
@@ -616,7 +588,7 @@ function DisplayNoneEndTimePicker() {
 
 function listenToClickCancelEndTimePicker() {
     let htmlTerug = document.querySelector('.js-cancel-reg-btn');
-    htmlTerug.addEventListener('click', function() {
+    htmlTerug.addEventListener('click', function () {
         htmlBackground.style = '';
         htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
         setTimeout(DisplayNoneEndTimePicker, 300);
@@ -633,7 +605,7 @@ function listenToClickStartReg() {
 }
 
 function listenToClickToggleLockerEndTimePicker(lockerid) {
-    htmlLockerSvg.addEventListener('click', function() {
+    htmlLockerSvg.addEventListener('click', function () {
         htmlBackground.style = 'filter: blur(8px);';
         console.log("Timepicker verschijnt");
         htmlPopUpEndTimePicker.style = "display: block;";
@@ -647,7 +619,7 @@ function listenToClickToggleLockerEndTimePicker(lockerid) {
 
 function listenToOpenLockerPopupContinue(lockerId) {
     if (htmlPopUpOk) {
-        htmlPopUpOk.addEventListener('click', function() {
+        htmlPopUpOk.addEventListener('click', function () {
             setTimeout(DisplayNone, 300);
             const endTimeReservation = new Date();
             endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
@@ -668,7 +640,7 @@ function callbackOpenLocker(registration) {
 
 function listenToOpenLockerPopupCancel() {
     if (htmlPopUpCancel) {
-        htmlPopUpCancel.addEventListener('click', function() {
+        htmlPopUpCancel.addEventListener('click', function () {
             htmlPopUp.style.animation = 'fadeout 0.3s';
             htmlBackground.style = '';
             setTimeout(DisplayNone, 300);
@@ -681,27 +653,29 @@ function DisplayNone() {
 }
 
 function listenToLockerReservate(lockerId) {
-    document.querySelector('.js-locker-reservate').addEventListener('click', function() {
+    document.querySelector('.js-locker-reservate').addEventListener('click', function () {
         window.location.href = `${location.origin
             }/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
 }
 
-const getCurrentRegistration = function(lockerId) {
-    handleData(`${APIURI}/registrations/users/me?lockerId=${lockerId}`, setRegistrationValue, null, 'GET', null, userToken);
+const callbackCurrentRegistration = function (registration) {
+    registrationStarted = registration[0] != null ? true : false;
+    if (registrationStarted)
+        currRegistrationId = registration[0].id;
 };
 
-const setRegistrationValue = function(jsonObject) {
-    console.log(jsonObject);
-    if (jsonObject[0] != null) {
-        currentRegistrationID = jsonObject[0].id;
-        registrationStarted = true;
-    }
-
+const callbackCurrentRegistrationFirst = function (registration) {
+    callbackCurrentRegistration(registration);
     getLockerDetail(currentLockerID);
 };
 
-const getLockerDetail = function(lockerId) {
+const getCurrentRegistration = function (lockerId, first) {
+    callback = first == true ? callbackCurrentRegistrationFirst : callbackCurrentRegistration;
+    handleData(`${APIURI}/registrations/users/me/current?lockerId=${lockerId}`, callback, null, 'GET', null, userToken);
+};
+
+const getLockerDetail = function (lockerId) {
     handleData(`${APIURI}/lockers/${lockerId}`, showLockerDetail, null, 'GET', null, userToken);
 };
 
@@ -709,7 +683,7 @@ const getLockerDetail = function(lockerId) {
 
 // #region Profile Page
 
-const showUserProfile = function(user) {
+const showUserProfile = function (user) {
     console.log(user);
 
     document.querySelector(".js-profile-picture").src = user.picture;
@@ -719,31 +693,31 @@ const showUserProfile = function(user) {
     document.querySelector(".js-created").innerHTML = new Date(user.userCreated).toLocaleDateString("nl-BE");
 
     ListenToUserReservations();
-    ListenToUserActivities()
+    ListenToUserActivities();
 };
 
 function ListenToUserLogout() {
-    document.querySelector('.js-logout').addEventListener('click', function() {
+    document.querySelector('.js-logout').addEventListener('click', function () {
         sessionStorage.removeItem('usertoken');
         window.location.reload();
     });
 }
 
 function ListenToUserReservations() {
-    document.querySelector('.js-reservations').addEventListener('click', function() {
+    document.querySelector('.js-reservations').addEventListener('click', function () {
         window.location.href = `${location.origin
             }/reservaties${WEBEXTENTION}?users=me`;
     });
 }
 
 function ListenToUserActivities() {
-    document.querySelector('.js-activities').addEventListener('click', function() {
+    document.querySelector('.js-activities').addEventListener('click', function () {
         window.location.href = `${location.origin
             }/activiteiten${WEBEXTENTION}?users=me`;
     });
 }
 
-const getUserProfile = function() {
+const getUserProfile = function () {
     handleData(`${APIURI}/users/me`, showUserProfile, null, 'GET', null, userToken);
 };
 
@@ -757,19 +731,19 @@ let htmlBackButton,
     htmlProfileButton;
 
 function listenToBackBtn() {
-    htmlBackButton.addEventListener('click', function() {
+    htmlBackButton.addEventListener('click', function () {
         window.history.back();
     });
 }
 
 function listenToMenuBtn() {
-    htmlMenuButton.addEventListener('click', function() {
+    htmlMenuButton.addEventListener('click', function () {
         window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
     });
 }
 
 function listenToProfileBtn() {
-    htmlProfileButton.addEventListener('click', function() {
+    htmlProfileButton.addEventListener('click', function () {
         window.location.href = `${location.origin
             }/profiel${WEBEXTENTION}`;
     });
@@ -780,14 +754,14 @@ function listenToProfileBtn() {
 function parseJwt(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
     return JSON.parse(jsonPayload);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     // Url params
     urlParams = new URLSearchParams(window.location.search);
@@ -839,11 +813,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (htmlPageLocker) {
+        listenToChangeLockerState();
         if (userTokenPayload.role == "Admin") showHamburger();
         const lockerId = urlParams.get('lockerId');
         currentLockerID = lockerId;
-        getCurrentRegistration(currentLockerID);
-
+        getCurrentRegistration(lockerId, true);
     }
 
     if (htmlPageProfile) {
