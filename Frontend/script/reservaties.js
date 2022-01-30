@@ -33,7 +33,6 @@ const closeAllTabs = function () {
         htmlTab.querySelector(`.js-arrow`).innerHTML = 'expand_more';
         htmlTab.querySelector(`.js-tab-main`).classList.remove("reservation_more_border");
         htmlTab.querySelector(`.js-tab-details`).style.display = 'none';
-        htmlTab.querySelector(`.js-tab-edit`).style.display = 'none';
     }
 };
 
@@ -44,62 +43,28 @@ const listenToTabs = function () {
 
         const htmlTabMain = htmlTab.querySelector(`.js-tab-main`);
         const htmlTabDetails = htmlTab.querySelector(`.js-tab-details`);
-        const htmlTabEdit = htmlTab.querySelector(`.js-tab-edit`);
         const htmlArrow = htmlTab.querySelector('.js-arrow');
-        const htmlEditIcon = htmlTab.querySelector('.js-editIcon');
-        const htmlSaveEditIcon = htmlTab.querySelector('.js-saveEditIcon');
-        const htmlCancelEditIcon = htmlTab.querySelector('.js-cancelEditIcon');
         const htmlDeleteIcon = htmlTab.querySelector('.js-deleteIcon');
 
         const id = htmlTab.dataset.id;
-        const registrationId = htmlTab.dataset.registrationId;
-
-        const htmlNote = document.querySelector(`.js-note-registration-${registrationId}`);
-        const htmlUpdatedNote = document.querySelector(`.js-updatedNote`);
 
         htmlArrow.addEventListener('click', function () {
             if (htmlArrow.innerHTML == 'expand_more') {
                 closeAllTabs();
                 htmlArrow.innerHTML = 'expand_less';
                 htmlTabDetails.style.display = 'Block';
-                htmlTabEdit.style.display = 'none';
                 htmlTabMain.classList.add("reservation_more_border");
             }
             else {
-                cancelEdit();
                 htmlArrow.innerHTML = 'expand_more';
                 htmlTabDetails.style.display = 'none';
-                htmlTabEdit.style.display = 'none';
                 htmlTabMain.classList.remove("reservation_more_border");
             }
-        });
-
-        if (htmlEditIcon) {
-            htmlEditIcon.addEventListener('click', function () {
-                htmlTabDetails.style.display = 'none';
-                htmlTabEdit.style.display = 'block';
-            });
-        }
-
-        htmlSaveEditIcon.addEventListener('click', function () {
-            const updatedNote = htmlUpdatedNote.innerHTML;
-            const body = { note: updatedNote };
-            handleData(`${APIURI}/registrations/${registrationId}`, callbackReloadPage, null, 'PUT', JSON.stringify(body), userToken);
-        });
-
-        htmlCancelEditIcon.addEventListener('click', function () {
-            cancelEdit();
         });
 
         htmlDeleteIcon.addEventListener('click', function () {
             showDeletePopUp(id);
         });
-
-        const cancelEdit = function () {
-            htmlUpdatedNote.innerHTML = htmlNote.innerHTML;
-            htmlTabEdit.style.display = 'none';
-            htmlTabDetails.style.display = 'block';
-        };
     };
 };
 
