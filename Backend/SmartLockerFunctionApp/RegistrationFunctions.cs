@@ -85,21 +85,13 @@ namespace SmartLockerFunctionApp
                 Container userContainer = cosmosClient.GetContainer("SmartLocker", "Users");
                 Models.User user = await userContainer.ReadItemAsync<Models.User>(registration.UserId, new PartitionKey(registration.UserId));
 
-                //Locker Status Aanpassen
-                Locker locker;
-                CosmosClient lockerClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container lockerContainer = cosmosClient.GetContainer("SmartLocker", "Lockers");
-                locker = await lockerContainer.ReadItemAsync<Locker>(registration.LockerId.ToString(), new PartitionKey(registration.LockerId.ToString()));
-                locker.Status = "Bezet";
-                await lockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
-
                 SmsService.AddMessageToQueue(user, reservation);
 
                 return new OkObjectResult(registration);
             }
             catch (Exception ex)
             {
-                throw ex;
+                return new StatusCodeResult(500);
             }
         }
 
@@ -149,20 +141,11 @@ namespace SmartLockerFunctionApp
                 // Update registration
                 await container.ReplaceItemAsync<Registration>(registration, registration.Id.ToString(), new PartitionKey(registration.Id.ToString()));
 
-                //Locker Status Aanpassen
-                Locker locker;
-                CosmosClient lockerClient = new CosmosClient(Environment.GetEnvironmentVariable("CosmosAdmin"));
-                Container lockerContainer = cosmosClient.GetContainer("SmartLocker", "Lockers");
-                locker = await lockerContainer.ReadItemAsync<Locker>(registration.LockerId.ToString(), new PartitionKey(registration.LockerId.ToString()));
-                locker.Status = "Beschikbaar";
-                await lockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
-
                 return new OkObjectResult(registration);
             }
             catch (Exception)
             {
-
-                throw;
+                return new StatusCodeResult(500);
             }
         }
 

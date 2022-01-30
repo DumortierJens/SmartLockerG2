@@ -47,7 +47,7 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
         public static async Task<List<Reservation>> GetReservationsNewAsync(Guid lockerId)
         {
             List<Reservation> reservations = new List<Reservation>();
-            QueryDefinition query = new QueryDefinition("SELECT TOP 1 * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @now ORDER BY r.startTime");
+            QueryDefinition query = new QueryDefinition("SELECT * FROM Reservations r WHERE r.lockerId = @id and r.endTime > @now ORDER BY r.startTime");
             query.WithParameter("@id", lockerId);
             query.WithParameter("@now", DateTime.Now);
 

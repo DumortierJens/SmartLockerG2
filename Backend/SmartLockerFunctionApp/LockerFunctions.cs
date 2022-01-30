@@ -31,6 +31,11 @@ namespace SmartLockerFunctionApp
 
                 var lockers = await LockerService.GetLockersAsync();
 
+                for (int i = 0; i < lockers.Count; i++)
+                {
+                    lockers[i] = await LockerManagementService.UpdateLockerStatusAsync(lockers[i]);
+                }
+
                 return new OkObjectResult(lockers);
             }
             catch (Exception)
@@ -59,6 +64,8 @@ namespace SmartLockerFunctionApp
                 {
                     return new NotFoundResult();
                 }
+
+                locker = await LockerManagementService.UpdateLockerStatusAsync(locker);
 
                 return new OkObjectResult(locker);
             }
@@ -164,6 +171,8 @@ namespace SmartLockerFunctionApp
                 locker.Status = updatedLocker.Status;
 
                 await LockerService.LockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
+
+                locker = await LockerManagementService.UpdateLockerStatusAsync(locker);
 
                 return new OkObjectResult(locker);
             }

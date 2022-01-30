@@ -48,5 +48,19 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
 
             return true;
         }
+
+        public static async Task<Locker> UpdateLockerStatusAsync(Locker locker) 
+        {
+            if (locker.Status != "Buiten gebruik")
+            {
+                var reservations = await ReservationService.GetReservationsNewAsync(locker.Id);
+                if (reservations.Count > 0 && reservations[0].StartTime < DateTime.Now)
+                    locker.Status = "Bezet";
+                else
+                    locker.Status = "Beschikbaar";
+            }
+
+            return locker;
+        }
     }
 }
