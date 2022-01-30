@@ -1,6 +1,5 @@
 let currentLockerID;
 let currentRegistrationID;
-let registrationStarted;
 let userToken;
 let urlParams, userTokenPayload;
 
@@ -113,7 +112,7 @@ const showLockerDetail = function (locker) {
     htmlLockerDescription.innerHTML = locker.description;
     htmlLockerStatus.innerHTML = locker.status;
 
-    if (locker.status == 'Beschikbaar' || registrationStarted) {
+    if (locker.status == 'Beschikbaar' || currentRegistrationID != null) {
         htmlLockerInstructions.innerHTML = 'Tik op het slot om de locker te openen';
         htmlLockerStatus.classList.add('locker_detail_content_status_color_available');
         listenToLockerReservate(locker.id);
@@ -122,8 +121,7 @@ const showLockerDetail = function (locker) {
         //        en je kan nog steeds de locker openen zolang de registratie bezig is
         // ==>nee: je kan de registratie starten door de locker te openen
         // reserveren van de locker kan je altijd
-        if (registrationStarted) {
-            console.log(registrationStarted);
+        if (currentRegistrationID != null) {
             htmlLockerStatus.innerHTML = 'Bezig';
             htmlstopRegistrationBtn.style = "display: flex";
             console.log("registratie is bezig");
@@ -253,17 +251,14 @@ function ListenToClickStopRegInfoConfirm() {
                 }
             }
         }
-        // console.log("materiele schade",materiële_schade)
-        // console.log("ontbrekend materiaal",ontbrekend_materiaal)
-        // console.log("opmerking",opmerking)
         const body = {
             "note": "Materiële_schade: " + materiële_schade + "\n" + "Ontbrekend_materiaal: " + ontbrekend_materiaal + "\n" + "Opmerking: " + opmerking + "\n"
         };
-        handleData(`${APIURI}/registrations/${currentRegistrationID}/stop`, cbEndRegistration, null, 'POST', JSON.stringify(body), userToken);
+        handleData(`${APIURI}/registrations/${currentRegistrationID}/stop`, callbackStopRegistration, null, 'POST', JSON.stringify(body), userToken);
     });
 }
 
-function cbEndRegistration() {
+function callbackStopRegistration() {
     console.log("ja");
     //Hier moet ik mn registratieId ophalen om dan mee te geven in een handledata om zo mn data te sturen naar de backend, ook tijdstip wnr alles
     //meegegeven wordt moet ook nog meegegeven worden aan de body en dat heb ik nog niet gedaan grt Jarne
@@ -487,24 +482,16 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
         window.alert("Je kan slechts maximum 90 minuten reserveren !");
         return;
     }
-    console.log("Dit tijdstip is in orde, sla de reservatie op");
-    let todayString = new Date().getFullYear() + "-" + addZero((parseInt(new Date().getMonth()) + 1).toString()) + "-" + addZero(new Date().getDate());
-    let startTime = todayString + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00";
-    let endTime = todayString + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00";
+    // console.log("Dit tijdstip is in orde, sla de reservatie op");
+    // let todayString = new Date().getFullYear() + "-" + addZero((parseInt(new Date().getMonth()) + 1).toString()) + "-" + addZero(new Date().getDate());
+    // let startTime = todayString + "T" + addZero(new Date().getHours()) + ":" + addZero(new Date().getMinutes()) + ":00+01:00";
+    // let endTime = todayString + "T" + addZero(parseInt(htmlEndHourEndTimePicker.value)) + ":" + addZero(parseInt(htmlEndMinuteEndTimepicker.value)) + ":00+01:00";
     const body = {
-
-        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
-        "startTime": startTime,
-        "endTime": endTime
+        "lockerId": currentLockerID,
+        "endTimeReservation": end.toISOString()
     };
     console.log(body);
-    console.log("Wordt opgeslagen");
-    //handleData(`${APIURI}/reservations/users/me`, cbStartRegistration, null, 'POST', JSON.stringify(body), userToken);
-    const bodyRegistration = {
-        "lockerId": "11cf21d4-03ef-4e0a-8a17-27c26ae80abd",
-        "endTimeReservation": endTime
-    };
-    handleData(`${APIURI}/registrations/start`, callbackStartRegistration, null, 'POST', JSON.stringify(bodyRegistration), userToken);
+    handleData(`${APIURI}/registrations/start`, callbackStartRegistration, null, 'POST', JSON.stringify(body), userToken);
 
 }
 
@@ -515,7 +502,6 @@ function callbackStartRegistration() {
     htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
     htmlBackground.style = '';
     setTimeout(DisplayNoneEndTimePicker, 300);
-    registrationStarted = true;
     document.querySelector('.js-locker-reservate').removeEventListener('click', function () {
         window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
     });
@@ -649,9 +635,8 @@ function listenToLockerReservate(lockerId) {
 }
 
 const callbackCurrentRegistration = function (registration) {
-    registrationStarted = registration[0] != null ? true : false;
-    if (registrationStarted)
-        currRegistrationId = registration[0].id;
+    if (registration[0] != null)
+        currentRegistrationID = registration[0].id;
 };
 
 const callbackCurrentRegistrationFirst = function (registration) {
