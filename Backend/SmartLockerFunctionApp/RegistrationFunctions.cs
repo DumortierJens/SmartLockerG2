@@ -136,7 +136,7 @@ namespace SmartLockerFunctionApp
 
                 // Validate end registration
                 if (!await LockerManagementService.ValidateEndRegistrationAsync(registration))
-                    return new BadRequestObjectResult(new { code = 805, message = "Time slot is not available" });
+                    return new BadRequestObjectResult(new { code = 806, message = "No active registration" });
 
                 // Check material
                 if (!await LockerService.CheckMaterialStatusAsync(registration.LockerId))
