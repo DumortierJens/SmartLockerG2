@@ -175,7 +175,6 @@ const showReservations = function (reservations) {
             </div>
             <div class="js-tab-details" style="display: none; animation: fadein 0.5s">
                 <div class="reservation_details_edit_and_delete flex">
-                    ${(parseJwt(userToken).role == 'Admin' && reservation.registratieId != '00000000-0000-0000-0000-000000000000') ? '<div class="reservation_details_edit flex centerflex"><span class="editicon js-editIcon material-icons-outlined">edit</span></div>' : ""}
                     <div class="reservation_details_delete flex centerflex">
                         <span class="deleteicon js-deleteIcon material-icons-outlined">delete</span>
                     </div>
@@ -205,39 +204,6 @@ const showReservations = function (reservations) {
                     <p style="font-size: 0.75rem" class="reservation_opmerking_content js-note-registration-${reservation.registratieId}"></p>
                 </div>
             </div >
-            <div class="js-tab-edit" style="display: none; animation: fadein 0.5s">
-                <div class="reservation_details_edit_and_delete flex">
-                    <div class="reservation_details_edit flex centerflex">
-                        <span class="canceledit js-cancelEditIcon material-icons-outlined">close</span>
-                    </div>
-                    <div class="reservation_details_delete flex centerflex">
-                        <span class="doneedit js-saveEditIcon material-icons-outlined">done</span>
-                    </div>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Locker</p>
-                    <p class="reservation_detail_content js-name-locker-${reservation.lockerId}"></p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Datum</p>
-                    <p class="reservation_detail_content">${startDate}${startDate != endDate ? ` - ${endDate}` : ``}</p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Tijdslot</p>
-                    <p class="reservation_detail_content">${startTime} - ${endTime}</p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Geopend</p>
-                    <p class="reservation_detail_content js-start-registration-${reservation.registratieId}"></p>
-                </div>
-                <div class="reservation_detail flex">
-                    <p class="reservation_detail_title">Teruggebracht</p>
-                    <p class="reservation_detail_content js-end-registration-${reservation.registratieId}"></p>
-                </div>
-                <div class="reservation_opmerking">
-                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-updatedNote js-note-registration-${reservation.registratieId}" role="textbox" contenteditable></span></label>
-                </div>
-            </div>
         </div > `;
     }
 

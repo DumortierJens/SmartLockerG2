@@ -1,9 +1,14 @@
+function callbackReloadPage() {
+    window.location.reload();
+}
+
 const closeAllTabs = function () {
     const htmlTabsAll = document.querySelectorAll('.js-tab');
     for (const htmlTab of htmlTabsAll) {
         htmlTab.querySelector(`.js-arrow`).innerHTML = 'expand_more';
         htmlTab.querySelector(`.js-tab-main`).classList.remove("reservation_more_border");
         htmlTab.querySelector(`.js-tab-details`).style.display = 'none';
+        htmlTab.querySelector(`.js-tab-edit`).style.display = 'none';
     }
 };
 
@@ -14,7 +19,13 @@ const listenToTabs = function () {
 
         const htmlTabMain = htmlTab.querySelector(`.js-tab-main`);
         const htmlTabDetails = htmlTab.querySelector(`.js-tab-details`);
+        const htmlTabEdit = htmlTab.querySelector(`.js-tab-edit`);
         const htmlArrow = htmlTab.querySelector('.js-arrow');
+        const htmlEditIcon = htmlTab.querySelector('.js-editIcon');
+        const htmlSaveEditIcon = htmlTab.querySelector('.js-saveEditIcon');
+        const htmlCancelEditIcon = htmlTab.querySelector('.js-cancelEditIcon');
+        const htmlNote = htmlTab.querySelector(`.js-note`);
+        const htmlUpdatedNote = htmlTab.querySelector(`.js-updated-note`);
 
         const id = htmlTab.dataset.id;
 
@@ -23,14 +34,41 @@ const listenToTabs = function () {
                 closeAllTabs();
                 htmlArrow.innerHTML = 'expand_less';
                 htmlTabDetails.style.display = 'Block';
+                htmlTabEdit.style.display = 'none';
                 htmlTabMain.classList.add("reservation_more_border");
             }
             else {
+                cancelEdit();
                 htmlArrow.innerHTML = 'expand_more';
                 htmlTabDetails.style.display = 'none';
+                htmlTabEdit.style.display = 'none';
                 htmlTabMain.classList.remove("reservation_more_border");
             }
         });
+
+        if (htmlEditIcon) {
+            htmlEditIcon.addEventListener('click', function () {
+                htmlTabDetails.style.display = 'none';
+                htmlTabEdit.style.display = 'block';
+            });
+        }
+
+        htmlSaveEditIcon.addEventListener('click', function () {
+            const updatedNote = htmlUpdatedNote.innerHTML;
+            const body = { note: updatedNote };
+            handleData(`${APIURI}/registrations/${id}`, callbackReloadPage, null, 'PUT', JSON.stringify(body), userToken);
+        });
+
+        htmlCancelEditIcon.addEventListener('click', function () {
+            cancelEdit();
+        });
+
+        const cancelEdit = function () {
+            console.log(htmlNote.innerHTML);
+            htmlUpdatedNote.innerHTML = htmlNote.innerHTML;
+            htmlTabEdit.style.display = 'none';
+            htmlTabDetails.style.display = 'block';
+        };
     };
 };
 
@@ -96,6 +134,33 @@ const showRegistrations = function (registrations) {
                 <span class="arrow_more js-arrow material-icons-outlined">expand_more</span>
             </div>
             <div class="js-tab-details" style="display: none; animation: fadein 0.5s">
+                ${(parseJwt(userToken).role == 'Admin' && registration.endTime != '0001-01-01T00:00:00') ? '<div class="reservation_details_edit_and_delete flex"><div class="reservation_details_edit flex centerflex"><span class="editicon js-editIcon material-icons-outlined">edit</span></div></div>' : ""}
+                <div class="reservation_detail flex">
+                    <p class="reservation_detail_title">Locker</p>
+                    <p class="reservation_detail_content js-name-locker-${registration.lockerId}"></p>
+                </div>
+                <div class="reservation_detail flex">
+                    <p class="reservation_detail_title">Geopend</p>
+                    <p class="reservation_detail_content">${new Date(registration.startTime).toLocaleString('nl-BE')}</p>
+                </div>
+                <div class="reservation_detail flex">
+                    <p class="reservation_detail_title">Teruggebracht</p>
+                    <p class="reservation_detail_content">${registration.endTime != '0001-01-01T00:00:00' ? new Date(registration.endTime).toLocaleString('nl-BE') : ''}</p>
+                </div>
+                <div class="reservation_opmerking">
+                    <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Opmerking</p>
+                    <p style="font-size: 0.75rem" class="reservation_opmerking_content js-note">${registration.note ? registration.note : ''}</p>
+                </div>
+            </div>
+            <div class="js-tab-edit" style="display: none; animation: fadein 0.5s">
+                <div class="reservation_details_edit_and_delete flex">
+                    <div class="reservation_details_edit flex centerflex">
+                        <span class="canceledit js-cancelEditIcon material-icons-outlined">close</span>
+                    </div>
+                    <div class="reservation_details_delete flex centerflex">
+                        <span class="doneedit js-saveEditIcon material-icons-outlined">done</span>
+                    </div>
+                </div>
                 <div class="reservation_detail flex">
                     <p class="reservation_detail_title">Locker</p>
                     <p class="reservation_detail_content js-name-locker-${registration.lockerId}"></p>
@@ -109,8 +174,7 @@ const showRegistrations = function (registrations) {
                     <p class="reservation_detail_content">${new Date(registration.endTime).toLocaleString('nl-BE')}</p>
                 </div>
                 <div class="reservation_opmerking">
-                    <p style="margin-top: 0.53125rem" class="reservation_opmerking_title">Opmerking</p>
-                    <p style="font-size: 0.75rem" class="reservation_opmerking_content">${registration.note}</p>
+                    <label for="opmerking" class="reservation_opmerking_title">Opmerking <span class="textarea js-updated-note" role="textbox" contenteditable>${registration.note}</span></label>
                 </div>
             </div>
         </div>`;
