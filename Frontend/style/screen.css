@@ -633,6 +633,12 @@ p {
     min-height: calc(100vh - 4.5rem);
 }
 
+.activities_table {
+    padding-bottom: 1.5rem;
+    padding-top: 4.5rem;
+    min-height: calc(100vh - 4.5rem);
+}
+
 .user_management_content {
     margin: 4.5rem 1rem 1rem 1rem;
 }
@@ -962,6 +968,7 @@ p {
 
 .doneedit {
     fill: var(--green-bezig);
+    color: var(--green-bezig);
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
@@ -1001,7 +1008,7 @@ p {
     display: grid;
     width: 80%;
     max-width: 31.25rem;
-    grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon' 'afmeldentext activiteittext reservatietext';
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
