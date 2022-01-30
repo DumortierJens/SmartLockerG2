@@ -585,17 +585,49 @@ p {
     margin-top: 1rem;
 }
 
+.logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 4rem;
+    gap: 3rem
+}
+
+.desktop {
+    display: none;
+}
+
+@media (min-width: 550px) {
+    .logos {
+        padding-top: 5rem;
+    }
+    .mobile {
+        display: none;
+    }
+    .desktop {
+        display: flex;
+    }
+}
+
+.logo {
+    max-width: 10rem;
+}
+
+.logo_2 {
+    max-width: 5rem;
+}
+
 .login_info {
     font-size: 1rem;
     text-align: center;
     color: white;
-    margin: 4rem auto 0 auto;
+    margin: 2rem auto 0 auto;
     width: 80%;
 }
 
 .login-links {
     position: absolute;
-    bottom: 3em;
+    bottom: 2em;
     width: 100%;
     text-align: center;
 }
