@@ -44,7 +44,7 @@ class LockerLock {
 
     void OpenLock() {
       digitalWrite(_lockPin, HIGH);
-      delay(15);
+      delay(400);
       digitalWrite(_lockPin, LOW);
     }
 
