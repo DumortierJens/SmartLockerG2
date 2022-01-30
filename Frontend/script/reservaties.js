@@ -12,7 +12,7 @@ function showDeletePopUp(id) {
 }
 
 function listenToDelete(id) {
-    htmlPopUpOk.addEventListener('click', function () {
+    htmlPopUpOk.addEventListener('click', function() {
         htmlBackground.style = "";
         htmlPopUp.style.animation = "fadeout 0.3s";
         handleData(`${APIURI}/reservations/${id}`, callbackReloadPage, null, 'DELETE', null, userToken);
@@ -20,14 +20,14 @@ function listenToDelete(id) {
 }
 
 function listenToCancel() {
-    htmlPopUpCancel.addEventListener('click', function () {
+    htmlPopUpCancel.addEventListener('click', function() {
         htmlBackground.style = "";
         htmlPopUp.style.animation = "fadeout 0.3s";
         htmlPopUp.style = "display: none;";
     });
 }
 
-const closeAllTabs = function () {
+const closeAllTabs = function() {
     const htmlTabsAll = document.querySelectorAll('.js-tab');
     for (const htmlTab of htmlTabsAll) {
         htmlTab.querySelector(`.js-arrow`).innerHTML = 'expand_more';
@@ -36,7 +36,7 @@ const closeAllTabs = function () {
     }
 };
 
-const listenToTabs = function () {
+const listenToTabs = function() {
     const htmlTabs = document.querySelectorAll('.js-tab');
 
     for (const htmlTab of htmlTabs) {
@@ -48,27 +48,26 @@ const listenToTabs = function () {
 
         const id = htmlTab.dataset.id;
 
-        htmlArrow.addEventListener('click', function () {
+        htmlArrow.addEventListener('click', function() {
             if (htmlArrow.innerHTML == 'expand_more') {
                 closeAllTabs();
                 htmlArrow.innerHTML = 'expand_less';
                 htmlTabDetails.style.display = 'Block';
                 htmlTabMain.classList.add("reservation_more_border");
-            }
-            else {
+            } else {
                 htmlArrow.innerHTML = 'expand_more';
                 htmlTabDetails.style.display = 'none';
                 htmlTabMain.classList.remove("reservation_more_border");
             }
         });
 
-        htmlDeleteIcon.addEventListener('click', function () {
+        htmlDeleteIcon.addEventListener('click', function() {
             showDeletePopUp(id);
         });
     };
 };
 
-const showRegistration = function (registration) {
+const showRegistration = function(registration) {
     const startTime = new Date(registration.startTime).toLocaleString('nl-BE');
     const endTime = new Date(registration.endTime).toLocaleString('nl-BE');
 
@@ -76,8 +75,7 @@ const showRegistration = function (registration) {
         if (endTime == "1/1/1 00:00:00") {
             htmlStatus.classList.add('status_bezig_rect');
             htmlStatus.innerHTML = 'Bezig';
-        }
-        else {
+        } else {
             htmlStatus.classList.add('status_verlopen_rect');
             htmlStatus.innerHTML = 'Verlopen';
         }
@@ -93,7 +91,7 @@ const showRegistration = function (registration) {
     }
 };
 
-const showUser = function (user) {
+const showUser = function(user) {
     for (const htmlName of document.querySelectorAll(`.js-name-${user.id}`)) {
         htmlName.innerHTML = user.name;
     }
@@ -102,33 +100,33 @@ const showUser = function (user) {
     }
 };
 
-const showLocker = function (locker) {
+const showLocker = function(locker) {
     for (const htmlName of document.querySelectorAll(`.js-name-locker-${locker.id}`)) {
         htmlName.innerHTML = locker.name;
     }
 };
 
-const showReservations = function (reservations) {
-    console.log(reservations);
+const showReservations = function(reservations) {
+        console.log(reservations);
 
-    let lockers = [];
-    let registrations = [];
-    let users = [];
+        let lockers = [];
+        let registrations = [];
+        let users = [];
 
-    let htmlString = '';
-    for (const reservation of reservations) {
+        let htmlString = '';
+        for (const reservation of reservations) {
 
 
-        if (!registrations.includes(reservation.registratieId) && reservation.registratieId != '00000000-0000-0000-0000-000000000000') registrations.push(reservation.registratieId);
-        if (!lockers.includes(reservation.lockerId)) lockers.push(reservation.lockerId);
-        if (!users.includes(reservation.userId)) users.push(reservation.userId);
+            if (!registrations.includes(reservation.registratieId) && reservation.registratieId != '00000000-0000-0000-0000-000000000000') registrations.push(reservation.registratieId);
+            if (!lockers.includes(reservation.lockerId)) lockers.push(reservation.lockerId);
+            if (!users.includes(reservation.userId)) users.push(reservation.userId);
 
-        const startDate = new Date(reservation.startTime).toLocaleDateString("nl-BE");
-        const endDate = new Date(reservation.endTime).toLocaleDateString("nl-BE");
-        const startTime = new Date(reservation.startTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
-        const endTime = new Date(reservation.endTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
+            const startDate = new Date(reservation.startTime).toLocaleDateString("nl-BE");
+            const endDate = new Date(reservation.endTime).toLocaleDateString("nl-BE");
+            const startTime = new Date(reservation.startTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
+            const endTime = new Date(reservation.endTime).toLocaleTimeString("nl-BE", { hour: '2-digit', minute: '2-digit' });
 
-        htmlString += `<div class="reservation_container js-tab js-tab-${reservation.id}" data-id="${reservation.id}" data-registration-id="${reservation.registratieId}">
+            htmlString += `<div class="reservation_container js-tab js-tab-${reservation.id}" data-id="${reservation.id}" data-registration-id="${reservation.registratieId}">
             <div class="js-tab-main reservation flex">
                 <img class="user_picture js-picture-${reservation.userId}" src="/img/profile_template.jpg" alt="user-picture" />
                 <div class="reservation_grid">
@@ -140,7 +138,7 @@ const showReservations = function (reservations) {
             </div>
             <div class="js-tab-details" style="display: none; animation: fadein 0.5s">
                 <div class="reservation_details_edit_and_delete flex">
-                    <div class="reservation_details_delete flex centerflex">
+                    <div class="reservation_details_edit_2 flex centerflex">
                         <span class="deleteicon js-deleteIcon material-icons-outlined">delete</span>
                     </div>
                 </div >

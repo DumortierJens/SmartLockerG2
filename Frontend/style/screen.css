@@ -83,6 +83,7 @@ p {
     margin: 0;
 }
 
+
 /*Lockerdetailpage*/
 
 .header_smartlocker {
@@ -375,6 +376,7 @@ p {
     margin: 0.5rem 0 0.5rem 0;
 }
 
+
 /* overview pagina */
 
 .overview_page {
@@ -500,6 +502,7 @@ p {
     align-self: center;
 }
 
+
 /* Login Page */
 
 .login_page_bg {
@@ -601,6 +604,7 @@ p {
     color: white;
 }
 
+
 /*Dashboard*/
 
 .dashboard-content {
@@ -618,6 +622,7 @@ p {
     margin: 0 0 0 0.8em;
     color: var(--blue-accent-color);
 }
+
 
 /* Reservatiepagina */
 
@@ -723,6 +728,13 @@ p {
     margin: 1rem;
 }
 
+.gebruiker_icon {
+    display: flex;
+    color: var(--blue-accent-color);
+    padding-left: 6.25rem;
+    align-items: center;
+}
+
 .reservation_grid,
 .locker_grid {
     display: grid;
@@ -807,6 +819,11 @@ p {
 
 .reservation_details_edit {
     width: 50%;
+    border-top: 1px solid var(--grey-bg);
+}
+
+.reservation_details_edit_2 {
+    width: 100%;
     border-top: 1px solid var(--grey-bg);
 }
 
@@ -944,7 +961,7 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked + .checkbox_box {
+.checkbox_input:checked+.checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -978,6 +995,7 @@ p {
     padding-bottom: 0.3rem;
     outline: none;
 }
+
 
 /* Profielpagina */
 
@@ -1079,6 +1097,7 @@ p {
     margin-bottom: 1rem;
 }
 
+
 /* Lockerbeheer */
 
 .status_selector {
@@ -1123,6 +1142,7 @@ p {
 .locker_status_available {
     color: var(--status-available);
 }
+
 
 /* Add reservation */
 
@@ -1229,6 +1249,7 @@ p {
     color: var(--red-verlopen);
 }
 
+
 /* Loading screen */
 
 .loading_container {
@@ -1250,6 +1271,7 @@ p {
 .privacy_policy_content {
     margin: 6rem 0 2rem 3rem;
 }
+
 
 /* Animations*/
 
