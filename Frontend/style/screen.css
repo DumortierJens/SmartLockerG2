@@ -61,17 +61,17 @@ html {
 }
 
 a {
-    color: var(--blue-accent-color);
+    color: white;
 }
 
 a:visited,
 a:active {
-    color: var(--blue-accent-color-dark);
+    color: white;
 }
 
 a:hover,
 a:focus {
-    color: var(--blue-accent-color-light);
+    color: white;
 }
 
 img {
