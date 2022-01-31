@@ -1,4 +1,4 @@
-const showAdminProfileAdmin = function (user) {
+const showAdminProfileAdmin = function(user) {
     document.querySelector(".js-profile-picture").src = user.picture;
     document.querySelector(".js-name").innerHTML = user.name;
     document.querySelector(".js-email").innerHTML = user.email;
@@ -8,17 +8,21 @@ const showAdminProfileAdmin = function (user) {
     listenToRemoveAdmin(user.id);
 };
 
-const listenToRemoveAdmin = function (id) {
-    document.querySelector(".js-block").addEventListener('click', function () {
-        handleData(`${APIURI}/users/${id}/rmadmin`, showAdminProfileAdmin, null, 'POST', null, userToken);
+const listenToRemoveAdmin = function(id) {
+    document.querySelector(".js-block").addEventListener('click', function() {
+        handleData(`${APIURI}/users/${id}/rmadmin`, callbackRemoveAdmin, null, 'POST', null, userToken);
     })
 }
 
-const getUserProfileAdmin = function (id) {
+const callbackRemoveAdmin = function() {
+    window.location.href = `${location.origin}/admins${WEBEXTENTION}`;
+};
+
+const getUserProfileAdmin = function(id) {
     handleData(`${APIURI}/users/${id}`, showAdminProfileAdmin, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const htmlPageUserProfileAdmin = document.querySelector('.js-user-profile-admin-page');
 
     if (htmlPageUserProfileAdmin) {
