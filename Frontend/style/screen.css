@@ -74,11 +74,12 @@ a:focus {
     color: white;
 }
 
-.link-blue{
+.link-blue {
     color: var(--blue-accent-color);
 }
 
-.link-blue:hover,.link-blue:focus{
+.link-blue:hover,
+.link-blue:focus {
     color: var(--blue-accent-color-light);
 }
 
@@ -90,6 +91,7 @@ img {
 p {
     margin: 0;
 }
+
 
 /*Lockerdetailpage*/
 
@@ -384,6 +386,7 @@ p {
     margin: 0.5rem 0 0.5rem 0;
 }
 
+
 /* overview pagina */
 
 .overview_page {
@@ -508,6 +511,7 @@ p {
     grid-area: text3;
     align-self: center;
 }
+
 
 /* Login Page */
 
@@ -641,6 +645,7 @@ p {
     color: white;
 }
 
+
 /*Dashboard*/
 
 .dashboard-content {
@@ -658,6 +663,7 @@ p {
     margin: 0 0 0 0.8em;
     color: var(--blue-accent-color);
 }
+
 
 /* Reservatiepagina */
 
@@ -996,7 +1002,7 @@ p {
     cursor: pointer;
 }
 
-.checkbox_input:checked + .checkbox_box {
+.checkbox_input:checked+.checkbox_box {
     border-color: var(--blue-accent-color);
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
@@ -1032,6 +1038,7 @@ p {
     outline: none;
 }
 
+
 /* Profielpagina */
 
 .profile_picture_content {
@@ -1056,7 +1063,7 @@ p {
     display: grid;
     width: 80%;
     max-width: 31.25rem;
-    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon' 'afmeldentext activiteittext reservatietext';
+    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon adminicon' 'afmeldentext activiteittext reservatietext admintext';
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
@@ -1093,6 +1100,8 @@ p {
 
 .profile_icon_afmelden_text {
     grid-area: afmeldentext;
+    display: flex;
+    justify-content: center;
 }
 
 .profile_icon_reservations {
@@ -1131,6 +1140,7 @@ p {
     margin-top: 3rem;
     margin-bottom: 1rem;
 }
+
 
 /* Lockerbeheer */
 
@@ -1176,6 +1186,7 @@ p {
 .locker_status_available {
     color: var(--status-available);
 }
+
 
 /* Add reservation */
 
@@ -1282,6 +1293,7 @@ p {
     color: var(--red-verlopen);
 }
 
+
 /* Loading screen */
 
 .loading_container {
@@ -1303,6 +1315,7 @@ p {
 .privacy_policy_content {
     margin: 6rem 0 2rem 3rem;
 }
+
 
 /* Animations*/
 
@@ -1362,16 +1375,16 @@ p {
     .locker_name {
         font-size: 1rem;
     }
-    .profile_icons_container_container{
+    .profile_icons_container_container {
         display: block;
         width: 100%;
         margin-bottom: 1.5rem;
     }
-    .profile_icons_container{
+    .profile_icons_container {
         display: block;
         text-align: center;
     }
-    .profile_icon_afmelden{
+    .profile_icon_afmelden {
         margin: 0 auto 0.5rem auto;
     }
 }

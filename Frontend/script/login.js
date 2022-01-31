@@ -92,7 +92,7 @@ const goToCorrectPage = function() {
         if (payload.isBlocked) window.location.href = `${location.origin}/geblokkeerd${WEBEXTENTION}`;
         else if (payload.role == "User" && payload.tel == null) window.location.href = `${location.origin}/gsm-nummer${WEBEXTENTION}`;
         else if (payload.role == "User" && lockerId == null) window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
-        else if (payload.role == "User" && lockerId != null) window.location.href = `${location.origin}/locker${WEBEXTENTION}?lockerId=11cf21d4-03ef-4e0a-8a17-27c26ae80abd`;
+        else if (payload.role == "User" && lockerId != null) window.location.href = `${location.origin}/locker${WEBEXTENTION}?lockerId=${lockerId}`;
         else if (payload.role == "Admin") window.location.href = `${location.origin}/adminmenu${WEBEXTENTION}`;
     }
 };
