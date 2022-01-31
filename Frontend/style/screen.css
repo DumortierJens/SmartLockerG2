@@ -74,6 +74,14 @@ a:focus {
     color: white;
 }
 
+.link-blue{
+    color: var(--blue-accent-color);
+}
+
+.link-blue:hover,.link-blue:focus{
+    color: var(--blue-accent-color-light);
+}
+
 img {
     max-width: 100%;
     vertical-align: top;
@@ -1000,6 +1008,7 @@ p {
     width: 1.5rem;
     cursor: pointer;
     display: flex;
+    color: var(--red-verlopen);
 }
 
 .stop_registration {
