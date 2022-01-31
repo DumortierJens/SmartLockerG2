@@ -12,8 +12,8 @@ ListenToClickDoorgaanBtn = function() {
 
 CallBackPhoneNumber = function() {
     const lockerId = sessionStorage.getItem("lockerid");
-    if (payload.role == "User" && lockerId == null) window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
-    else if (payload.role == "User" && lockerId != null) window.location.href = `${location.origin}/locker${WEBEXTENTION}?lockerId=${lockerId}`;
+    if (lockerId == null) window.location.href = `${location.origin}/overzicht${WEBEXTENTION}`;
+    else if (lockerId != null) window.location.href = `${location.origin}/locker${WEBEXTENTION}?lockerId=${lockerId}`;
 }
 
 function phonenumber(inputtxt) {
