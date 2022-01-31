@@ -1,6 +1,6 @@
 let htmlAdminContent
 
-const showAdmins = function (jsonObject) {
+const showAdmins = function(jsonObject) {
     htmlAdminContent.innerHTML = ``;
     for (i = 0; i < jsonObject.length; i++) {
         console.log(jsonObject[i]);
@@ -8,16 +8,20 @@ const showAdmins = function (jsonObject) {
         <div class="locker pointer users_container flex">
             <img class="user_picture" src="${jsonObject[i].picture}" alt="">
             <p class="locker_name">${jsonObject[i].name}</p>
+            <div class="gebruiker_icon">
+            <span class="material-icons-outlined">
+chevron_right
+</span></div>
         </div>
     </div>`;
     };
     listenToClickAdmin();
 }
 
-const listenToClickAdmin = function () {
+const listenToClickAdmin = function() {
     const buttons = document.querySelectorAll('.js-admin');
     for (const btn of buttons) {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function() {
             //console.log(this);
             const id = btn.dataset.id;
             window.location.href = `${location.origin}/admin${WEBEXTENTION}?id=${id}`;
@@ -25,11 +29,11 @@ const listenToClickAdmin = function () {
     };
 }
 
-const getAdmins = function () {
+const getAdmins = function() {
     handleData(`${APIURI}/users/admin`, showAdmins, null, 'GET', null, userToken);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     htmlAdminContent = document.querySelector('.js-admins')
     getAdmins()
 })
