@@ -1063,12 +1063,13 @@ p {
     display: grid;
     width: 80%;
     max-width: 31.25rem;
-    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon adminicon' 'afmeldentext activiteittext reservatietext admintext';
+    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon' 'afmeldentext activiteittext reservatietext';
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
     justify-items: center;
 }
+
 
 .profile_icons_container__one-column {
     display: grid;
@@ -1084,7 +1085,7 @@ p {
 .profile_icons_container_container {
     display: grid;
     max-width: 31.25rem;
-    grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    grid-template-areas: 'afmeldenicon' 'afmeldentext';
     margin: 0 auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
@@ -1316,6 +1317,9 @@ p {
     margin: 6rem 0 2rem 3rem;
 }
 
+.grid-4-icons{
+    grid-template-areas: 'afmeldenicon afmeldenicon afmeldenicon afmeldenicon' 'afmeldentext afmeldentext afmeldentext afmeldentext';
+}
 
 /* Animations*/
 
@@ -1355,7 +1359,7 @@ p {
 @media (min-width: 800px) {
     .centered_content {
         position: absolute;
-        left: 10rem;
+        left: 8rem;
     }
 }
 
@@ -1375,7 +1379,7 @@ p {
     .locker_name {
         font-size: 1rem;
     }
-    .profile_icons_container_container {
+    /* .profile_icons_container_container {
         display: block;
         width: 100%;
         margin-bottom: 1.5rem;
@@ -1386,6 +1390,13 @@ p {
     }
     .profile_icon_afmelden {
         margin: 0 auto 0.5rem auto;
+    } */
+}
+
+@media(max-width: 500px){
+    .grid-4-icons{
+        grid-template-areas: 'afmeldenicon afmeldenicon' 'afmeldentext afmeldentext';
+        row-gap: 1.5rem;
     }
 }
 
