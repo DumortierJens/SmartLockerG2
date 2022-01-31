@@ -188,6 +188,7 @@ function listenToLockerStopRegistration() {
         htmlPopUpCancelStopRegistration = document.querySelector('.js-popup-cancel-stop-reservation');
         htmlPopUpConfirmStopRegistration = document.querySelector('.js-popup-stop-reservation');
         htmlPopUpStopRegistration.style = "display:block";
+        htmlBackground.style = 'filter: blur(8px);'
         htmlPopUpCancelStopRegistration.addEventListener('click', function() {
             console.log("Cancel");
             htmlPopUpStopRegistration.style.animation = "fadeout 0.3s";
@@ -232,12 +233,14 @@ function ListenToClickStopRegInfoBack() {
                 <button class="locker_detail_popup_open js-popup-stop-reservation">Ja</button>
             </div>
         `;
+    htmlBackground.style = ''
     });
 }
 
 function ListenToClickStopRegInfoConfirm() {
     htmlStopRegConfirm = document.querySelector('.js-stop-registration-info-confirm');
     htmlStopRegConfirm.addEventListener('click', function() {
+        htmlBackground.style = ''
         let materiële_schade = "nee";
         let ontbrekend_materiaal = "nee";
         let opmerking = document.querySelector('.js-stop-reg-opmerking').innerHTML;

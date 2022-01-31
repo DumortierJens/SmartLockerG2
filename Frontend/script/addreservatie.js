@@ -306,11 +306,6 @@ function disablePast() {
             setNewMinutes();
         }
     }
-
-    if(parseInt(htmlStartMinute.value) == 50 && htmlStartHour.value == htmlEndHour.value){
-        htmlEndHour.value = parseInt(htmlEndHour.value)+1
-        setNewMinutes()
-    }
 }
 
 function SetReservationTime(jsonObject) {
