@@ -1,14 +1,14 @@
 // let htmlLockerContent, htmlExtraInfo, htmlJson, htmlOpmerking, htmlConfirm, htmlCancel;
 
-const checkStatus = function(status) {
+const checkStatus = function (status) {
 
 };
 
-const showUpdatedLocker = function(locker) {
+const showUpdatedLocker = function (locker) {
     window.location.reload();
 };
 
-const openLocker = function(lockerId) {
+const openLocker = function (lockerId) {
     console.log("Open locker");
     handleData(`${APIURI}/lockers/${lockerId}/open`, callbackLockerOpenedBeheer, null, 'POST', null, userToken);
 };
@@ -17,7 +17,7 @@ function callbackLockerOpenedBeheer() {
     console.log('Locker opened');
 }
 
-const closeAllTabs = function() {
+const closeAllTabs = function () {
     const htmlTabsAll = document.querySelectorAll('.js-tab');
     for (const htmlTab of htmlTabsAll) {
         htmlTab.querySelector(`.js-arrow`).innerHTML = 'expand_more';
@@ -26,7 +26,7 @@ const closeAllTabs = function() {
     }
 };
 
-const listenToTabs = function() {
+const listenToTabs = function () {
     const htmlTabs = document.querySelectorAll('.js-tab');
 
     for (const htmlTab of htmlTabs) {
@@ -50,7 +50,7 @@ const listenToTabs = function() {
         const sport = htmlSport.value;
         const status = htmlStatus.value;
 
-        htmlArrow.addEventListener('click', function() {
+        htmlArrow.addEventListener('click', function () {
             if (htmlArrow.innerHTML == 'expand_more') {
                 closeAllTabs();
                 htmlArrow.innerHTML = 'expand_less';
@@ -64,12 +64,12 @@ const listenToTabs = function() {
             }
         });
 
-        htmlEditIcon.addEventListener('click', function() {
+        htmlEditIcon.addEventListener('click', function () {
             htmlTabDetails.style.display = 'none';
             htmlTabEdit.style.display = 'block';
         });
 
-        htmlSaveEditIcon.addEventListener('click', function() {
+        htmlSaveEditIcon.addEventListener('click', function () {
             const updatedName = htmlName.value;
             const updatedDescription = htmlDescription.innerHTML;
             const updatedSport = htmlSport.value;
@@ -78,15 +78,15 @@ const listenToTabs = function() {
             handleData(`${APIURI}/lockers/${id}`, showUpdatedLocker, null, 'PUT', JSON.stringify(body), userToken);
         });
 
-        htmlCancelEditIcon.addEventListener('click', function() {
+        htmlCancelEditIcon.addEventListener('click', function () {
             cancelEdit();
         });
 
-        htmlOpenLocker.addEventListener('click', function() {
+        htmlOpenLocker.addEventListener('click', function () {
             openLocker(id);
         });
 
-        const cancelEdit = function() {
+        const cancelEdit = function () {
             htmlName.value = name;
             htmlDescription.innerHTML = description;
             htmlSport.value = sport;
@@ -97,7 +97,7 @@ const listenToTabs = function() {
     };
 };
 
-const showLockersLockermanagement = function(lockers) {
+const showLockersLockermanagement = function (lockers) {
     console.log(lockers);
 
     for (const locker of lockers) {
@@ -152,17 +152,17 @@ const showLockersLockermanagement = function(lockers) {
             </div>
             <div class="reservation_detail flex">
                 <p class="reservation_detail_title">Sport</p>
-                <select class="reservation_detail_content status_selector js-sport" id="sport">
-                    <option value="Voetbal">Voetbal</option>
-                    <option value="Basketbal">Basketbal</option>
-                </select>
-            </div>
+                <select class="reservation_detail_content status_selector js-sport" id="sport-${locker.id}">
+                    <option value="Voetbal" ${locker.sport == 'Voetbal' ? 'selected' : ''}>Voetbal</option>
+                    <option value="Basketbal" ${locker.sport == 'Basketbal' ? 'selected' : ''}>Basketbal</option >
+                </select >
+            </div >
             <div class="reservation_detail flex">
                 <p for="status" class="reservation_detail_title">Status</p>
-                <select class="reservation_detail_content status_selector js-status" id="status">
-                    <option value="Beschikbaar">Beschikbaar</option>
-                    <option value="Bezet">Bezet</option>
-                    <option value="Buiten gebruik">Buiten gebruik</option>
+                <select class="reservation_detail_content status_selector js-status" id="status-${locker.id}">
+                    <option value="Beschikbaar" ${locker.status == 'Beschikbaar' ? 'selected' : ''}>Beschikbaar</option>
+                    <option value="Bezet" ${locker.status == 'Bezet' ? 'selected' : ''}>Bezet</option>
+                    <option value="Buiten gebruik" ${locker.status == 'Buiten gebruik' ? 'selected' : ''}>Buiten gebruik</option>
                 </select>
             </div>
             <div class="reservation_opmerking">
@@ -170,44 +170,17 @@ const showLockersLockermanagement = function(lockers) {
                     <span class="textarea js-description" role="textbox" contenteditable>${locker.description}</span>
                 </label>
             </div>
-        </div>`;
-
-        /*if (locker.sport == "Voetbal") {
-            console.log("voetbal")
-            document.querySelectorAll('.js-Voetbal').innerHTML = `<option value="Voetbal" selected>Voetbal</option>
-            <option value="Basketbal">Basketbal</option>`
-        } else if (locker.sport == "Basketbal") {
-            console.log("basketbal")
-            document.querySelectorAll('.js-Basketbal').innerHTML = `<option value="Voetbal">Voetbal</option>
-            <option value="Basketbal" selected>Basketbal</option>`
-        }
-        if (locker.status == "Beschikbaar") {
-            document.querySelectorAll('.js-Beschikbaar').innerHTML = `<option value="Beschikbaar" selected>Beschikbaar</option>
-            <option value="Bezet">Bezet</option>
-            <option value="Buiten gebruik">Buiten gebruik</option>`
-        } else if (locker.status == "Bezet") {
-            document.querySelectorAll('.js-Bezet').innerHTML = `<option value="Beschikbaar" >Beschikbaar</option>
-            <option value="Bezet" selected>Bezet</option>
-            <option value="Buiten gebruik">Buiten gebruik</option>`
-        } else if (locker.status == "Buiten gebruik") {
-            document.querySelectorAll('.js-Buiten').innerHTML = `<option value="Beschikbaar" >Beschikbaar</option>
-            <option value="Bezet">Bezet</option>
-            <option value="Buiten gebruik" selected>Buiten gebruik</option>`
-        }*/
-
-        // Set sport & status
-        document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-sport').value = locker.sport;
-        document.querySelector(`.js-tab-${locker.id}`).querySelector('.js-status').value = locker.status;
+        </div > `;
     }
 
     listenToTabs();
 };
 
-const getLockersLockermanagement = function() {
+const getLockersLockermanagement = function () {
     handleData(`${APIURI}/lockers`, showLockersLockermanagement, null, 'GET', null, userToken);
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const htmlPageLockermanagement = document.querySelector(".js-lockermanagement-page");
 
     if (htmlPageLockermanagement)
