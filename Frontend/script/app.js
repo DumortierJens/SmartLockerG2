@@ -526,6 +526,9 @@ function disablePastReservation(busy_timestamps_endTimePicker) {
             nextHour = parseInt(hour);
         }
     }
+    if (nextHour == 0){
+        return
+    }
     console.log("nexthour", nextHour);
     nextMinute = busy_timestamps_endTimePicker[nextHour][0];
     console.log("nextminute", nextMinute);
@@ -554,7 +557,7 @@ function setReservationEndTimePicker(jsonObject) {
     console.log("busy_timestamps", busy_timestamps_endTimePicker);
     disableBusyHours(busy_timestamps_endTimePicker);
     disablePast();
-    // disablePastReservation(busy_timestamps_endTimePicker);
+    disablePastReservation(busy_timestamps_endTimePicker);
     htmlEndHourEndTimePicker.addEventListener('change', setNewMinutes);
     console.log('test2');
     ListenToConfirmRegistrationEndTimePicker();
