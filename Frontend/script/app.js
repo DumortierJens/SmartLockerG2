@@ -126,7 +126,7 @@ const showLockerDetail = function (locker) {
         htmlLockerStatus.innerHTML = 'Bezig';
         htmlstopRegistrationBtn.style = "display: flex";
         htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
-        listenToClickToggleLocker(locker.id);
+        listenToClickToggleLocker();
         listenToLockerStopRegistration();
     } else if (locker.status == 'Beschikbaar' || currentReservation) {
         console.log("Activiteit starten");
@@ -286,13 +286,13 @@ async function callbackStopRegistrationError(errorMessage) {
     }
 }
 
-function listenToClickToggleLocker(lockerId) {
+function listenToClickToggleLocker() {
     htmlLockerSvg.addEventListener('click', function () {
         htmlPopUp.style = 'display:block';
         htmlPopUp.style.animation = 'fadein 0.5s';
         htmlBackground.style = 'filter: blur(8px);';
     });
-    listenToOpenLockerPopupContinue(lockerId);
+    listenToOpenLockerPopupContinue();
     listenToOpenLockerPopupCancel();
 }
 
@@ -516,45 +516,47 @@ function ListenToConfirmRegistrationEndTimePicker() {
     }
 }
 
-function disablePastReservation(busy_timestamps_endTimePicker){
+function disablePastReservation(busy_timestamps_endTimePicker) {
     // Eerste uur dat voorkomt ophalen en vanaf dan alle uren en minuten disablen
-    let nextHour = 0
-    console.log(busy_timestamps_endTimePicker)
-    let nextMinute = 0
-    for (let hour in busy_timestamps_endTimePicker){
-        if (hour >= new Date().getHours() && nextHour == 0){
-            nextHour = parseInt(hour)
+    let nextHour = 0;
+    console.log(busy_timestamps_endTimePicker);
+    let nextMinute = 0;
+    for (let hour in busy_timestamps_endTimePicker) {
+        if (hour >= new Date().getHours() && nextHour == 0) {
+            nextHour = parseInt(hour);
         }
     }
-    console.log("nexthour",nextHour)
-    nextMinute = busy_timestamps_endTimePicker[nextHour][0]
-    console.log("nextminute",nextMinute)
-    for(let option of htmlEndHourEndTimePicker){
-        let optionValue = parseInt(option.value)
-        if (optionValue > parseInt(nextHour)){
+    console.log("nexthour", nextHour);
+    nextMinute = busy_timestamps_endTimePicker[nextHour][0];
+    console.log("nextminute", nextMinute);
+    for (let option of htmlEndHourEndTimePicker) {
+        let optionValue = parseInt(option.value);
+        if (optionValue > parseInt(nextHour)) {
             option.disabled = true;
         }
     }
-    for (let option of htmlEndMinuteEndTimepicker){
-        let optionValue = parseInt(option.value)
-        if(optionValue >= parseInt(nextMinute) && parseInt(htmlEndHourEndTimePicker.value) == parseInt(nextHour)){
+    for (let option of htmlEndMinuteEndTimepicker) {
+        let optionValue = parseInt(option.value);
+        if (optionValue >= parseInt(nextMinute) && parseInt(htmlEndHourEndTimePicker.value) == parseInt(nextHour)) {
             option.disabled = true;
         }
-        else if(parseInt(htmlEndHourEndTimePicker.value) > parseInt(nextHour)){
+        else if (parseInt(htmlEndHourEndTimePicker.value) > parseInt(nextHour)) {
             option.disabled = true;
         }
     }
 }
 
 function setReservationEndTimePicker(jsonObject) {
+    console.log('test1');
     let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject);
     console.log(todaysReservations);
     busy_timestamps_endTimePicker = getBusyTimestamps(todaysReservations);
     console.log("busy_timestamps", busy_timestamps_endTimePicker);
     disableBusyHours(busy_timestamps_endTimePicker);
     disablePast();
-    disablePastReservation(busy_timestamps_endTimePicker);
+    // disablePastReservation(busy_timestamps_endTimePicker);
     htmlEndHourEndTimePicker.addEventListener('change', setNewMinutes);
+    console.log('test2');
     ListenToConfirmRegistrationEndTimePicker();
 }
 
@@ -614,7 +616,7 @@ function showStartRegistrationPopup() {
     listenToClickStartReg();
 }
 
-function listenToOpenLockerPopupContinue(lockerId) {
+function listenToOpenLockerPopupContinue() {
     if (htmlPopUpOk) {
         htmlPopUpOk.addEventListener('click', function () {
             htmlBackground.style = '';
@@ -636,7 +638,7 @@ function callbackRegistrationStarted(registration) {
     document.querySelector('.js-popup-message').innerHTML = "Wil je de locker opnieuw openen?";
 
     htmlLockerSvg.removeEventListener('click', showStartRegistrationPopup);
-    listenToClickToggleLocker(currentLockerID);
+    listenToClickToggleLocker();
     listenToLockerStopRegistration();
 
     openLockerLock();
