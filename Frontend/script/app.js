@@ -516,6 +516,36 @@ function ListenToConfirmRegistrationEndTimePicker() {
     }
 }
 
+function disablePastReservation(busy_timestamps_endTimePicker){
+    // Eerste uur dat voorkomt ophalen en vanaf dan alle uren en minuten disablen
+    let nextHour = 0
+    console.log(busy_timestamps_endTimePicker)
+    let nextMinute = 0
+    for (let hour in busy_timestamps_endTimePicker){
+        if (hour >= new Date().getHours() && nextHour == 0){
+            nextHour = parseInt(hour)
+        }
+    }
+    console.log("nexthour",nextHour)
+    nextMinute = busy_timestamps_endTimePicker[nextHour][0]
+    console.log("nextminute",nextMinute)
+    for(let option of htmlEndHourEndTimePicker){
+        let optionValue = parseInt(option.value)
+        if (optionValue > parseInt(nextHour)){
+            option.disabled = true;
+        }
+    }
+    for (let option of htmlEndMinuteEndTimepicker){
+        let optionValue = parseInt(option.value)
+        if(optionValue >= parseInt(nextMinute) && parseInt(htmlEndHourEndTimePicker.value) == parseInt(nextHour)){
+            option.disabled = true;
+        }
+        else if(parseInt(htmlEndHourEndTimePicker.value) > parseInt(nextHour)){
+            option.disabled = true;
+        }
+    }
+}
+
 function setReservationEndTimePicker(jsonObject) {
     let todaysReservations = getTodaysReservationsEndTimePicker(jsonObject);
     console.log(todaysReservations);
@@ -523,6 +553,7 @@ function setReservationEndTimePicker(jsonObject) {
     console.log("busy_timestamps", busy_timestamps_endTimePicker);
     disableBusyHours(busy_timestamps_endTimePicker);
     disablePast();
+    disablePastReservation(busy_timestamps_endTimePicker);
     htmlEndHourEndTimePicker.addEventListener('change', setNewMinutes);
     ListenToConfirmRegistrationEndTimePicker();
 }
