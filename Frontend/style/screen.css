@@ -1070,7 +1070,6 @@ p {
     justify-items: center;
 }
 
-
 .profile_icons_container__one-column {
     display: grid;
     width: 80%;
@@ -1316,9 +1315,10 @@ p {
     margin: 6rem 0 2rem 3rem;
 }
 
-.grid-4-icons{
+.grid-4-icons {
     grid-template-areas: 'afmeldenicon afmeldenicon afmeldenicon afmeldenicon' 'afmeldentext afmeldentext afmeldentext afmeldentext';
 }
+
 
 /* Animations*/
 
@@ -1392,8 +1392,8 @@ p {
     } */
 }
 
-@media(max-width: 500px){
-    .grid-4-icons{
+@media(max-width: 500px) {
+    .grid-4-icons {
         grid-template-areas: 'afmeldenicon afmeldenicon' 'afmeldentext afmeldentext';
         row-gap: 1.5rem;
     }
@@ -1420,4 +1420,8 @@ p {
         top: 6rem;
         padding: 1rem;
     }
+}
+
+.no-reservations {
+    justify-content: center;
 }

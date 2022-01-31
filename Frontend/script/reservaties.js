@@ -171,7 +171,7 @@ const showReservations = function(reservations) {
     }
 
     if (htmlString == '')
-        htmlString = 'Geen reservaties gevonden';
+        htmlString = '<div class="flex no-reservations">Geen reservaties gevonden</div>';
 
     document.querySelector('.js-reservations').innerHTML = htmlString;
 
