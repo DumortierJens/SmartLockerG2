@@ -190,53 +190,179 @@ function cbAddRegistration(){
     window.history.back()
 }
 
+function disableBusyHours(busy_timestamps) {
+    for (const [key, value] of Object.entries(busy_timestamps)) {
+        if (busy_timestamps[key].includes(0) && busy_timestamps[key].includes(10) && busy_timestamps[key].includes(20) && busy_timestamps[key].includes(30) && busy_timestamps[key].includes(40) && busy_timestamps[key].includes(50)) {
+            for (let option of htmlStartHour) {
+                let optionValue = parseInt(option.value);
+                if (optionValue == key) {
+                    option.disabled = true;
+                }
+            }
+            for (let option of htmlEndHour) {
+                let optionValue = parseInt(option.value);
+                if (optionValue == key) {
+                    option.disabled = true;
+                }
+            }
+        }
+    }
+}
+
+function setNewMinutes() {
+    console.log("Change endhour");
+    let chosenStartHour = parseInt(htmlStartHour.value);
+    let chosenEndHour = parseInt(htmlEndHour.value);
+    // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
+    if (busy_timestamps[chosenStartHour]) {
+        for (let option of htmlStartMinute) {
+            let optionValue = parseInt(option.value);
+            if (busy_timestamps[chosenStartHour].includes(optionValue)) {
+                option.disabled = true;
+            } else {
+                option.disabled = false;
+            }
+        }
+    }
+    if(busy_timestamps[chosenEndHour]){
+        for (let option of htmlEndMinute) {
+            let optionValue = parseInt(option.value);
+            if (busy_timestamps[chosenEndHour].includes(optionValue)) {
+                option.disabled = true;
+            } else {
+                option.disabled = false;
+            }
+        }
+    }
+    if (new Date().getHours() == htmlStartHour.value && !busy_timestamps[chosenStartHour]) {
+        for (let option of htmlStartMinute) {
+            let optionValue = parseInt(option.value);
+            if (optionValue <= new Date().getMinutes()) {
+                option.disabled = true;
+            }
+        }
+    } 
+    else {
+        for (let option of htmlStartMinute) {
+            option.disabled = false;
+        }
+    }
+    if (new Date().getHours() == htmlEndHour.value && !busy_timestamps[chosenEndHour]) {
+        for (let option of htmlEndMinute) {
+            let optionValue = parseInt(option.value);
+            if (optionValue <= new Date().getMinutes()) {
+                option.disabled = true;
+            }
+        }
+    } 
+    else {
+        for (let option of htmlEndMinute) {
+            option.disabled = false;
+        }
+    }
+    // selecteer automatisch eerst beschikbare minuten
+    $('.js-end-minute').children('option:enabled').eq(1).prop('selected', true);
+    $('.js-start-minute').children('option:enabled').eq(0).prop('selected', true);
+}
+
+function disablePast() {
+    for (let option of htmlStartHour) {
+        let optionValue = parseInt(option.value);
+        if (optionValue < new Date().getHours()) {
+            option.disabled = true;
+        }
+        for (let option of htmlStartMinute) {
+            let optionValue = parseInt(option.value);
+            if (optionValue <= new Date().getMinutes()) {
+                option.disabled = true;
+            }
+        }
+        let disabled = $('.js-start-minute option:not(:enabled)');
+        $('.js-start-hour').children('option:enabled').eq(0).prop('selected', true);
+        $('.js-start-minute').children('option:enabled').eq(-0).prop('selected', true);
+        // Als alle minute options zijn gedisabled, toon volgend uur
+        if (disabled.length == 6 && parseInt(htmlStartHour.value) < 21) {
+            $('.js-start-hour').children('option:enabled').eq(1).prop('selected', true);
+            setNewMinutes();
+        }
+    }
+    for (let option of htmlEndHour) {
+        let optionValue = parseInt(option.value);
+        if (optionValue < new Date().getHours()) {
+            option.disabled = true;
+        }
+        for (let option of htmlEndMinute) {
+            let optionValue = parseInt(option.value);
+            if (optionValue <= new Date().getMinutes()) {
+                option.disabled = true;
+            }
+        }
+        let disabled = $('.js-end-minute option:not(:enabled)');
+        $('.js-end-hour').children('option:enabled').eq(0).prop('selected', true);
+        $('.js-end-minute').children('option:enabled').eq(1).prop('selected', true);
+        // Als alle minute options zijn gedisabled, toon volgend uur
+        if (disabled.length == 6 && parseInt(htmlStartHour.value) < 21) {
+            $('.js-end-hour').children('option:enabled').eq(1).prop('selected', true);
+            setNewMinutes();
+        }
+    }
+
+    if(parseInt(htmlStartMinute.value) == 50 && htmlStartHour.value == htmlEndHour.value){
+        htmlEndHour.value = parseInt(htmlEndHour.value)+1
+        setNewMinutes()
+    }
+}
+
 function SetReservationTime(jsonObject) {
     let todaysReservations = getTodaysReservations(jsonObject);
     console.log(todaysReservations);
     busy_timestamps = getBusyTimestamps(todaysReservations);
     console.log("busy_timestamps", busy_timestamps);
-
+    disableBusyHours(busy_timestamps)
+    disablePast();
     // Uren en minuten van in het verleden disabelen als je date == vandaag
     let date = new Date(htmlDate.value).getDate();
     htmlStartHour.value = new Date().getHours();
     htmlEndHour.value = new Date().getHours();
-    htmlStartHour.addEventListener('change', function() {
-        let chosenHour = parseInt(htmlStartHour.value);
-        // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
-        if (busy_timestamps[chosenHour]) {
-            for (let option of htmlStartMinute) {
-                let optionValue = parseInt(option.value);
-                if (busy_timestamps[chosenHour].includes(optionValue)) {
-                    option.disabled = true;
-                } else {
-                    option.disabled = false;
-                }
-            }
-        } else {
-            for (let option of htmlStartMinute) {
-                option.disabled = false;
+    // htmlStartHour.addEventListener('change', function() {
+    //     let chosenStartHour = parseInt(htmlStartHour.value);
+    //     // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
+    //     if (busy_timestamps[chosenStartHour]) {
+    //         for (let option of htmlStartMinute) {
+    //             let optionValue = parseInt(option.value);
+    //             if (busy_timestamps[chosenStartHour].includes(optionValue)) {
+    //                 option.disabled = true;
+    //             } else {
+    //                 option.disabled = false;
+    //             }
+    //         }
+    //     } else {
+    //         for (let option of htmlStartMinute) {
+    //             option.disabled = false;
 
-            }
-        }
-    });
-    htmlEndHour.addEventListener('change', function() {
-        let chosenHour = parseInt(htmlEndHour.value);
-        // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
-        if (busy_timestamps[chosenHour]) {
-            for (let option of htmlEndMinute) {
-                let optionValue = parseInt(option.value);
-                if (busy_timestamps[chosenHour].includes(optionValue)) {
-                    option.disabled = true;
-                } else {
-                    option.disabled = false;
-                }
-            }
-        } else {
-            for (let option of htmlEndMinute) {
-                option.disabled = false;
-            }
-        }
-    });
+    //         }
+    //     }
+    // });
+    // htmlEndHour.addEventListener('change', function() {
+    //     let chosenStartHour = parseInt(htmlEndHour.value);
+    //     // Als er voor het gekozen uur bezette minuten zijn, disable ze dan:
+    //     if (busy_timestamps[chosenStartHour]) {
+    //         for (let option of htmlEndMinute) {
+    //             let optionValue = parseInt(option.value);
+    //             if (busy_timestamps[chosenStartHour].includes(optionValue)) {
+    //                 option.disabled = true;
+    //             } else {
+    //                 option.disabled = false;
+    //             }
+    //         }
+    //     } else {
+    //         for (let option of htmlEndMinute) {
+    //             option.disabled = false;
+    //         }
+    //     }
+    // });
+    htmlStartHour.addEventListener('change', setNewMinutes);
+    htmlEndHour.addEventListener('change', setNewMinutes);
     ListenToChangeDate();
     ListenToConfirmRegistration();
 }

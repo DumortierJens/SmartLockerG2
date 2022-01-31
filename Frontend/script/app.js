@@ -614,7 +614,9 @@ function callbackLockerOpened() {
     htmlPopUp.style.animation = 'fadeout 0.3s';
     htmlBackground.style = '';
     htmlLockerSvg.innerHTML = getSvg('locker open');
+
 }
+
 
 function listenToOpenLockerPopupCancel() {
     if (htmlPopUpCancel) {
