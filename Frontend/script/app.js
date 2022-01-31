@@ -581,7 +581,7 @@ function listenToOpenLockerPopupContinue(lockerId) {
     if (htmlPopUpOk) {
         htmlPopUpOk.addEventListener('click', function () {
             setTimeout(DisplayNone, 300);
-            openLocker();
+            openLockerLock();
         });
     }
 }
@@ -601,10 +601,10 @@ function callbackRegistrationStarted(registration) {
     listenToClickToggleLocker(currentLockerID);
     listenToLockerStopRegistration();
 
-    openLocker();
+    function openLockerLock();
 }
 
-function openLocker() {
+function openLockerLock() {
     console.log("Open locker");
     handleData(`${APIURI}/lockers/${currentLockerID}/open`, callbackLockerOpened, null, 'POST', null, userToken);
 }
@@ -612,9 +612,7 @@ function openLocker() {
 function callbackLockerOpened() {
     console.log('Locker opened');
     htmlPopUp.style.animation = 'fadeout 0.3s';
-    htmlBackground.style = '';
     htmlLockerSvg.innerHTML = getSvg('locker open');
-
 }
 
 
@@ -622,7 +620,6 @@ function listenToOpenLockerPopupCancel() {
     if (htmlPopUpCancel) {
         htmlPopUpCancel.addEventListener('click', function () {
             htmlPopUp.style.animation = 'fadeout 0.3s';
-            htmlBackground.style = '';
             setTimeout(DisplayNone, 300);
         });
     }
