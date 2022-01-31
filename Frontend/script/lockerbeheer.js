@@ -10,7 +10,12 @@ const showUpdatedLocker = function(locker) {
 
 const openLocker = function(lockerId) {
     console.log("Open locker");
+    handleData(`${APIURI}/lockers/${lockerId}/open`, callbackLockerOpenedBeheer, null, 'POST', null, userToken);
 };
+
+function callbackLockerOpenedBeheer() {
+    console.log('Locker opened');
+}
 
 const closeAllTabs = function() {
     const htmlTabsAll = document.querySelectorAll('.js-tab');
