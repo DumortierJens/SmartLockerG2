@@ -114,8 +114,8 @@ const showLockerDetail = function (locker) {
     htmlLockerStatus.innerHTML = locker.status;
     htmlLockerSvg.innerHTML = getSvg('locker close');
 
-    console.log(currentReservation);
-    console.log(currentRegistrationID);
+    console.log("Reservation:", currentReservation);
+    console.log("Registration id:", currentRegistrationID);
 
     if (currentRegistrationID) {
         console.log("Activiteit bezig");
@@ -125,8 +125,8 @@ const showLockerDetail = function (locker) {
 
         htmlLockerStatus.innerHTML = 'Bezig';
         htmlstopRegistrationBtn.style = "display: flex";
-        listenToClickToggleLocker(locker.id);
         htmlLockerPopupMessage.innerHTML = "Wil je de locker opnieuw openen?";
+        listenToClickToggleLocker(locker.id);
         listenToLockerStopRegistration();
     }
     else if (locker.status == 'Beschikbaar' || currentReservation) {
@@ -420,68 +420,69 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
             window.location.reload();
         }
     }
+    else {
+        let startHour = new Date().getHours();
+        let startMinute = new Date().getMinutes();
+        let endHour = parseInt(htmlEndHourEndTimePicker.value);
+        let endMinute = parseInt(htmlEndMinuteEndTimepicker.value);
 
-    let startHour = new Date().getHours();
-    let startMinute = new Date().getMinutes();
-    let endHour = parseInt(htmlEndHourEndTimePicker.value);
-    let endMinute = parseInt(htmlEndMinuteEndTimepicker.value);
+        if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
+            console.log("Eindtijdstip moet later liggen dan starttijdstip");
+            window.alert("Eindtijdstip moet later liggen dan starttijdstip");
+            return;
+        }
 
-    if (startHour == endHour && startMinute > endMinute || startHour > endHour) {
-        console.log("Eindtijdstip moet later liggen dan starttijdstip");
-        window.alert("Eindtijdstip moet later liggen dan starttijdstip");
-        return;
-    }
+        if (startHour == endHour && startMinute == endMinute) {
+            console.log("Beide tijdstippen zijn hetzelfde");
+            window.alert("Beide tijdstippen zijn hetzelfde");
+            return;
+        }
 
-    if (startHour == endHour && startMinute == endMinute) {
-        console.log("Beide tijdstippen zijn hetzelfde");
-        window.alert("Beide tijdstippen zijn hetzelfde");
-        return;
-    }
-
-    // Kijken of het niet overlapt met een bestaande reservatie
-    let inputString = `${addZero(new Date().getHours())
-        }:${addZero(new Date().getMinutes())
-        }:00-${addZero(htmlEndHourEndTimePicker.value)
-        }:${addZero(htmlEndMinuteEndTimepicker.value)
-        }:00`;
-    let inputArray = [];
-    inputArray.push(inputString);
-    console.log("inputarray", inputArray);
-    let new_busy_timestamps = getBusyTimestamps(inputArray);
-    console.log("busy_timestamps", busy_timestamps_endTimePicker);
-    console.log("new_busy_timestamps", new_busy_timestamps);
-    for (let key1 in busy_timestamps_endTimePicker) {
-        for (let key2 in new_busy_timestamps) {
-            if (key1 == key2) {
-                for (let minutes1 of busy_timestamps_endTimePicker[key1]) {
-                    for (let minutes2 of new_busy_timestamps[key2]) {
-                        if (minutes1 == minutes2) {
-                            console.log("Tijdstip overlapt met een bestaande reservatie");
-                            window.alert("Tijdstip overlapt met een bestaande reservatie");
-                            return;
+        // Kijken of het niet overlapt met een bestaande reservatie
+        let inputString = `${addZero(new Date().getHours())
+            }:${addZero(new Date().getMinutes())
+            }:00-${addZero(htmlEndHourEndTimePicker.value)
+            }:${addZero(htmlEndMinuteEndTimepicker.value)
+            }:00`;
+        let inputArray = [];
+        inputArray.push(inputString);
+        console.log("inputarray", inputArray);
+        let new_busy_timestamps = getBusyTimestamps(inputArray);
+        console.log("busy_timestamps", busy_timestamps_endTimePicker);
+        console.log("new_busy_timestamps", new_busy_timestamps);
+        for (let key1 in busy_timestamps_endTimePicker) {
+            for (let key2 in new_busy_timestamps) {
+                if (key1 == key2) {
+                    for (let minutes1 of busy_timestamps_endTimePicker[key1]) {
+                        for (let minutes2 of new_busy_timestamps[key2]) {
+                            if (minutes1 == minutes2) {
+                                console.log("Tijdstip overlapt met een bestaande reservatie");
+                                window.alert("Tijdstip overlapt met een bestaande reservatie");
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
-    let startPoint = Object.keys(new_busy_timestamps)[0];
-    let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1];
-    console.log("startpoint ", startPoint, " endpoint ", endPoint);
+        // Kijken of er niet wordt gestart voor de reservatie en geëindigd na de reservatie
+        let startPoint = Object.keys(new_busy_timestamps)[0];
+        let endPoint = Object.keys(new_busy_timestamps)[Object.keys(new_busy_timestamps).length - 1];
+        console.log("startpoint ", startPoint, " endpoint ", endPoint);
 
-    for (let reservationsHour in busy_timestamps_endTimePicker) {
-        if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
-            console.log("Tijdstip overlapt met een bestaande reservatie");
-            window.alert("Tijdstip overlapt met een bestaande reservatie");
-            return;
+        for (let reservationsHour in busy_timestamps_endTimePicker) {
+            if (startPoint < parseInt(reservationsHour) && endPoint > parseInt(reservationsHour)) {
+                console.log("Tijdstip overlapt met een bestaande reservatie");
+                window.alert("Tijdstip overlapt met een bestaande reservatie");
+                return;
+            }
         }
     }
 
     let now = new Date(Date.now());
     let end = new Date(new Date(now).setHours(htmlEndHourEndTimePicker.value, htmlEndMinuteEndTimepicker.value, 0, 0));
-    let endTimeReservation = end.toISOString();
+    let endReservation = end.toUTCString().replace("UTC", "GMT");
 
     // Kijken of een slot niet langer dan 90 minuten duurt
     let diffMin = new Date(end - now).getMinutes();
@@ -494,42 +495,10 @@ function CheckIfValidReservationEndTimePicker() { // Waarden die voorlopig ingev
     console.log("Geldig tijdstip");
     const body = {
         "lockerId": currentLockerID,
-        "endTimeReservation": endTimeReservation
+        "endTimeReservation": endReservation
     };
-    handleData(`${APIURI}/registrations/start`, callbackStartRegistration, null, 'POST', JSON.stringify(body), userToken);
-}
 
-function callbackStartRegistration() {
-    getCurrentRegistration(currentLockerID);
-    handleData(`${APIURI}/lockers/${currentLockerID}/open`, callbackOpenLocker, null, 'POST', null, userToken);
-
-    htmlPopUpEndTimePicker.style.animation = "fadeout 0.3s";
-    htmlBackground.style = '';
-    setTimeout(DisplayNoneEndTimePicker, 300);
-    document.querySelector('.js-locker-reservate').removeEventListener('click', function () {
-        window.location.href = `${location.origin}/reservatie_toevoegen${WEBEXTENTION}?lockerId=${lockerId}`;
-    });
-    htmlLockerSvg.removeEventListener('click', function () {
-        htmlBackground.style = 'filter: blur(8px);';
-        console.log("Timepicker verschijnt");
-        htmlPopUpEndTimePicker.style = "display: block;";
-        htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
-        fillOptionsSelectEndTimePicker();
-        getReservationsEndTimePicker();
-        listenToClickCancelEndTimePicker();
-    });
-
-    htmlLockerSvg.removeEventListener('click', function () {
-        htmlPopUp.style = 'display:block';
-        htmlPopUp.style.animation = 'fadein 0.5s';
-        htmlBackground.style = 'filter: blur(8px);';
-        listenToOpenLockerPopupContinue(lockerId);
-        listenToOpenLockerPopupCancel();
-    });
-    htmlstopRegistrationBtn = document.querySelector('.js-locker-stop-registration');
-    htmlstopRegistrationBtn.removeEventListener('click', function () {
-
-    });
+    handleData(`${APIURI}/registrations/start`, callbackRegistrationStarted, null, 'POST', JSON.stringify(body), userToken);
 }
 
 function ListenToConfirmRegistrationEndTimePicker() {
@@ -561,7 +530,6 @@ function fillOptionsSelectEndTimePicker() {
     htmlEndMinuteEndTimepicker.innerHTML = ``;
     for (let hour = 5; hour < 23; hour++) {
         htmlEndHourEndTimePicker.innerHTML += `<option value="${hour}">${hour}</option>`;
-
     }
     for (let minute = 0; minute < 60; minute += 10) {
         if (minute < 10) {
@@ -596,40 +564,56 @@ function listenToClickStartReg() {
 }
 
 function listenToClickToggleLockerEndTimePicker(lockerid) {
-    htmlLockerSvg.addEventListener('click', function () {
-        htmlBackground.style = 'filter: blur(8px);';
-        htmlPopUpEndTimePicker.style = "display: block;";
-        htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
-        fillOptionsSelectEndTimePicker();
-        getReservationsEndTimePicker();
-        listenToClickCancelEndTimePicker();
-        listenToClickStartReg();
-    });
+    htmlLockerSvg.addEventListener('click', showStartRegistrationPopup);
+}
+
+function showStartRegistrationPopup() {
+    htmlBackground.style = 'filter: blur(8px);';
+    htmlPopUpEndTimePicker.style = "display: block;";
+    htmlPopUpEndTimePicker.style.animation = "fadein 0.3s";
+    fillOptionsSelectEndTimePicker();
+    getReservationsEndTimePicker();
+    listenToClickCancelEndTimePicker();
+    listenToClickStartReg();
 }
 
 function listenToOpenLockerPopupContinue(lockerId) {
     if (htmlPopUpOk) {
         htmlPopUpOk.addEventListener('click', function () {
             setTimeout(DisplayNone, 300);
-            const endTimeReservation = new Date();
-            endTimeReservation.setMinutes(endTimeReservation.getMinutes() + 60);
-            handleData(`${APIURI}/registrations/start`, callbackOpenLocker, null, 'POST', JSON.stringify({ lockerId, endTimeReservation }), userToken);
+            openLocker();
         });
     }
 }
 
-function callbackOpenLocker(registration) {
-    console.log("Open locker");
-    htmlBackground.style = '';
-    htmlLockerSvg.innerHTML = getSvg('locker open');
-    document.querySelector('.js-locker-instructions').innerHTML = 'Vergeet de locker niet manueel te sluiten';
-    htmlPopUp.style.animation = 'fadeout 0.3s';
-    handleData(`${APIURI}/lockers/${registration.lockerId
-        }/open`, callbackOpenLocker, null, 'POST', null, userToken);
+function callbackRegistrationStarted(registration) {
+    console.log("New Registration id:", registration.id);
+    currentRegistrationID = registration.id;
+
+    document.querySelector('.js-locker-status').classList.add('locker_detail_content_status_color_available');
+    document.querySelector('.js-locker-status').classList.add('locker_detail_content_status_color_unavailable');
+    document.querySelector('.js-locker-status').innerHTML = 'Bezig';
+    document.querySelector('.js-locker-stop-registration').style = "display: flex";
+    document.querySelector('.js-locker-instructions').innerHTML = 'Tik op het slot om de locker opnieuw te openen';
+    document.querySelector('.js-popup-message').innerHTML = "Wil je de locker opnieuw openen?";
+
+    htmlLockerSvg.removeEventListener('click', showStartRegistrationPopup);
+    listenToClickToggleLocker(currentLockerID);
+    listenToLockerStopRegistration();
+
+    openLocker();
 }
 
-function callbackOpenLocker(locker) {
-    console.log('locker openend');
+function openLocker() {
+    console.log("Open locker");
+    handleData(`${APIURI}/lockers/${currentLockerID}/open`, callbackLockerOpened, null, 'POST', null, userToken);
+}
+
+function callbackLockerOpened() {
+    console.log('Locker opened');
+    htmlPopUp.style.animation = 'fadeout 0.3s';
+    htmlBackground.style = '';
+    htmlLockerSvg.innerHTML = getSvg('locker open');
 }
 
 function listenToOpenLockerPopupCancel() {
