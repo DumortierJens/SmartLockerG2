@@ -191,6 +191,7 @@ function listenToLockerStopRegistration() {
         htmlBackground.style = 'filter: blur(8px);'
         htmlPopUpCancelStopRegistration.addEventListener('click', function() {
             console.log("Cancel");
+            htmlBackground.style = '';
             htmlPopUpStopRegistration.style.animation = "fadeout 0.3s";
             setTimeout(displayNoneStopRegistration, 300);
         });
@@ -584,7 +585,8 @@ function showStartRegistrationPopup() {
 
 function listenToOpenLockerPopupContinue(lockerId) {
     if (htmlPopUpOk) {
-        htmlPopUpOk.addEventListener('click', function() {
+        htmlPopUpOk.addEventListener('click', function () {
+            htmlBackground.style = '';
             setTimeout(DisplayNone, 300);
             openLockerLock();
         });
@@ -625,6 +627,7 @@ function listenToOpenLockerPopupCancel() {
     if (htmlPopUpCancel) {
         htmlPopUpCancel.addEventListener('click', function() {
             htmlPopUp.style.animation = 'fadeout 0.3s';
+            htmlBackground.style = '';
             setTimeout(DisplayNone, 300);
         });
     }
