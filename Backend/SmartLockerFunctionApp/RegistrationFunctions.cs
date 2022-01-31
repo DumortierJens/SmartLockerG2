@@ -132,7 +132,10 @@ namespace SmartLockerFunctionApp
 
                 // Check material
                 if (!await LockerService.CheckMaterialStatusAsync(registration.LockerId))
-                    return new BadRequestObjectResult(new { code = 800, message = "Not all material in locker" });
+                {
+                    Locker locker = await LockerService.LockerContainer.ReadItemAsync<Locker>(registration.LockerId.ToString(), new PartitionKey(registration.LockerId.ToString()));
+                    await LockerService.LockerContainer.ReplaceItemAsync(locker, locker.Id.ToString(), new PartitionKey(locker.Id.ToString()));
+                }
                 
                 // Check lock
                 if (!await LockerService.CheckLockStatusAsync(registration.LockerId))
