@@ -213,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const userId = urlParams.get('users');
 
     if (htmlPageReservations) {
+        if (userTokenPayload.role == "Admin") showHamburger();
         if (userTokenPayload.role == 'User') getReservations('me');
         else if (userTokenPayload.role == 'Admin' && !(userId == undefined || userId == 'all')) getReservations(userId);
         else getReservations('all');
