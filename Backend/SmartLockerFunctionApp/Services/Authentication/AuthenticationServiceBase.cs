@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
+using SmartLockerFunctionApp.Models;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using SmartLockerFunctionApp.Services.LockerManagement;
 using Newtonsoft.Json.Linq;
 using SmartLockerFunctionApp.Services.Sms;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 
 namespace SmartLockerFunctionApp
 {
@@ -45,6 +46,10 @@ namespace SmartLockerFunctionApp
                 {
                     reservation.RegistrationId = registration.Id;
                     reservation.IsUsed = true;
+
+                    // Validate registration
+                    if (!await LockerManagementService.ValidateStartRegistrationAsync(registration))
+                        return new BadRequestObjectResult(new { code = 806, message = "Er is nog een activiteit bezig" });
                 }
                 else {
                     // Get end time
@@ -91,6 +96,7 @@ namespace SmartLockerFunctionApp
             }
             catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -146,8 +152,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -187,8 +194,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -213,8 +221,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -242,8 +251,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -274,8 +284,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -314,8 +325,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }

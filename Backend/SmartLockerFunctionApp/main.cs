@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Azure.Cosmos;
 using SmartLockerFunctionApp.Services.Authentication;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 
 namespace SmartLockerFunctionApp
 {
@@ -40,8 +41,9 @@ namespace SmartLockerFunctionApp
                 logs.AddRange(response);
                 return new OkObjectResult(logs);
             }
-            catch
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }

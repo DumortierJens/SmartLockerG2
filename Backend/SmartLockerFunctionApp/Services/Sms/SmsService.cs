@@ -14,19 +14,28 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartLockerFunctionApp.Models;
 using System.Text.Json;
+using IO.ClickSend.ClickSend.Api;
+using IO.ClickSend.Client;
+using IO.ClickSend.ClickSend.Model;
+using System.Collections.Generic;
+using SmartLockerFunctionApp.Services.ErrorLogging;
+using System.IO;
+
 namespace SmartLockerFunctionApp.Services.Sms
 {
     public static class SmsService
     {
+        public static SMSApi SmsApi = new SMSApi( new IO.ClickSend.Client.Configuration() { Username = Environment.GetEnvironmentVariable("ClickSendUsername"), Password = Environment.GetEnvironmentVariable("ClickSendKey") });
+
         public static void AddMessageToQueue(User user, Reservation res)
         {
-            Message msg = new Message() { Tel = user.Tel, Bericht = $"Hallo {user.Name},\n minder dan 15 minuten resterend!", EndTime = res.EndTime };
+            Message msg = new Message() { Tel = user.Tel, Bericht = $"Hallo {user.Name},\nJe heb minder dan 5 minuten resterend!", EndTime = res.EndTime };
             string jsonString = JsonSerializer.Serialize(msg);
 
             string connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
 
             // Instantiate a QueueClient which will be used to create and manipulate the queue
-            QueueClient queueClient = new QueueClient(connectionString, "twilio");
+            QueueClient queueClient = new QueueClient(connectionString, "sms");
 
             // Create the queue
             queueClient.CreateIfNotExists();
@@ -39,54 +48,45 @@ namespace SmartLockerFunctionApp.Services.Sms
 
 
         [FunctionName("TimeTrigger")]
-        public static void Run(
-      [TimerTrigger("0 */5 * * * *")] TimerInfo myTimer,
-       ILogger log,
-       [TwilioSms(AccountSidSetting = "TwilioAccountSid", AuthTokenSetting = "TwilioAuthToken")]
-        ICollector<CreateMessageOptions> messageCollector
-       )
+        public static async Task Run(
+        [TimerTrigger("0 */1 * * * *")] TimerInfo myTimer, 
+        ILogger log)
         {
-            string connectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage");
-            QueueClient queueClient = new QueueClient(connectionString, "twilio");
-
-            string fromPhoneNumber = "+19378825833";
-
-            queueClient.CreateIfNotExists();
-
-            if (queueClient.Exists())
+            try
             {
-                QueueMessage[] peekedMessages = queueClient.ReceiveMessages();
-                if (peekedMessages.Length != 0)
-                {
-                    foreach (var msg in peekedMessages)
-                    {
-                        Message fullMsg = JsonSerializer.Deserialize<Message>(msg.Body);
-                        if ((fullMsg.EndTime - DateTime.UtcNow).TotalMinutes < 15)
-                        {
-                            for (int i = 1; i <= 2; i++)
-                            {
-                                var message = new CreateMessageOptions(new PhoneNumber(fullMsg.Tel))
-                                {
-                                    From = new PhoneNumber(fromPhoneNumber),
-                                    Body = fullMsg.Bericht
-                                };
-                                messageCollector.Add(message);
+                QueueClient queueClient = new QueueClient(Environment.GetEnvironmentVariable("AzureWebJobsStorage"), "sms");
+                queueClient.CreateIfNotExists();
 
+                if (queueClient.Exists())
+                {
+                    QueueMessage[] peekedMessages = queueClient.ReceiveMessages();
+                    if (peekedMessages.Length > 0)
+                    {
+                        foreach (var msg in peekedMessages)
+                        {
+                            //string requestBody = await new StreamReader(msg.Body).ReadToEndAsync();
+                            Message fullMsg = JsonSerializer.Deserialize<Message>(msg.MessageText);
+                            
+                            if ((fullMsg.EndTime - DateTime.Now).TotalMinutes < 5)
+                            {
+                                var listOfSms = new List<SmsMessage> { new SmsMessage(
+                                    from: "from",
+                                    to: fullMsg.Tel,
+                                    body: fullMsg.Bericht,
+                                    source: "sdk"
+                                )};
+                                var smsCollection = new SmsMessageCollection(listOfSms);
+                                var response = SmsApi.SmsSendPost(smsCollection);
+                                queueClient.DeleteMessage(msg.MessageId, msg.PopReceipt);
                             }
-                            queueClient.DeleteMessage(msg.MessageId, msg.PopReceipt);
                         }
-                        
                     }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"Make sure the Azurite storage emulator running and try again.");
+                await ErrorService.SaveError(new Error("500", ex.Message));
             }
-
-
-
-
         }
     }
 }

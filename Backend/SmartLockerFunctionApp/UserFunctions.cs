@@ -5,7 +5,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SmartLockerFunctionApp.Models;
 using SmartLockerFunctionApp.Services.Authentication;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,8 +45,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(users);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -73,8 +76,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(users);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -106,8 +110,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(users);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -143,8 +148,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -181,8 +187,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -219,8 +226,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -258,8 +266,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -296,8 +305,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -339,8 +349,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
