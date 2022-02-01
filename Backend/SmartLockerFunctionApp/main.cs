@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Azure.Cosmos;
 using SmartLockerFunctionApp.Services.Authentication;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 
 namespace SmartLockerFunctionApp
 {

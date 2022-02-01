@@ -29,6 +29,15 @@ namespace SmartLockerFunctionApp.Services.LockerManagement
             return true;
         }
 
+        public static async Task<bool> ValidateStartRegistrationAsync(Registration registration)
+        {
+            // Check for open registration
+            var currentRegistration = await RegistrationService.GetCurrentRegistrationAsync(registration.LockerId);
+            if (currentRegistration != null) return false;
+
+            return true;
+        }
+
         public static async Task<bool> ValidateEndRegistrationAsync(Registration registration)
         {
             // Check for open registration
