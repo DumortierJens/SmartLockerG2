@@ -316,9 +316,7 @@ function SetReservationTime(jsonObject) {
     busy_timestamps = getBusyTimestamps(todaysReservations);
     console.log("busy_timestamps", busy_timestamps);
     disableBusyHours(busy_timestamps)
-    if (new Date(htmlDate.value).toDateString() == new Date().toDateString()) {
-        disablePast();
-    }
+    // disablePast()
     // Uren en minuten van in het verleden disabelen als je date == vandaag
     let date = new Date(htmlDate.value).getDate();
     htmlStartHour.value = new Date().getHours();
