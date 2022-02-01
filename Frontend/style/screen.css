@@ -196,9 +196,10 @@ p {
     cursor: pointer;
 }
 
-.locker_detail_content_toggleSvg_outofuse {
-    opacity: 0.5;
-    cursor: auto;
+.locker_detail_content_toggleSvg_outofuse,
+.locker_detail_content_toggleSvg_outofuse * {
+    opacity: 0.75;
+    cursor: not-allowed;
 }
 
 .center {
@@ -1424,4 +1425,5 @@ p {
 
 .no-reservations {
     justify-content: center;
+    padding-top: 1rem;
 }

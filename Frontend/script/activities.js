@@ -178,7 +178,7 @@ const showRegistrations = function(registrations) {
     }
 
     if (htmlString == '')
-        htmlString = 'Geen activiteiten gevonden';
+        htmlString = `<div class="flex no-reservations">Geen activiteiten gevonden</div>`;
 
     document.querySelector('.js-registrations').innerHTML = htmlString;
 
@@ -212,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const userId = urlParams.get('users');
 
     if (htmlPageReservations) {
+        if (userTokenPayload.role == "Admin") showHamburger();
         if (userTokenPayload.role == 'User') getRegistrations('me');
         else if (userTokenPayload.role == 'Admin' && !(userId == undefined || userId == 'all')) getRegistrations(userId);
         else getRegistrations('all');
