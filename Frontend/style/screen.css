@@ -23,7 +23,7 @@
     --blue-accent-color-light: #4992ff;
     --blue-accent-color-dark: #1f48ff;
     --status-available: #008000;
-    --status-available-icon: #00ff00;
+    --status-available-icon: #00cc00;
     --status-unavailable: #ffa500;
     --status-outofuse: #b60000;
     --green-faded: #a9e8a9;
@@ -32,7 +32,8 @@
     --yellow-wachten: #944a00;
     --red-faded: #ffcccc;
     --red-verlopen: #b10303;
-    --grey-bg: #f2f2f2;
+    --red-dark: #8f3d3d;
+    --grey-bg: #f7f7f7;
     --grey-bg-dark: #6b6969;
     -webkit-tap-highlight-color: transparent;
 }
@@ -59,6 +60,29 @@ html {
     text-shadow: none;
 }
 
+a {
+    color: white;
+}
+
+a:visited,
+a:active {
+    color: white;
+}
+
+a:hover,
+a:focus {
+    color: white;
+}
+
+.link-blue {
+    color: var(--blue-accent-color);
+}
+
+.link-blue:hover,
+.link-blue:focus {
+    color: var(--blue-accent-color-light);
+}
+
 img {
     max-width: 100%;
     vertical-align: top;
@@ -66,16 +90,6 @@ img {
 
 p {
     margin: 0;
-}
-
-a:visited,
-a:active {
-    color: var(--blue-accent-color-dark);
-}
-
-a:hover,
-a:focus {
-    color: var(--blue-accent-color-light);
 }
 
 
@@ -89,6 +103,12 @@ a:focus {
     font-size: 2rem;
     font-weight: 400;
     align-items: center;
+}
+
+@media (max-width: 400px) {
+    .header_smartlocker {
+        font-size: 1.5rem;
+    }
 }
 
 .header_smartlocker_center {
@@ -112,6 +132,14 @@ a:focus {
     width: 1.5rem;
     position: absolute;
     right: 1.5rem;
+    cursor: pointer;
+}
+
+.header_right_icon_profile {
+    height: 1.5rem;
+    width: 1.5rem;
+    position: absolute;
+    right: 4rem;
     cursor: pointer;
 }
 
@@ -158,8 +186,12 @@ a:focus {
     margin: 1.5rem 0 1.5rem 0;
 }
 
+.cursor_pointer {
+    cursor: pointer;
+}
+
 .locker_detail_content_toggleSvg {
-    height: 11.25rem;
+    height: 9.375rem;
     width: 9.375rem;
     cursor: pointer;
 }
@@ -180,7 +212,8 @@ a:focus {
     margin: 0;
 }
 
-.locker_detail_opmerkingbtn {
+.locker_detail_opmerkingbtn,
+.locker_detail_stop_reg_btn {
     margin: 0 0 1.5rem 0;
     background-color: var(--blue-accent-color);
     border-style: none;
@@ -191,6 +224,11 @@ a:focus {
     cursor: pointer;
     height: 2.5rem;
     align-items: center;
+}
+
+.locker_detail_stop_reg_btn {
+    background-color: var(--status-outofuse);
+    display: none;
 }
 
 .locker_detail_sendbtn {
@@ -238,8 +276,32 @@ a:focus {
 .locker_detail_popup {
     display: none;
     position: fixed;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    margin-top: -6.25rem;
+    margin-left: -40%;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    text-align: center;
+    padding: 1rem;
+}
+
+.cancel_registration_btn {
+    background-color: var(--status-outofuse);
+    border-style: none;
+    color: white;
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.locker_detail_popup_endtimepicker {
+    display: none;
+    position: fixed;
     width: 18.75rem;
-    height: 12.5rem;
     top: 50%;
     left: 50%;
     margin-top: -6.25rem;
@@ -259,6 +321,33 @@ a:focus {
     border-radius: 5px;
     cursor: pointer;
     margin-right: 2rem;
+    min-width: 3.5rem;
+}
+
+.stop-registration-message {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--blue-accent-color);
+}
+
+.stop-registration-info-confirm,
+.stop-registration-info-back {
+    border: none;
+    margin: 0.5rem;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 5px;
+    background-color: var(--blue-accent-color);
+    font-weight: 400;
+    font-family: 'MyFont';
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.stop-registration-info-back {
+    background-color: var(--status-outofuse);
 }
 
 .locker_detail_popup_open {
@@ -270,11 +359,31 @@ a:focus {
     border-radius: 5px;
     cursor: pointer;
     margin-left: 2rem;
+    min-width: 3.5rem;
 }
 
 .open_locker_message {
-    padding: 1rem 0.5rem 1rem 0.5rem;
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
     margin-bottom: 0rem;
+}
+
+.locker_detail_popup_buttons {
+    padding: 0.5rem 0rem 1rem 0rem;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.start_registration_btn {
+    color: white;
+    font-family: 'MyFont';
+    background-color: var(--blue-accent-color);
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem 0 0.5rem 0;
 }
 
 
@@ -426,37 +535,154 @@ a:focus {
 }
 
 .login_content_bg {
-  position: relative;
-  width: 18.75rem;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 4rem;
-  border-radius: 0.5rem;
+    position: relative;
+    width: 18.75rem;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4rem;
+    border-radius: 0.5rem;
 }
 
 .login_content {
-  font-size: 1.5rem;
-  color: var(--blue-accent-color);
-  padding: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    color: var(--blue-accent-color);
+    padding: 1rem;
+}
+
+.login_content_gsm {
+    font-size: 1.5rem;
+    color: var(--blue-accent-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+.phonenumber_input {
+    max-width: 10em;
+    font-family: 'MyFont';
+    border: 1px solid var(--blue-accent-color);
+    border-radius: 5px;
+    outline: none;
+    font-size: 1.5rem;
+    font-weight: 300;
+    text-align: center;
+}
+
+.gsm-btn-doorgaan {
+    margin: 1.5rem 0 1rem 0;
+    background-color: var(--blue-accent-color);
+    border-style: none;
+    color: white;
+    font-family: 'MyFont';
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 2.5rem;
+    align-items: center;
+}
+
+.info-gsm {
+    font-size: 1rem;
+    color: var(--blue-accent-color);
 }
 
 .facebook_login {
-  text-align: center;
-  cursor: pointer;
-  margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    gap: 3rem
+}
+
+.desktop {
+    display: none;
+}
+
+.logo {
+    max-width: 10rem;
+}
+
+@media (min-width: 550px) {
+    .logos {
+        padding-top: 5rem;
+    }
+    .mobile {
+        display: none;
+    }
+    .desktop {
+        display: flex;
+    }
+    .logo_2 {
+        max-width: 10rem;
+    }
 }
 
 .login_info {
     font-size: 1rem;
     text-align: center;
     color: white;
-    margin: 4rem auto 0 auto;
+    margin: 2rem auto 0 auto;
     width: 80%;
+}
+
+.login-links {
+    position: absolute;
+    bottom: 2em;
+    width: 100%;
+    text-align: center;
+}
+
+.login-link {
+    color: white;
+}
+
+
+/*Dashboard*/
+
+.dashboard-content {
+    display: flex;
+    align-items: center;
+    gap: 1.2em;
+}
+
+.dashboard-content-img {
+    display: flex;
+    align-items: center;
+}
+
+.dashboard-icon {
+    margin: 0 0 0 0.8em;
+    color: var(--blue-accent-color);
 }
 
 
 /* Reservatiepagina */
+
+.reservations_table,
+.users_table {
+    padding-bottom: 1.5rem;
+    padding-top: 0.5rem;
+    min-height: calc(100vh - 4.5rem);
+}
+
+.activities_table {
+    padding-bottom: 1.5rem;
+    padding-top: 4.5rem;
+    min-height: calc(100vh - 4.5rem);
+}
+
+.user_management_content {
+    margin: 4.5rem 1rem 1rem 1rem;
+}
 
 .reservation_legende {
     width: 80%;
@@ -467,6 +693,7 @@ a:focus {
     grid-template-areas: 'bezigicon bezigtekst' 'wachtenicon wachtentekst' 'verlopenicon verlopentekst';
     row-gap: 1rem;
     padding-top: 96px;
+    padding-bottom: 1rem;
 }
 
 .rect_bezig {
@@ -518,11 +745,12 @@ a:focus {
     justify-items: center;
 }
 
-.reservation {
+.reservation,
+.locker {
     position: relative;
     width: 90%;
     max-width: 20.5rem;
-    margin: 1.5rem auto 0 auto;
+    margin: 1rem auto 0 auto;
     height: 4rem;
     background-color: white;
     border-radius: 0.5rem;
@@ -541,21 +769,31 @@ a:focus {
     margin: 1rem;
 }
 
-.reservation_grid {
+.gebruiker_icon {
+    display: flex;
+    position: absolute;
+    right: 0;
+    padding: 20px 1.25rem 0 0
+}
+
+.reservation_grid,
+.locker_grid {
     display: grid;
     grid-template-rows: 1.5rem 1.5rem;
     grid-template-areas: 'name' 'date';
     align-self: center;
 }
 
-.reservation_name {
+.reservation_name,
+.locker_name {
     align-self: center;
     grid-area: name;
     font-size: 1.25rem;
     font-weight: 600;
 }
 
-.reservation_date {
+.reservation_date,
+.locker_status {
     align-self: center;
     grid-area: date;
     font-size: 0.75rem;
@@ -603,12 +841,13 @@ a:focus {
 
 .arrow_more {
     position: absolute;
-    height: 1rem;
-    width: 1rem;
-    right: 1rem;
+    height: 24px;
+    width: 24px;
+    right: 16px;
     align-self: center;
     cursor: pointer;
-    fill: black;
+    color: black;
+    transform: scale(0.8);
 }
 
 .reservation_details_edit_and_delete {
@@ -621,6 +860,11 @@ a:focus {
 
 .reservation_details_edit {
     width: 50%;
+    border-top: 1px solid var(--grey-bg);
+}
+
+.reservation_details_edit_2 {
+    width: 100%;
     border-top: 1px solid var(--grey-bg);
 }
 
@@ -663,7 +907,7 @@ a:focus {
     margin: 0 auto 0 auto;
     border-top: 1px solid var(--grey-bg);
     text-align: start;
-    padding: 0 0 1rem 1rem;
+    padding: 0 1rem 1rem;
     border-radius: 0 0 0.5rem 0.5rem;
 }
 
@@ -675,16 +919,19 @@ a:focus {
 
 .textarea {
     display: block;
-    width: 90%;
-    overflow: hidden;
-    resize: both;
-    border: 1px solid var(--grey-bg);
+    width: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+    resize: none;
+    border: 1px solid lightgrey;
     border-radius: 0.2rem;
+    outline: none;
     min-height: 40px;
     line-height: 20px;
     color: black;
     font-weight: 400;
     padding: 0.25rem;
+    margin-top: 1rem;
 }
 
 .reservation_more_border {
@@ -699,10 +946,14 @@ a:focus {
 
 .editicon {
     cursor: pointer;
+    color: var(--blue-accent-color);
+    height: 24px;
+    width: 24px;
 }
 
 .deleteicon {
     cursor: pointer;
+    color: var(--blue-accent-color);
 }
 
 .popupreservation {
@@ -742,7 +993,7 @@ a:focus {
 .checkbox_box {
     width: 1rem;
     height: 1rem;
-    border: 2px solid var(--grey-bg);
+    border: 2px solid lightgray;
     border-radius: 3px;
     align-self: center;
     position: absolute;
@@ -756,18 +1007,35 @@ a:focus {
     content: url('/svg/iconmonstr-check-mark-17.svg');
 }
 
-.canceledit {
+.canceledit,
+.stop_registration {
     fill: var(--red-verlopen);
-    height: 1rem;
-    width: 1rem;
+    height: 1.5rem;
+    width: 1.5rem;
     cursor: pointer;
+    display: flex;
+    color: var(--red-verlopen);
+}
+
+.stop_registration {
+    color: white;
 }
 
 .doneedit {
     fill: var(--green-bezig);
+    color: var(--green-bezig);
     height: 1.5rem;
     width: 1.5rem;
     cursor: pointer;
+}
+
+.reservation_detail_content_name {
+    border: none;
+    border-bottom: 1px solid lightgrey;
+    text-align: center;
+    font-family: 'MyFont';
+    padding-bottom: 0.3rem;
+    outline: none;
 }
 
 
@@ -795,15 +1063,35 @@ a:focus {
     display: grid;
     width: 80%;
     max-width: 31.25rem;
-    grid-template-areas: 'afmeldenicon reservatieicon' 'afmeldentext reservatietext';
+    grid-template-areas: 'afmeldenicon activiteiticon reservatieicon' 'afmeldentext activiteittext reservatietext';
     margin: 1.5rem auto 0 auto;
     row-gap: 0.5rem;
     align-items: center;
     justify-items: center;
 }
 
+.profile_icons_container__one-column {
+    display: grid;
+    width: 80%;
+    max-width: 31.25rem;
+    grid-template-columns: 1fr;
+    margin: 1.5rem auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
+.profile_icons_container_container {
+    display: grid;
+    grid-template-areas: 'afmeldenicon' 'afmeldentext';
+    margin: 0 auto 0 auto;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+}
+
 .profile_icon_afmelden {
-    fill: var(--blue-accent-color);
+    color: var(--blue-accent-color);
     width: 1.5rem;
     height: 1.5rem;
     grid-area: afmeldenicon;
@@ -811,9 +1099,12 @@ a:focus {
 
 .profile_icon_afmelden_text {
     grid-area: afmeldentext;
+    display: flex;
+    justify-content: center;
 }
 
 .profile_icon_reservations {
+    color: var(--blue-accent-color);
     width: 1.5rem;
     height: 1.5rem;
     grid-area: reservatieicon;
@@ -844,9 +1135,55 @@ a:focus {
 }
 
 .delete_account {
-    color: #8f3d3d;
+    color: var(--red-dark);
     margin-top: 3rem;
     margin-bottom: 1rem;
+}
+
+
+/* Lockerbeheer */
+
+.status_selector {
+    outline: none;
+    border: none;
+    text-align: center;
+    font-family: 'MyFont';
+}
+
+.lockermanagement_open_locker {
+    outline: 0;
+    text-align: center;
+    font-family: 'MyFont';
+    background-color: white;
+    color: var(--blue-accent-color);
+    border: 1.5px solid var(--blue-accent-color);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    height: 1.5rem;
+}
+
+.locker_management_content {
+    margin: 6rem 1rem 1rem 1rem;
+}
+
+.locker_img {
+    align-self: center;
+    width: 2rem;
+    height: 2rem;
+    margin: 1rem;
+}
+
+.locker_status_out_of_use {
+    color: var(--red-dark);
+}
+
+.locker_status_occupied {
+    color: darkorange;
+}
+
+.locker_status_available {
+    color: var(--status-available);
 }
 
 
@@ -860,14 +1197,14 @@ a:focus {
     width: auto;
     right: 1rem;
     left: 1rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .add_reservation_content {
     margin: 2rem auto 0 auto;
     text-align: center;
-    border-bottom: 2px solid var(--grey-bg);
     width: 50%;
+    border-bottom: 0.8px solid var(--grey-bg);
 }
 
 .add_reservation_title {
@@ -876,23 +1213,54 @@ a:focus {
     color: var(--blue-accent-color);
 }
 
+.add_reservation_sport,
+.add_reservation_date,
 .add_reservation_time {
-    border: none;
-    font-family: 'MyFont';
-    margin-top: 0.5rem;
-    background-color: white;
-    outline: none;
-    align-items: center;
+    height: 3rem;
+    border-radius: 5px;
+    margin: 0.5rem auto 0 auto;
+    max-width: 12.5rem;
 }
 
-.add_reservation_sport {
-    border: none;
-    font-family: 'MyFont';
-    margin-top: 0.5rem;
-    background-color: white;
-    outline: none;
+.add_reservation_time_endtimepicker {
+    height: 3rem;
+    border-radius: 5px;
+    margin: 0 auto 0 auto;
+    max-width: 12.5rem;
 }
-<<<<<<< HEAD
+
+.add_reservation_sport_content {
+    background-color: white;
+    width: 80%;
+    border-radius: 5px;
+    justify-content: center;
+    align-content: center;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    font-family: 'MyFont';
+    outline: none;
+    border: none;
+    padding: 0.1rem;
+}
+
+.time_selection {
+    font-family: 'MyFont';
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.time_selection_endtimepicker {
+    font-family: 'MyFont';
+    text-align: center;
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
 
 .confirm_reservationbtn {
     margin-top: 1.5rem;
@@ -905,42 +1273,50 @@ a:focus {
     width: 50%;
     font-family: 'MyFont';
     cursor: pointer;
+    max-width: 12.5rem;
 }
 
 .confirm_reservationbtn_container {
     text-align: center;
 }
 
-=======
->>>>>>> develop
-
-.confirm_reservationbtn {
-    margin-top: 1.5rem;
+.add_reservation_info {
     text-align: center;
-    background-color: var(--blue-accent-color);
-    color: white;
-    border: none;
-    height: 2.5rem;
-    border-radius: 5px;
-    width: 50%;
-    font-family: 'MyFont';
-    cursor: pointer;
+    margin: 1rem auto 0 auto;
+    width: 80%;
+    font-weight: 300;
+    font-size: 0.75rem;
 }
 
-.confirm_reservationbtn_container {
-    text-align: center;
+.error_message {
+    color: var(--red-verlopen);
 }
 
 
 /* Loading screen */
-.loading_container{
-  position: absolute;
-  width: 15rem;
-  height: 15rem;
-  top: 50%;
-  left: 50%;
-  margin-top: -7.5rem;
-  margin-left: -7.5rem;
+
+.loading_container {
+    position: absolute;
+    width: 15rem;
+    height: 15rem;
+    top: 50%;
+    left: 50%;
+    margin-top: -7.5rem;
+    margin-left: -7.5rem;
+}
+
+.locker_detail_blur {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.privacy_policy_content {
+    margin: 6rem 0 2rem 3rem;
+}
+
+.grid-4-icons {
+    grid-template-areas: 'afmeldenicon afmeldenicon afmeldenicon afmeldenicon' 'afmeldentext afmeldentext afmeldentext afmeldentext';
 }
 
 
@@ -968,17 +1344,21 @@ a:focus {
     .locker_detail_blur {
         text-align: center;
     }
-    .profile_info_content {
-        margin: 1.5rem 30% 0 30%;
+    .reservation_legende {
+        text-align: start;
     }
+    /* .profile_info_content {
+        margin: 1.5rem 30% 0 30%;
+    } */
     .header_add_reservation {
         font-size: 2rem;
     }
 }
 
 @media (min-width: 800px) {
-    .profile_info_content {
-        margin: 1.5rem 30% 0 30%;
+    .centered_content {
+        position: absolute;
+        left: 8rem;
     }
 }
 
@@ -995,4 +1375,53 @@ a:focus {
     .confirm_reservationbtn {
         font-size: 0.75rem;
     }
+    .locker_name {
+        font-size: 1rem;
+    }
+    /* .profile_icons_container_container {
+        display: block;
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+    .profile_icons_container {
+        display: block;
+        text-align: center;
+    }
+    .profile_icon_afmelden {
+        margin: 0 auto 0.5rem auto;
+    } */
+}
+
+@media(max-width: 500px) {
+    .grid-4-icons {
+        grid-template-areas: 'afmeldenicon afmeldenicon' 'afmeldentext afmeldentext';
+        row-gap: 1.5rem;
+    }
+}
+
+@media (min-width: 880px) {
+    .reservations_table {
+        padding-top: 6rem;
+        display: grid;
+        grid-template-areas: 'reservation legende';
+        max-width: 880px;
+        margin: 0 auto 0 auto;
+    }
+    .reservations_table_content {
+        width: 440px;
+    }
+    .reservation_container {
+        grid-area: reservation;
+    }
+    .reservation_legende {
+        grid-area: legende;
+        max-height: 116px;
+        position: sticky;
+        top: 6rem;
+        padding: 1rem;
+    }
+}
+
+.no-reservations {
+    justify-content: center;
 }

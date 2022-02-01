@@ -22,28 +22,26 @@
 #include "Lock.h"
 #include "AzureIotHub.h"
 #include "Esp32MQTTClient.h"
+#include "Sonar.h"
 
 
 // Methods for tasks
-void checkMaterial();
-bool checkMaterialOfUltrasoonSensor(NewPing, double);
-void checkLock();
+void CheckMaterialSonar();
+void CheckLock();
 
 
 // Variables
 Scheduler taskRunner;
 
-NewPing usLeft(US_LEFT_TRIGGER_PIN, US_LEFT_ECHO_PIN, 400);
-double usLeftThreshold = 22;
-bool usLeftLastState = false;
+int selectedSonar = 0;
+int sonarDiff = 4;
+Sonar sonars[] {
+  Sonar("6e557e60-84a8-45b0-a026-37ae6d0d06fb", US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN, 17, sonarDiff),
+  Sonar("ed1f152e-822d-4940-935c-70c40e1b8c3e", US_LEFT_TRIGGER_PIN, US_LEFT_ECHO_PIN, 17, sonarDiff)
+};
 
-NewPing usRight(US_RIGHT_TRIGGER_PIN, US_RIGHT_ECHO_PIN, 400);
-double usRightThreshold = 22;
-bool usRightLastState = false;
-
-LockerLock lock(LOCK_PIN, LOCK_FEEDBACK_PIN);
+LockerLock lock("fc5a0661-20fc-4eb1-95d7-e27e19f211df", LOCK_PIN, LOCK_FEEDBACK_PIN);
 bool lockLastState = LOW;
-
 
 // IoT hub
 static void SendConfirmationCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result)
@@ -63,7 +61,7 @@ static int  DeviceMethodCallback(const char *methodName, const unsigned char *pa
   if (strcmp(methodName, "open") == 0)
   {
     LogInfo("Open lock");
-    lock.openLock();
+    lock.OpenLock();
   }
   else
   {
@@ -79,10 +77,10 @@ static int  DeviceMethodCallback(const char *methodName, const unsigned char *pa
 }
 
 // Tasks
-Task checkMaterialTask(500, TASK_FOREVER, &checkMaterial, NULL );
-Task checkLockTask(500, TASK_FOREVER, &checkLock, NULL );
+Task checkMaterialTask(1000, TASK_FOREVER, &CheckMaterialSonar, NULL );
+Task checkLockTask(500, TASK_FOREVER, &CheckLock, NULL );
 
-void updateDeviceStatus(String deviceId, bool value){
+void UpdateDeviceStatus(String deviceId, bool value){
 
     // Create json payload
     String messagePayload = "{\"iotDeviceId\":\"" + String(IOTHUB_DEVICEID) + "\", \"deviceId\":\"" + deviceId + "\", \"value\":" + value + "}";
@@ -94,46 +92,22 @@ void updateDeviceStatus(String deviceId, bool value){
 
 }
 
-void checkMaterial(){            
-    bool usLeftState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
-    bool usRightState = checkMaterialOfUltrasoonSensor(usLeft, usLeftThreshold);
-    
-    if (usLeftState != usLeftLastState)
-    {
-        if (usLeftState)
-            Serial.println("Ultrasoon left: material detected");
-        else
-            Serial.println("Ultrasoon left: no material detected");
+void CheckMaterialSonar(){       
+    bool sonarLastState = sonars[selectedSonar].LastState;
+    bool materialDetected = sonars[selectedSonar].MaterialDetected();
 
-        updateDeviceStatus("ed1f152e-822d-4940-935c-70c40e1b8c3e", usLeftState);
+    if (sonarLastState != materialDetected) {
+        Serial.println("DeviceId: " + sonars[selectedSonar].Id + " Detected: " + String(materialDetected));
+        UpdateDeviceStatus(sonars[selectedSonar].Id, materialDetected);
     }
 
-    if (usRightState != usRightLastState)
-    {
-        if (usRightState)
-            Serial.println("Ultrasoon right: material detected");
-        else
-            Serial.println("Ultrasoon right: no material detected");
-
-        updateDeviceStatus("6e557e60-84a8-45b0-a026-37ae6d0d06fb", usRightState);
-    }
-    
-    usLeftLastState = usLeftState;
-    usRightLastState = usRightState;
+    selectedSonar++;
+    if (selectedSonar >= sizeof(sonars) / sizeof(sonars[0]))
+        selectedSonar = 0;
 }
 
-bool checkMaterialOfUltrasoonSensor(NewPing us, double usThresholdValue){            
-    double usValue = us.ping_cm();
-    Serial.println(usValue);
-    
-    if (usValue > usThresholdValue - US_THRESHOLD_DIFF && usValue < usThresholdValue + US_THRESHOLD_DIFF)
-        return true;
-
-    return false;
-}
-
-void checkLock() {
-    bool lockState = lock.getLockState();
+void CheckLock() {
+    bool lockState = lock.GetLockState();
     Serial.println(lockState);
 
     if (lockState != lockLastState)
@@ -143,7 +117,7 @@ void checkLock() {
         else
             Serial.println("Locker: opened");
 
-        updateDeviceStatus("fc5a0661-20fc-4eb1-95d7-e27e19f211df", lockState);
+        UpdateDeviceStatus(lock.Id, lockState);
     }
 
     lockLastState = lockState;

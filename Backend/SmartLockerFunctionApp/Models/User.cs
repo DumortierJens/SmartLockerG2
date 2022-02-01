@@ -19,9 +19,6 @@ namespace SmartLockerFunctionApp.Models
         [JsonProperty("email")]
         public string Email { get; set; }
 
-        [JsonProperty("birthday")]
-        public DateTime Birthday { get; set; }
-
         [JsonProperty("picture")]
         public string Picture { get; set; }
 
@@ -30,5 +27,8 @@ namespace SmartLockerFunctionApp.Models
 
         [JsonProperty("isBlocked")]
         public bool IsBlocked { get; set; }
+
+        [JsonProperty("tel")]
+        public string Tel { get; set; }
     }
 }

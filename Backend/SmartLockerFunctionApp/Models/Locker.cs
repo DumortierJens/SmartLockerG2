@@ -9,14 +9,20 @@ namespace SmartLockerFunctionApp.Models
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
+
         [JsonProperty("sport")]
         public string Sport { get; set; }
+
         [JsonProperty("description")]
         public string Description { get; set; }
+
         [JsonProperty("status")]
         public string Status { get; set; }
-
+        
+        [JsonProperty("iconLocation")]
+        public string IconLocation { get; set; }
     }
 }
