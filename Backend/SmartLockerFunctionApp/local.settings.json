@@ -8,8 +8,9 @@
     "IoTHubAdmin": "HostName=smartlockeriothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q4TxjfspN0Gz12JptHyKouz+shZvrLSQPJGbUys3q74=",
     "PubSub": "Endpoint=https://smartlocker.webpubsub.azure.com;AccessKey=6vsilS0MAZd3nEj2+7rpc9wqAVWxo/Ctoh9C5+HUQiA=;Version=1.0;",
     "JWTsecret": "GiNubWXa6650qoaC2ByvR0ppsFmTms4wvk8rvUHXE5qG7A3k+0xa7pLi3wA/cp0CTj8SzSAFyxlq6bjIMi06BA==",
-    "TwilioAccountSid": "ACafc1d1c9bb795c53f39098193d58e2e8",
-    "TwilioAuthToken": "969afe02ac34ca2da6ea4a0794fd321c"
+    "ClickSendUsername": "jens.dumortier@student.howest.be",
+    "ClickSendKey": "242C11AF-3269-12FF-20B1-F6544600B532",
+    "ReminderTimeBefore": "5"
   },
   "Host": {
     "LocalHttpPort": 7071,
