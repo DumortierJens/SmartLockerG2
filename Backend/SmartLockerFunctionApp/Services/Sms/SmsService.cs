@@ -83,10 +83,6 @@ namespace SmartLockerFunctionApp.Services.Sms
             {
                 Console.WriteLine($"Make sure the Azurite storage emulator running and try again.");
             }
-
-
-
-
         }
     }
 }

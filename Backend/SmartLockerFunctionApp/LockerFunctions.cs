@@ -14,6 +14,7 @@ using SmartLockerFunctionApp.Models;
 using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using System.Security.Authentication;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 
 namespace SmartLockerFunctionApp
 {
@@ -38,7 +39,7 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(lockers);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
@@ -70,8 +71,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(locker);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -92,8 +94,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(new { lockStatus, materialStatus });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -133,8 +136,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(new { Message = "Locker Opened"});
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -177,8 +181,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(locker);
             }
-            catch
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
