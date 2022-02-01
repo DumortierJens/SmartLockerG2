@@ -91,6 +91,7 @@ namespace SmartLockerFunctionApp
             }
             catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -146,8 +147,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -187,8 +189,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -213,8 +216,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -242,8 +246,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registrations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -274,8 +279,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -314,8 +320,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(registration);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }

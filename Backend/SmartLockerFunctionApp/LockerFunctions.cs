@@ -40,7 +40,8 @@ namespace SmartLockerFunctionApp
             }
             catch (Exception)
             {
-                return new StatusCodeResult(400);
+                await ErrorService.SaveError(new Error("500", ex.Message));
+                return new StatusCodeResult(500);
             }
         }
 

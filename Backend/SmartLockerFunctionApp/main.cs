@@ -40,8 +40,9 @@ namespace SmartLockerFunctionApp
                 logs.AddRange(response);
                 return new OkObjectResult(logs);
             }
-            catch
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
