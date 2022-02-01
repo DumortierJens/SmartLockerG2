@@ -12,6 +12,7 @@ using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using SmartLockerFunctionApp.Models;
 using SmartLockerFunctionApp.Services.LockerManagement;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 
 namespace SmartLockerFunctionApp
 {
@@ -123,9 +124,9 @@ namespace SmartLockerFunctionApp
                 
                 return new OkObjectResult(reservation);
             }
-
-            catch (Exception)
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -168,9 +169,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(reservation);
             }
-
-            catch
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
@@ -203,8 +204,9 @@ namespace SmartLockerFunctionApp
 
                 return new OkObjectResult(reservation);
             }
-            catch
+            catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }

@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Azure.Cosmos;
 using System.Net.Http;
 using System.Globalization;
+using SmartLockerFunctionApp.Services.ErrorLogging;
 
 namespace SmartLockerFunctionApp.Services.Authentication
 {
@@ -42,6 +43,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
                 JToken accessToken;
                 if (!jObject.TryGetValue("accessToken", out accessToken))
                     return new BadRequestObjectResult(new { code = 850, message = "No accesstoken" });
+                    
 
                 // Get social from user
                 JToken socialType;
@@ -85,6 +87,7 @@ namespace SmartLockerFunctionApp.Services.Authentication
             }
             catch (Exception ex)
             {
+                await ErrorService.SaveError(new Error("500", ex.Message));
                 return new StatusCodeResult(500);
             }
         }
